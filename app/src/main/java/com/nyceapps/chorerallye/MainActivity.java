@@ -2,16 +2,23 @@ package com.nyceapps.chorerallye;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,11 +44,47 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference choresDatabase;
     private DatabaseReference raceDatabase;
 
+    private FirebaseAuth rallyeAuth;
+    private FirebaseAuth.AuthStateListener rallyeAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        rallyeAuth = FirebaseAuth.getInstance();
+        rallyeAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    init();
+                }
+            }
+        };
+
+        signIn();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        rallyeAuth.addAuthStateListener(rallyeAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (rallyeAuthListener != null) {
+            rallyeAuth.removeAuthStateListener(rallyeAuthListener);
+        }
+    }
+
+    private void signIn() {
+        rallyeAuth.signInAnonymously();
+    }
+
+    private void init() {
         initData();
 
         initPointsView();
