@@ -1,43 +1,35 @@
 {
   "project_info": {
-    "project_number": "961054444035",
-    "firebase_url": "https://chorerallye.firebaseio.com",
-    "project_id": "chorerallye",
-    "storage_bucket": "chorerallye.appspot.com"
+    "project_number": "269945660850",
+    "firebase_url": "https://chorerallye-84ede.firebaseio.com",
+    "project_id": "chorerallye-84ede",
+    "storage_bucket": "chorerallye-84ede.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:961054444035:android:0b1bba2d3b3e9616",
+        "mobilesdk_app_id": "1:269945660850:android:0b1bba2d3b3e9616",
         "android_client_info": {
           "package_name": "com.nyceapps.chorerallye"
         }
       },
       "oauth_client": [
         {
-          "client_id": "961054444035-19gvcfci7bv94ls1iso66ptgmu86und3.apps.googleusercontent.com",
+          "client_id": "269945660850-fmvpii75bf9kffph8pkrlkhun6kmsm5p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.nyceapps.chorerallye",
-            "certificate_hash": "8A67EDD41C07F1E0B8B542F6C54EFBC1DE487C20"
+            "certificate_hash": "1510040334ac9a0c3233cc477de0a7eea9155519"
           }
         },
         {
-          "client_id": "961054444035-l6cbamjsmdpskkv7mh063nmng85r9q9l.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nyceapps.chorerallye",
-            "certificate_hash": "1510040334AC9A0C3233CC477DE0A7EEA9155519"
-          }
-        },
-        {
-          "client_id": "961054444035-dbonhupp8l7fm5su0io8cee3t0ogn5n4.apps.googleusercontent.com",
+          "client_id": "269945660850-hnnd1mc70ff51i98cfatatv2ltq8iqp1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCqJe6tv9Fkq_2HwjcPDJVTjomwg-CjQG8"
+          "current_key": "AIzaSyCbTjUU9fC-gSGG8evNCmYKdzc-xzIoQy4"
         }
       ],
       "services": {
@@ -48,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "961054444035-dbonhupp8l7fm5su0io8cee3t0ogn5n4.apps.googleusercontent.com",
+              "client_id": "269945660850-hnnd1mc70ff51i98cfatatv2ltq8iqp1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
