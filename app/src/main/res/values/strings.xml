@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ChoreRallye</string>
+
+    <string name="dialog_text_choose_image">Choose image</string>
+    <string name="dialog_text_capture_camera_image">Capture camera image</string>
+    <string name="dialog_text_choose_gallery_image">Choose image from gallery</string>
+
+    <string name="dialog_button_text_ok">OK</string>
+    <string name="dialog_button_text_cancel">Cancel</string>
+
+    <string name="activity_label_members">Members</string>
+    <string name="activity_label_chores">Chores</string>
+
+    <string name="main_menu_manage_members">Members</string>
+    <string name="main_menu_manage_chores">Chores</string>
+
+    <string name="list_menu_action_add">Add</string>
+
+    <string name="detail_menu_action_save">Save</string>
+
+    <string name="toast_text_member_points_for_chore" formatted="false">%s gets %d points for doing %s.</string>
+
+    <string name="list_context_menu_edit">Edit</string>
+    <string name="list_context_menu_remove">Remove</string>
+
+    <string name="confirmation_text_remove_member" formatted="false">Do you really want to remove member %s?</string>
+    <string name="confirmation_text_remove_chore" formatted="false">Do you really want to remove chore %s?</string>
+
+    <string name="edittext_hint_name">Name</string>
+    <string name="edittext_hint_value">Value</string>
+</resources>
