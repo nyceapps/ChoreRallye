@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "961054444035",
+    "firebase_url": "https://chorerallye.firebaseio.com",
+    "project_id": "chorerallye",
+    "storage_bucket": "chorerallye.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961054444035:android:0b1bba2d3b3e9616",
+        "android_client_info": {
+          "package_name": "com.nyceapps.chorerallye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961054444035-19gvcfci7bv94ls1iso66ptgmu86und3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nyceapps.chorerallye",
+            "certificate_hash": "8A67EDD41C07F1E0B8B542F6C54EFBC1DE487C20"
+          }
+        },
+        {
+          "client_id": "961054444035-l6cbamjsmdpskkv7mh063nmng85r9q9l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nyceapps.chorerallye",
+            "certificate_hash": "1510040334AC9A0C3233CC477DE0A7EEA9155519"
+          }
+        },
+        {
+          "client_id": "961054444035-dbonhupp8l7fm5su0io8cee3t0ogn5n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqJe6tv9Fkq_2HwjcPDJVTjomwg-CjQG8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961054444035-dbonhupp8l7fm5su0io8cee3t0ogn5n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
