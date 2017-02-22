@@ -35,6 +35,8 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 public class MainActivity extends AppCompatActivity {
+    private boolean enterInit;
+
     private RallyeData data;
 
     private TextView pointsTextView;
@@ -52,13 +54,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        enterInit = true;
+
         rallyeAuth = FirebaseAuth.getInstance();
         rallyeAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null && enterInit) {
                     init();
+                    enterInit = false;
                 }
             }
         };
@@ -93,15 +98,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             initData();
 
+            initPointsView();
+            initMembersView();
+            initChoresView();
+
             if (data.getMembers().size() == 0) {
                 showGotoMembersDialog();
             } else if (data.getChores().size() == 0) {
                 showGotoChoresDialog();
             } else {
-                initPointsView();
-                initMembersView();
-                initChoresView();
-
                 showPointsText();
             }
         }
@@ -196,16 +201,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void manageMembers() {
+        enterInit = true;
+
         Intent intent = new Intent(this, MembersListActivity.class);
         startActivity(intent);
     }
 
     private void manageChores() {
+        enterInit = true;
+
         Intent intent = new Intent(this, ChoresListActivity.class);
         startActivity(intent);
     }
 
     private void managePreferences() {
+        enterInit = true;
+
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
