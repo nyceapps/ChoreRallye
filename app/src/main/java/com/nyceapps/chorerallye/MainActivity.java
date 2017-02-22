@@ -1,6 +1,8 @@
 package com.nyceapps.chorerallye;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +16,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,13 +26,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static com.nyceapps.chorerallye.Constants.DATABASE_PATH_CHORES;
-import static com.nyceapps.chorerallye.Constants.DATABASE_PATH_MEMBERS;
-import static com.nyceapps.chorerallye.Constants.DATABASE_PATH_RACE;
+import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.Constants.PREFS_KEY_HOUSEHOLD_NAME;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int CHORE_COLUMNS = 3;
+    private String householdName;
 
     private RallyeData data;
 
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+        initHousehold();
+
         initData();
 
         initPointsView();
@@ -92,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
         initChoresView();
 
         showPointsText();
+    }
+
+    private void initHousehold() {
+        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        householdName = sharedPrefs.getString(PREFS_KEY_HOUSEHOLD_NAME, null);
+
+        // TEST
+        Log.d("HOUSEHOLDNAME", householdName);
+        householdName = "HOUSEHOLD" + "_" + UUID.randomUUID().toString();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(PREFS_KEY_HOUSEHOLD_NAME, householdName);
+        editor.commit();
     }
 
     @Override
@@ -132,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         data = new RallyeData();
         ((RallyeApplication) this.getApplication()).setRallyeData(data);
 
-        membersDatabase = FirebaseDatabase.getInstance().getReference(DATABASE_PATH_MEMBERS);
+        membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -151,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        choresDatabase = FirebaseDatabase.getInstance().getReference(DATABASE_PATH_CHORES);
+        choresDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -170,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        raceDatabase = FirebaseDatabase.getInstance().getReference(DATABASE_PATH_RACE);
+        raceDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_RACE);
         raceDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

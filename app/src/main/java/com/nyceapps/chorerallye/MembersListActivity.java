@@ -1,8 +1,10 @@
 package com.nyceapps.chorerallye;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nyceapps.chorerallye.Constants.DATABASE_PATH_MEMBERS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.Constants.PREFS_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_MEMBER;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_MEMBER;
 
@@ -48,7 +51,9 @@ public class MembersListActivity extends AppCompatActivity {
         membersListAdapter = new MembersListAdapter(data, this);
         membersListView.setAdapter(membersListAdapter);
 
-        membersDatabase = FirebaseDatabase.getInstance().getReference(DATABASE_PATH_MEMBERS);
+        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        String householdName = sharedPrefs.getString(PREFS_KEY_HOUSEHOLD_NAME, null);
+        membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

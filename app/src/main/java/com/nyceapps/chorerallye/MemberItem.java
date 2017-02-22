@@ -10,13 +10,13 @@ import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
+import static com.nyceapps.chorerallye.Constants.MEMBER_IMAGE_CORNER_RADIUS;
+
 /**
  * Created by lugosi on 07.02.17.
  */
 
 public class MemberItem {
-    private static final float CORNER_RADIUS = 45;
-
     private String uid;
     private String name;
     private String imageString;
@@ -65,7 +65,7 @@ public class MemberItem {
         }
         if (memberBitmap != null) {
             imageDrawable = RoundedBitmapDrawableFactory.create(pContext.getResources(), memberBitmap);
-            ((RoundedBitmapDrawable) imageDrawable).setCornerRadius(CORNER_RADIUS);
+            ((RoundedBitmapDrawable) imageDrawable).setCornerRadius(MEMBER_IMAGE_CORNER_RADIUS);
         }
     }
 }
