@@ -4,6 +4,9 @@
     <string name="dialog_text_choose_image">Choose image</string>
     <string name="dialog_text_capture_camera_image">Capture camera image</string>
     <string name="dialog_text_choose_gallery_image">Choose image from gallery</string>
+    <string name="dialog_text_no_members">You have not added any members yet.\nYou need them to use the app.</string>
+    <string name="dialog_text_no_chores">You have not added any chores yet.\nYou need them to use the app.</string>
+    <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings.</string>
 
     <string name="dialog_button_text_ok">OK</string>
     <string name="dialog_button_text_cancel">Cancel</string>
@@ -13,6 +16,7 @@
 
     <string name="main_menu_manage_members">Members</string>
     <string name="main_menu_manage_chores">Chores</string>
+    <string name="main_menu_manage_preferences">Preferences</string>
 
     <string name="list_menu_action_add">Add</string>
 
@@ -28,4 +32,7 @@
 
     <string name="edittext_hint_name">Name</string>
     <string name="edittext_hint_value">Value</string>
+
+    <string name="pref_title_household_name">Household name</string>
+    <string name="pref_summary_household_name">The symbolic name of your household</string>
 </resources>

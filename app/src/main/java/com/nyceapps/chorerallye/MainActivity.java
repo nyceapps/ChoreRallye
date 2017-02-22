@@ -1,15 +1,16 @@
 package com.nyceapps.chorerallye;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,18 +27,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.Constants.PREFS_FILE_NAME;
-import static com.nyceapps.chorerallye.Constants.PREFS_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 public class MainActivity extends AppCompatActivity {
-    private String householdName;
-
     private RallyeData data;
 
     private TextView pointsTextView;
@@ -88,30 +85,77 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        initHousehold();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
 
-        initData();
+        if (householdName == null) {
+            showGotoPreferencesDialog();
+        } else {
+            initData();
 
-        initPointsView();
-        initMembersView();
-        initChoresView();
+            if (data.getMembers().size() == 0) {
+                showGotoMembersDialog();
+            } else if (data.getChores().size() == 0) {
+                showGotoChoresDialog();
+            } else {
+                initPointsView();
+                initMembersView();
+                initChoresView();
 
-        showPointsText();
+                showPointsText();
+            }
+        }
     }
 
-    private void initHousehold() {
-        SharedPreferences sharedPrefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        householdName = sharedPrefs.getString(PREFS_KEY_HOUSEHOLD_NAME, null);
+    private void showGotoMembersDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_text_no_members)
+                .setPositiveButton(R.string.main_menu_manage_members, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        manageMembers();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        builder.create().show();
 
-        // TEST
-        Log.d("CR", "householdName:" + householdName);
-        if (householdName == null) {
-            householdName = "HOUSEHOLD" + "_" + UUID.randomUUID().toString();
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putString(PREFS_KEY_HOUSEHOLD_NAME, householdName);
-            editor.commit();
-        }
-        // TEST
+    }
+
+    private void showGotoChoresDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_text_no_chores)
+                .setPositiveButton(R.string.main_menu_manage_chores, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        manageChores();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        builder.create().show();
+
+    }
+
+    private void showGotoPreferencesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_text_no_household_name)
+                .setPositiveButton(R.string.main_menu_manage_preferences, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        managePreferences();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        builder.create().show();
+
     }
 
     @Override
@@ -124,12 +168,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
         switch (item.getItemId()) {
             case R.id.action_manage_members:
-                manageMembers();
+                if (householdName == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    manageMembers();
+                }
                 break;
             case R.id.action_manage_chores:
-                manageChores();
+                if (householdName == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    manageChores();
+                }
+                break;
+            case R.id.action_manage_preferences:
+                managePreferences();
                 break;
             default:
                 break;
@@ -148,9 +205,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void managePreferences() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     private void initData() {
         data = new RallyeData();
         ((RallyeApplication) this.getApplication()).setRallyeData(data);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
 
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
