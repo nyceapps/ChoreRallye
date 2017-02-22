@@ -30,5 +30,6 @@ public interface Constants {
     int IMAGE_WIDTH = 64;
     int IMAGE_HEIGHT = 64;
 
+    String PREFS_FILE_NAME = "com_nyceapps_chorerallye_preferences";
     String PREFS_KEY_HOUSEHOLD_NAME = "com.nyceapps.chorerallye.PREFS_KEY_HOUSEHOLD_NAME";
 }

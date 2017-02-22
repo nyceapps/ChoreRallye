@@ -32,6 +32,7 @@ import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.Constants.PREFS_FILE_NAME;
 import static com.nyceapps.chorerallye.Constants.PREFS_KEY_HOUSEHOLD_NAME;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,15 +100,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initHousehold() {
-        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
         householdName = sharedPrefs.getString(PREFS_KEY_HOUSEHOLD_NAME, null);
 
         // TEST
-        Log.d("HOUSEHOLDNAME", householdName);
-        householdName = "HOUSEHOLD" + "_" + UUID.randomUUID().toString();
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(PREFS_KEY_HOUSEHOLD_NAME, householdName);
-        editor.commit();
+        Log.d("CR", "householdName:" + householdName);
+        if (householdName == null) {
+            householdName = "HOUSEHOLD" + "_" + UUID.randomUUID().toString();
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putString(PREFS_KEY_HOUSEHOLD_NAME, householdName);
+            editor.commit();
+        }
+        // TEST
     }
 
     @Override

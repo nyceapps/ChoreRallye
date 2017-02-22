@@ -27,6 +27,7 @@ import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.Constants.PREFS_FILE_NAME;
 import static com.nyceapps.chorerallye.Constants.PREFS_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_CHORE;
@@ -52,7 +53,7 @@ public class ChoresListActivity extends AppCompatActivity {
         choresListAdapter = new ChoresListAdapter(data, this);
         choresListView.setAdapter(choresListAdapter);
 
-        SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
         String householdName = sharedPrefs.getString(PREFS_KEY_HOUSEHOLD_NAME, null);
         choresDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
