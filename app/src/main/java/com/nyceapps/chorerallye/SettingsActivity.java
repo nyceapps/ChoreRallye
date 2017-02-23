@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import java.util.UUID;
 
+import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
@@ -86,7 +87,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         String householdId = null;
         String householdName = prefHouseholdName.getText();
         if (!TextUtils.isEmpty(householdName)) {
-            householdId = householdName + "_" + UUID.randomUUID().toString();
+            householdId = householdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
         }
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_KEY_HOUSEHOLD_ID, householdId);
