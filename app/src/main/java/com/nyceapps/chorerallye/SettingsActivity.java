@@ -9,10 +9,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 
-import java.util.UUID;
-
-import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 /**
@@ -85,7 +81,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     public void setHouseholdId() {
         String householdName = prefHouseholdName.getText();
-        Utils.setHouseholdId(householdName, this);
+        Utils.setHouseholdIdByName(householdName, this);
     }
 
     private void setHouseholdNameSummary() {

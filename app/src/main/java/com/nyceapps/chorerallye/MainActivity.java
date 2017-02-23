@@ -33,6 +33,8 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog membersDialog;
     private AlertDialog choresDialog;
+    private AlertDialog participateHouseholdDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showGotoPreferencesDialog() {
+        if (participateHouseholdDialog != null && participateHouseholdDialog.isShowing()) {
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_household_name)
                 .setPositiveButton(R.string.main_menu_manage_preferences, new DialogInterface.OnClickListener() {
@@ -194,11 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_scan_household_qr_code:
-                if (householdId == null) {
-                    showGotoPreferencesDialog();
-                } else {
-                    scanHouseholdQRCore();
-                }
+                scanHouseholdQRCore();
                 break;
             case R.id.action_manage_preferences:
                 managePreferences();
@@ -229,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         String householdId = Utils.getHouseholdId(this);
 
-        Intent intent = new Intent(this, QRCodeActivity.class);
+        Intent intent = new Intent(this, ShowQRCodeActivity.class);
         intent.putExtra(EXTRA_MESSAGE_VALUE, householdId);
         startActivity(intent);
     }
@@ -237,7 +240,45 @@ public class MainActivity extends AppCompatActivity {
     private void scanHouseholdQRCore() {
         enterInit = true;
 
-        // TODO: scan QR code
+        Intent intent = new Intent(this, ScanQRCodeActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN_QR_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_SCAN_QR_CODE) {
+                final String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
+                if (!TextUtils.isEmpty(householdId)) {
+                    Log.d(TAG, String.format("householdId from scan = [%s]", householdId));
+                    String[] parts = TextUtils.split(householdId, HOUSEHOLD_ID_INFIX);
+                    if (parts != null && parts.length > 0) {
+                        final String householdName = parts[0];
+                        if (!TextUtils.isEmpty(householdName)) {
+                            Log.d(TAG, String.format("householdName from scan = [%s]", householdName));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
+                                    .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Utils.setHouseholdId(householdId, MainActivity.this);
+                                            Utils.setHouseholdName(householdName, MainActivity.this);
+
+                                            finish();
+                                            startActivity(getIntent());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User cancelled the dialog
+                                        }
+                                    });
+                            participateHouseholdDialog = builder.create();
+                            participateHouseholdDialog.show();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void managePreferences() {

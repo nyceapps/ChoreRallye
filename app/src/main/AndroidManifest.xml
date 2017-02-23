@@ -30,7 +30,10 @@
         <activity
             android:name=".SettingsActivity"/>
         <activity
-            android:name=".QRCodeActivity"
+            android:name=".ShowQRCodeActivity"
+            android:label="@string/activity_label_qr_code"/>
+        <activity
+            android:name=".ScanQRCodeActivity"
             android:label="@string/activity_label_qr_code"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -44,8 +47,11 @@
                 tools:replace="android:resource"/>
         </provider>
     </application>
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
 </manifest>
