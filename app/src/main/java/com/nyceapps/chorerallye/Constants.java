@@ -30,5 +30,6 @@ public interface Constants {
     int IMAGE_WIDTH = 64;
     int IMAGE_HEIGHT = 64;
 
+    String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
 }

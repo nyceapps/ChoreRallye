@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;
@@ -57,7 +58,7 @@ public class MemberItem {
     protected void initDrawable(String pImageString, Context pContext) {
         Bitmap placeHolderBitmap = BitmapFactory.decodeResource(pContext.getResources(), R.drawable.member_placeholder);
         Bitmap memberBitmap;
-        if (!Utils.isEmptyString(pImageString)) {
+        if (!TextUtils.isEmpty(pImageString)) {
             memberBitmap = Utils.convertStringToBitmap(pImageString);
             memberBitmap = Bitmap.createScaledBitmap(memberBitmap, placeHolderBitmap.getWidth(), placeHolderBitmap.getHeight(), true);
         } else {

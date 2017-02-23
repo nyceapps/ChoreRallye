@@ -2,6 +2,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
         android:key="pref_key_household_name"
-        android:title="@string/pref_title_household_name"
-        android:summary="@string/pref_summary_household_name"/>
+        android:title="@string/pref_title_household_name"/>
 </PreferenceScreen>

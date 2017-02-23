@@ -3,12 +3,11 @@ package com.nyceapps.chorerallye;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_CHORE;
 
@@ -52,8 +50,7 @@ public class ChoresListActivity extends AppCompatActivity {
         choresListAdapter = new ChoresListAdapter(data, this);
         choresListView.setAdapter(choresListAdapter);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+        String householdName = Utils.getHousehouldId(this);
         choresDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,7 +126,7 @@ public class ChoresListActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
             int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
-            if (!Utils.isEmptyString(choreName) && choreValue > 0) {
+            if (!TextUtils.isEmpty(choreName) && choreValue > 0) {
                 ChoreItem chore = new ChoreItem();
                 String uid = null;
                 switch (requestCode) {
@@ -144,7 +141,7 @@ public class ChoresListActivity extends AppCompatActivity {
                 chore.setName(choreName);
                 chore.setValue(choreValue);
                 String choreImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-                if (!Utils.isEmptyString(choreImageString)) {
+                if (!TextUtils.isEmpty(choreImageString)) {
                     chore.setImageString(choreImageString);
                 }
 

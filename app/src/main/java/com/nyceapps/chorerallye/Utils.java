@@ -1,10 +1,13 @@
 package com.nyceapps.chorerallye;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,17 +21,17 @@ import java.util.Date;
 
 import static com.nyceapps.chorerallye.Constants.IMAGE_HEIGHT;
 import static com.nyceapps.chorerallye.Constants.IMAGE_WIDTH;
+import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
+import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 /**
  * Created by bela on 08.02.17.
  */
 
 public class Utils {
-    private Utils() {}
+    private static final String TAG = "Utils";
 
-    public static boolean isEmptyString(String pString) {
-        return !(pString != null && pString.length() > 0);
-    }
+    private Utils() {}
 
     public static int calculatePercentage(int pPart, int pTotal) {
         return Math.round(pTotal > 0 ? (pPart * 100f) / pTotal : 0);
@@ -69,20 +72,20 @@ public class Utils {
                 bytes = outputStream.toByteArray();
                 fileString = Base64.encodeToString(bytes, Base64.DEFAULT);
             } catch (IOException e) {
-                Log.e("FILEREAD", e.getMessage());
+                Log.e(TAG, e.getMessage());
             } finally {
                 if (inputStream != null) {
                     try {
                         inputStream.close();
                     } catch (IOException e) {
-                        Log.e("INSTRMCLS", e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
                 }
                 if (outputStream != null) {
                     try {
                         outputStream.close();
                     } catch (IOException e) {
-                        Log.e("OUTSTRMCLS", e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
                 }
             }
@@ -100,7 +103,7 @@ public class Utils {
         try {
             cameraImage = File.createTempFile(imageFileName, ".jpg",storageDir);
         } catch (IOException e) {
-            Log.e("CAMFILE", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
 
         return cameraImage;
@@ -127,7 +130,7 @@ public class Utils {
     public static Bitmap convertStringToBitmap(String pString) {
         Bitmap stringBitmap = null;
 
-        if (!isEmptyString(pString)) {
+        if (!TextUtils.isEmpty(pString)) {
             byte[] decodedBytes = Base64.decode(pString, Base64.DEFAULT);
             stringBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
         }
@@ -144,5 +147,12 @@ public class Utils {
         }
 
         return stringBitmapDrawable;
+    }
+
+    public static String getHousehouldId(Context pContext) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(pContext);
+        String householdId = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_ID, null);
+        Log.d(TAG, String.format("householdId = [%s]", householdId));
+        return householdId;
     }
 }

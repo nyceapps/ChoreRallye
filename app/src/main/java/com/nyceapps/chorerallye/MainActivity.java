@@ -3,14 +3,14 @@ package com.nyceapps.chorerallye;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,9 +32,10 @@ import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
     private boolean enterInit;
 
     private RallyeData data;
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth rallyeAuth;
     private FirebaseAuth.AuthStateListener rallyeAuthListener;
 
+    private AlertDialog membersDialog;
+    private AlertDialog choresDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                Log.d(TAG, String.format("user = [%s]", user));
                 if (user != null && enterInit) {
                     init();
                     enterInit = false;
@@ -90,59 +95,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+        Log.d(TAG, "Initializing...");
+        String householdName = Utils.getHousehouldId(this);
 
-        if (householdName == null) {
+        if (TextUtils.isEmpty(householdName)) {
             showGotoPreferencesDialog();
         } else {
             initData();
 
-            initPointsView();
             initMembersView();
             initChoresView();
+            initPointsView();
 
-            if (data.getMembers().size() == 0) {
-                showGotoMembersDialog();
-            } else if (data.getChores().size() == 0) {
-                showGotoChoresDialog();
-            } else {
-                showPointsText();
-            }
+            initDatabases();
+
+            showPointsText();
         }
     }
 
     private void showGotoMembersDialog() {
+        if (choresDialog != null && choresDialog.isShowing()) {
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_members)
                 .setPositiveButton(R.string.main_menu_manage_members, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         manageMembers();
                     }
-                })
-                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
                 });
-        builder.create().show();
+        membersDialog = builder.create();
+        membersDialog.show();
 
     }
 
     private void showGotoChoresDialog() {
+        if (membersDialog != null && membersDialog.isShowing()) {
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_chores)
                 .setPositiveButton(R.string.main_menu_manage_chores, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         manageChores();
                     }
-                })
-                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
                 });
-        builder.create().show();
+        choresDialog = builder.create();
+        choresDialog.show();
 
     }
 
@@ -152,11 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.main_menu_manage_preferences, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         managePreferences();
-                    }
-                })
-                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
                     }
                 });
         builder.create().show();
@@ -173,8 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+        String householdName = Utils.getHousehouldId(this);
         switch (item.getItemId()) {
             case R.id.action_manage_members:
                 if (householdName == null) {
@@ -222,11 +217,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        Log.d(TAG, "Initializing data...");
+
         data = new RallyeData();
         ((RallyeApplication) this.getApplication()).setRallyeData(data);
+    }
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+    private void initMembersView() {
+        RecyclerView membersView = (RecyclerView) findViewById(R.id.members_view);
+
+        membersView.setHasFixedSize(true);
+
+        LinearLayoutManager membersLayoutManager = new LinearLayoutManager(this);
+        membersView.setLayoutManager(membersLayoutManager);
+
+        membersAdapter = new MembersAdapter(data, this);
+        membersView.setAdapter(membersAdapter);
+    }
+
+    private void initChoresView() {
+        RecyclerView choresView = (RecyclerView) findViewById(R.id.chores_view);
+
+        choresView.setHasFixedSize(true);
+
+        LinearLayoutManager choresLayoutManager = new GridLayoutManager(this, CHORE_COLUMNS);
+        choresView.setLayoutManager(choresLayoutManager);
+
+        choresAdapter = new ChoresAdapter(data, this);
+        choresView.setAdapter(choresAdapter);
+    }
+
+    private void initPointsView() {
+        pointsTextView = (TextView) findViewById(R.id.points_view);
+    }
+
+    private void initDatabases() {
+        Log.d(TAG, "Initializing databases...");
+
+        String householdName = Utils.getHousehouldId(this);
 
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
@@ -238,6 +266,11 @@ public class MainActivity extends AppCompatActivity {
                     members.add(member);
                 }
                 membersAdapter.updateList(members);
+
+                if (members.size() == 0) {
+                    showGotoMembersDialog();
+                }
+
                 showPointsText();
             }
 
@@ -257,6 +290,11 @@ public class MainActivity extends AppCompatActivity {
                     chores.add(chore);
                 }
                 choresAdapter.updateList(chores);
+
+                if (chores.size() == 0) {
+                    showGotoChoresDialog();
+                }
+
                 showPointsText();
             }
 
@@ -306,33 +344,5 @@ public class MainActivity extends AppCompatActivity {
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
         String toastText = String.format(getString(R.string.toast_text_member_points_for_chore), pMember.getName(), pChore.getValue(), pChore.getName());
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
-    }
-
-    private void initPointsView() {
-        pointsTextView = (TextView) findViewById(R.id.points_view);
-    }
-
-    private void initMembersView() {
-        RecyclerView membersView = (RecyclerView) findViewById(R.id.members_view);
-
-        membersView.setHasFixedSize(true);
-
-        LinearLayoutManager membersLayoutManager = new LinearLayoutManager(this);
-        membersView.setLayoutManager(membersLayoutManager);
-
-        membersAdapter = new MembersAdapter(data, this);
-        membersView.setAdapter(membersAdapter);
-    }
-
-    private void initChoresView() {
-        RecyclerView choresView = (RecyclerView) findViewById(R.id.chores_view);
-
-        choresView.setHasFixedSize(true);
-
-        LinearLayoutManager choresLayoutManager = new GridLayoutManager(this, CHORE_COLUMNS);
-        choresView.setLayoutManager(choresLayoutManager);
-
-        choresAdapter = new ChoresAdapter(data, this);
-        choresView.setAdapter(choresAdapter);
     }
 }

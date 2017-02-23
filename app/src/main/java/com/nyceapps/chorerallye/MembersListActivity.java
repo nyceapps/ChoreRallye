@@ -3,12 +3,11 @@ package com.nyceapps.chorerallye;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,7 +25,6 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_MEMBER;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_MEMBER;
 
@@ -51,8 +49,7 @@ public class MembersListActivity extends AppCompatActivity {
         membersListAdapter = new MembersListAdapter(data, this);
         membersListView.setAdapter(membersListAdapter);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String householdName = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+        String householdName = Utils.getHousehouldId(this);
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -126,7 +123,7 @@ public class MembersListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             String memberName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
-            if (!Utils.isEmptyString(memberName)) {
+            if (!TextUtils.isEmpty(memberName)) {
                 MemberItem member = new MemberItem();
                 String uid = null;
                 switch (requestCode) {
@@ -140,7 +137,7 @@ public class MembersListActivity extends AppCompatActivity {
                 member.setUid(uid);
                 member.setName(memberName);
                 String memberImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-                if (!Utils.isEmptyString(memberImageString)) {
+                if (!TextUtils.isEmpty(memberImageString)) {
                     member.setImageString(memberImageString);
                 }
 

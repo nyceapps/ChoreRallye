@@ -29,6 +29,7 @@
 
     <string name="confirmation_text_remove_member" formatted="false">Do you really want to remove member %s?</string>
     <string name="confirmation_text_remove_chore" formatted="false">Do you really want to remove chore %s?</string>
+    <string name="confirmation_text_change_household_name">Do you really want to change the household name?\nYou cannot use the existing data anymore!</string>
 
     <string name="edittext_hint_name">Name</string>
     <string name="edittext_hint_value">Value</string>

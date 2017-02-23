@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.TextUtils;
 
 /**
  * Created by lugosi on 06.02.17.
@@ -25,7 +26,7 @@ public class ChoreItem extends MemberItem {
     protected void initDrawable(String pImageString, Context pContext) {
         Bitmap placeHolderBitmap = BitmapFactory.decodeResource(pContext.getResources(), R.drawable.chore_placeholder);
         Bitmap choreBitmap;
-        if (!Utils.isEmptyString(pImageString)) {
+        if (!TextUtils.isEmpty(pImageString)) {
             choreBitmap = Utils.convertStringToBitmap(pImageString);
             choreBitmap = Bitmap.createScaledBitmap(choreBitmap, placeHolderBitmap.getWidth(), placeHolderBitmap.getHeight(), true);
         } else {
