@@ -13,9 +13,12 @@
 
     <string name="activity_label_members">Members</string>
     <string name="activity_label_chores">Chores</string>
+    <string name="activity_label_qr_code">CR code</string>
 
     <string name="main_menu_manage_members">Members</string>
     <string name="main_menu_manage_chores">Chores</string>
+    <string name="main_menu_show_household_qr_code">Show QR code</string>
+    <string name="main_menu_scan_household_qr_code">Scan QR code</string>
     <string name="main_menu_manage_preferences">Preferences</string>
 
     <string name="list_menu_action_add">Add</string>
@@ -36,4 +39,6 @@
 
     <string name="pref_title_household_name">Household name</string>
     <string name="pref_summary_household_name">The symbolic name of your household</string>
+
+    <string name="text_scan_qr_code_to_participate">Scan this QR code with another app to participate in the same household.</string>
 </resources>

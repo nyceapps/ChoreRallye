@@ -84,14 +84,8 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     public void setHouseholdId() {
-        String householdId = null;
         String householdName = prefHouseholdName.getText();
-        if (!TextUtils.isEmpty(householdName)) {
-            householdId = householdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
-        }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_HOUSEHOLD_ID, householdId);
-        editor.commit();
+        Utils.setHouseholdId(householdName, this);
     }
 
     private void setHouseholdNameSummary() {

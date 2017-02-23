@@ -18,18 +18,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
-import static com.nyceapps.chorerallye.Constants.IMAGE_HEIGHT;
-import static com.nyceapps.chorerallye.Constants.IMAGE_WIDTH;
+import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 
 /**
  * Created by bela on 08.02.17.
  */
 
 public class Utils {
-    private static final String TAG = "Utils";
+    private static final String TAG = Utils.class.getSimpleName();
 
     private Utils() {}
 
@@ -149,10 +148,21 @@ public class Utils {
         return stringBitmapDrawable;
     }
 
-    public static String getHousehouldId(Context pContext) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String householdId = sharedPrefs.getString(PREF_KEY_HOUSEHOLD_ID, null);
+    public static String getHouseholdId(Context pContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        String householdId = sharedPreferences.getString(PREF_KEY_HOUSEHOLD_ID, null);
         Log.d(TAG, String.format("householdId = [%s]", householdId));
         return householdId;
+    }
+
+    public static void setHouseholdId(String pHouseholdName, Context pContext) {
+        String householdId = null;
+        if (!TextUtils.isEmpty(pHouseholdName)) {
+            householdId = pHouseholdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
+        }
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(PREF_KEY_HOUSEHOLD_ID, householdId);
+        editor.commit();
     }
 }

@@ -32,9 +32,10 @@ import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private boolean enterInit;
 
@@ -96,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         Log.d(TAG, "Initializing...");
-        String householdName = Utils.getHousehouldId(this);
+        String householdId = Utils.getHouseholdId(this);
 
-        if (TextUtils.isEmpty(householdName)) {
+        if (TextUtils.isEmpty(householdId)) {
             showGotoPreferencesDialog();
         } else {
             initData();
@@ -169,20 +170,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String householdName = Utils.getHousehouldId(this);
+        String householdId = Utils.getHouseholdId(this);
         switch (item.getItemId()) {
             case R.id.action_manage_members:
-                if (householdName == null) {
+                if (householdId == null) {
                     showGotoPreferencesDialog();
                 } else {
                     manageMembers();
                 }
                 break;
             case R.id.action_manage_chores:
-                if (householdName == null) {
+                if (householdId == null) {
                     showGotoPreferencesDialog();
                 } else {
                     manageChores();
+                }
+                break;
+            case R.id.action_show_household_qr_code:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    showHouseholdQRCore();
+                }
+                break;
+            case R.id.action_scan_household_qr_code:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    scanHouseholdQRCore();
                 }
                 break;
             case R.id.action_manage_preferences:
@@ -207,6 +222,22 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ChoresListActivity.class);
         startActivity(intent);
+    }
+
+    private void showHouseholdQRCore() {
+        enterInit = true;
+
+        String householdId = Utils.getHouseholdId(this);
+
+        Intent intent = new Intent(this, QRCodeActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_VALUE, householdId);
+        startActivity(intent);
+    }
+
+    private void scanHouseholdQRCore() {
+        enterInit = true;
+
+        // TODO: scan QR code
     }
 
     private void managePreferences() {
@@ -254,9 +285,9 @@ public class MainActivity extends AppCompatActivity {
     private void initDatabases() {
         Log.d(TAG, "Initializing databases...");
 
-        String householdName = Utils.getHousehouldId(this);
+        String householdId = Utils.getHouseholdId(this);
 
-        membersDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_MEMBERS);
+        membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -280,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        choresDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_CHORES);
+        choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -304,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        raceDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_RACE);
+        raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
         raceDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

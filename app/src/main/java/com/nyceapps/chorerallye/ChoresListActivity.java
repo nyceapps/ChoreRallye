@@ -50,8 +50,8 @@ public class ChoresListActivity extends AppCompatActivity {
         choresListAdapter = new ChoresListAdapter(data, this);
         choresListView.setAdapter(choresListAdapter);
 
-        String householdName = Utils.getHousehouldId(this);
-        choresDatabase = FirebaseDatabase.getInstance().getReference(householdName + "/" + DATABASE_SUBPATH_CHORES);
+        String householdId = Utils.getHouseholdId(this);
+        choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

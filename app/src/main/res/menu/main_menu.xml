@@ -7,6 +7,12 @@
         android:id="@+id/action_manage_chores"
         android:title="@string/main_menu_manage_chores"/>
     <item
+        android:id="@+id/action_show_household_qr_code"
+        android:title="@string/main_menu_show_household_qr_code"/>
+    <item
+        android:id="@+id/action_scan_household_qr_code"
+        android:title="@string/main_menu_scan_household_qr_code"/>
+    <item
         android:id="@+id/action_manage_preferences"
         android:title="@string/main_menu_manage_preferences"/>
 </menu>
