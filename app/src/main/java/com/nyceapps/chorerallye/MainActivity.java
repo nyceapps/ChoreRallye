@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_members)
                 .setPositiveButton(R.string.main_menu_manage_members, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
                         manageMembers();
                     }
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_chores)
                 .setPositiveButton(R.string.main_menu_manage_chores, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
                         manageChores();
                     }
@@ -158,7 +160,14 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_text_no_household_name)
+                .setNeutralButton(R.string.main_menu_scan_household_qr_code, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        scanHouseholdQRCode();
+                    }
+                })
                 .setPositiveButton(R.string.main_menu_manage_preferences, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
                         managePreferences();
                     }
@@ -197,11 +206,11 @@ public class MainActivity extends AppCompatActivity {
                 if (householdId == null) {
                     showGotoPreferencesDialog();
                 } else {
-                    showHouseholdQRCore();
+                    showHouseholdQRCode();
                 }
                 break;
             case R.id.action_scan_household_qr_code:
-                scanHouseholdQRCore();
+                scanHouseholdQRCode();
                 break;
             case R.id.action_manage_preferences:
                 managePreferences();
@@ -227,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void showHouseholdQRCore() {
+    private void showHouseholdQRCode() {
         enterInit = true;
 
         String householdId = Utils.getHouseholdId(this);
@@ -237,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void scanHouseholdQRCore() {
+    private void scanHouseholdQRCode() {
         enterInit = true;
 
         Intent intent = new Intent(this, ScanQRCodeActivity.class);

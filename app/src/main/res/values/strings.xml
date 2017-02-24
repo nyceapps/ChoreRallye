@@ -6,14 +6,14 @@
     <string name="dialog_text_choose_gallery_image">Choose image from gallery</string>
     <string name="dialog_text_no_members">You have not added any members yet.\nYou need them to use the app.</string>
     <string name="dialog_text_no_chores">You have not added any chores yet.\nYou need them to use the app.</string>
-    <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings.</string>
+    <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings or scan a QR code.</string>
 
     <string name="dialog_button_text_ok">OK</string>
     <string name="dialog_button_text_cancel">Cancel</string>
 
     <string name="activity_label_members">Members</string>
     <string name="activity_label_chores">Chores</string>
-    <string name="activity_label_qr_code">CR code</string>
+    <string name="activity_label_qr_code">QR code</string>
 
     <string name="main_menu_manage_members">Members</string>
     <string name="main_menu_manage_chores">Chores</string>
