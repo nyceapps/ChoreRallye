@@ -5,15 +5,15 @@
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/chore_image"
+        android:src="@drawable/chore_placeholder"
         android:layout_width="@dimen/rallye_item_width"
         android:layout_height="@dimen/rallye_item_height"
-        android:layout_gravity="center"
-        android:src="@drawable/chore_placeholder"/>
+        android:layout_gravity="center"/>
     <TextView
         android:id="@+id/chore_name"
+        android:text="Chore"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12sp"
-        android:text="Chore"/>
+        android:layout_marginBottom="8dp"/>
 </LinearLayout>

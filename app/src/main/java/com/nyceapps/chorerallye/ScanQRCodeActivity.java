@@ -37,7 +37,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeReade
     }
 
     private void initQRCodeReaderView() {
-        View content = getLayoutInflater().inflate(R.layout.content_scan_qr_code, mainLayout, true);
+        getLayoutInflater().inflate(R.layout.content_scan_qr_code, mainLayout, true);
 
         qrCodeDecoderView = (QRCodeReaderView) findViewById(R.id.qr_code);
         qrCodeDecoderView.setOnQRCodeReadListener(this);
