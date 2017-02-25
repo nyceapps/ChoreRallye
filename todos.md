@@ -1,5 +1,6 @@
 * Hauptmenü
   * Rennen starten beenden
+  * Icons
 * Undo
   * Icon in der unteren Toolbar
   * History bearbeiten
