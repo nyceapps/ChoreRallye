@@ -7,7 +7,6 @@
   * x% bis zum Gewinn
   * Geschenk oder Pott
     * Bei Pott: Höhe des Potts
-* App-Icon
 * Neu-Berechnung des aktuellen Standes bei
   * Bei Entfernen eines Members oder Chores
   * Veränderung des Wertes eines Chores
