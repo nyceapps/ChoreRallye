@@ -35,4 +35,6 @@ public interface Constants {
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
 
     String HOUSEHOLD_ID_INFIX = "___";
+
+    String FILE_NAME_LOCAL_HISTORY = "local_history";
 }

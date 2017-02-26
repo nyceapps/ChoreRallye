@@ -109,24 +109,6 @@ public class Utils {
         return cameraImage;
     }
 
-    /*
-    public static String convertFileToString(File pFile) {
-        String fileString = null;
-
-        if (pFile != null) {
-            String filePath = pFile.getPath();
-            Bitmap fileBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), IMAGE_WIDTH, IMAGE_HEIGHT, false);
-            if (fileBitmap != null) {
-                ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-                fileBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS);
-                return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
-            }
-        }
-
-        return fileString;
-    }
-    */
-
     public static Bitmap convertStringToBitmap(String pString) {
         Bitmap stringBitmap = null;
 

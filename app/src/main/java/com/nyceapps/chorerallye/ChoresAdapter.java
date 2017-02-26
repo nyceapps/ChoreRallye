@@ -23,21 +23,17 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
     private RallyeData data;
     private MainActivity callingActivity;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public ChoresAdapter(RallyeData pData, MainActivity pCallingActivity) {
         data = pData;
         callingActivity = pCallingActivity;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chore_item_layout, parent, false);
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ChoreItem chore = data.getChores().get(position);
@@ -72,11 +68,7 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
         }
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView nameTextView;
         public ImageView imageImageView;
 
@@ -88,7 +80,6 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return data.getChores().size();

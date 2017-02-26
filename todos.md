@@ -1,11 +1,7 @@
 * Hauptmenü
   * Rallye starten beenden
   * Icons
-* Undo
-  * Letzte Aktion in der eigenen App zurücknehmen
-    * https://developer.android.com/guide/topics/data/data-storage.html#filesInternal
-  * Icon in der unteren / oberen Toolbar
-  * History bearbeiten
+* History bearbeiten
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn

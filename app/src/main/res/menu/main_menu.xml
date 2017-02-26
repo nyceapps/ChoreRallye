@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_undo"
+        android:title="@string/main_menu_undo"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_manage_members"
         android:title="@string/main_menu_manage_members"/>

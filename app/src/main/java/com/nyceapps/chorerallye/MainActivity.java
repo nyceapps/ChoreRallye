@@ -42,17 +42,18 @@ public class MainActivity extends AppCompatActivity {
     private boolean enterInit;
 
     private RallyeData data;
+    private LocalHistory localHistory;
 
     private TextView pointsTextView;
     private MembersAdapter membersAdapter;
     private ChoresAdapter choresAdapter;
     private DatabaseReference membersDatabase;
     private DatabaseReference choresDatabase;
+
     private DatabaseReference raceDatabase;
-
     private FirebaseAuth rallyeAuth;
-    private FirebaseAuth.AuthStateListener rallyeAuthListener;
 
+    private FirebaseAuth.AuthStateListener rallyeAuthListener;
     private AlertDialog membersDialog;
     private AlertDialog choresDialog;
     private AlertDialog participateHouseholdDialog;
@@ -83,15 +84,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         rallyeAuth.addAuthStateListener(rallyeAuthListener);
+
+        localHistory = new LocalHistory(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
         if (rallyeAuthListener != null) {
             rallyeAuth.removeAuthStateListener(rallyeAuthListener);
         }
+
+        localHistory.save();
     }
 
     private void signIn() {
@@ -188,6 +195,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         String householdId = Utils.getHouseholdId(this);
         switch (item.getItemId()) {
+            case R.id.action_undo:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    undoPoints();
+                }
+                break;
             case R.id.action_manage_members:
                 if (householdId == null) {
                     showGotoPreferencesDialog();
@@ -414,7 +428,16 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreValue(pChore.getValue());
         raceDatabase.child(uid).setValue(raceItem);
 
+        localHistory.add(uid);
+
         showPointsToast(pMember, pChore);
+    }
+
+    private void undoPoints() {
+        String lastLocalHistoryId = localHistory.undo();
+        if (lastLocalHistoryId != null) {
+            raceDatabase.child(lastLocalHistoryId).removeValue();
+        }
     }
 
     private void showPointsText() {
