@@ -1,10 +1,12 @@
 * Hauptmenü
-  * Rennen starten beenden
+  * Rallye starten beenden
   * Icons
 * Undo
-  * Icon in der unteren Toolbar
+  * Letzte Aktion in der eigenen App zurücknehmen
+    * https://developer.android.com/guide/topics/data/data-storage.html#filesInternal
+  * Icon in der unteren / oberen Toolbar
   * History bearbeiten
-* Preferences
+* Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn
   * Geschenk oder Pott
@@ -21,3 +23,13 @@
 * Freie Chores
   * Bewertung durch Abstimmung
 * Komplette Anzeige von Titel und Wert im Chores-Grid
+* Übersetzungen
+  * https://developer.android.com/studio/write/translations-editor.html
+  * https://developer.android.com/distribute/tools/localization-checklist.html
+  * https://developer.android.com/guide/topics/resources/localization.html
+* Photo für Members / Chores auf Shift5 (Android 4.4.2) nicht möglich
+  * https://www.google.de/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=android+4.4.2+MediaStore.ACTION_IMAGE_CAPTURE+gallery+crashes
+  * http://stackoverflow.com/questions/12952859/capturing-images-with-mediastore-action-image-capture-intent-in-android
+* Icons
+  * https://developer.android.com/guide/practices/ui_guidelines/icon_design_menu.html
+  * https://developer.android.com/guide/practices/ui_guidelines/icon_design_launcher.html
