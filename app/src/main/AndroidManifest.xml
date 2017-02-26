@@ -19,7 +19,7 @@
         </activity>
         <activity
             android:name=".MembersListActivity"
-            android:label="@string/activity_label_members" />
+            android:label="@string/activity_label_members"/>
         <activity
             android:name=".ChoresListActivity"
             android:label="@string/activity_label_chores" />
