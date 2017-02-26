@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HaushaltsRallye</string>
+
+    <string name="layout_item_text_chore">Aufgabe</string>
+    <string name="layout_item_text_member">Person</string>
+
+    <string name="dialog_text_choose_image">Bild auswählen</string>
+    <string name="dialog_text_capture_camera_image">Bild mir der Kamera aufnehmen</string>
+    <string name="dialog_text_choose_gallery_image">Bild aus der Galerie auswählen</string>
+    <string name="dialog_text_no_members">Sie haben bisher keinen Personen hinzugefügt.\nSie benötigen Sie, um die App zu verwenden.</string>
+    <string name="dialog_text_no_chores">Sie haben bisher keinen Aufgaben hinzugefügt.\nSie benötigen Sie, um die App zu verwenden.</string>
+    <string name="dialog_text_no_household_name">Sie haben noch keinen Haushaltsnamen angegeben.\nBitte setzen Sie ihn in den Einstellungen oder scannen Sie einen QR-Code ein.</string>
+
+    <string name="dialog_button_text_cancel">Abbruch</string>
+    <string name="dialog_button_text_ok">OK</string>
+
+    <string name="activity_label_members">Personen</string>
+    <string name="activity_label_chores">Aufgaben</string>
+    <string name="activity_label_qr_code">QR-Code</string>
+
+    <string name="main_menu_undo">Rückgängig</string>
+    <string name="main_menu_manage_members">Personen</string>
+    <string name="main_menu_manage_chores">Aufgaben</string>
+    <string name="main_menu_show_household_qr_code">QR-Code anzeigen</string>
+    <string name="main_menu_scan_household_qr_code">QR-Code einscannen</string>
+    <string name="main_menu_manage_preferences">Einstellungen</string>
+
+    <string name="list_menu_action_add">Hinzufügen</string>
+
+    <string name="detail_menu_action_save">Speichern</string>
+
+    <string name="toast_text_member_points_for_chore" formatted="false">%s bekommt %d Punkte für %s</string>
+
+    <string name="list_context_menu_edit">Ändern</string>
+    <string name="list_context_menu_remove">Entfernen</string>
+
+    <string name="confirmation_text_remove_member" formatted="false">Wollen Sie wirklich die Person \"%s\" entfernen?</string>
+    <string name="confirmation_text_remove_chore" formatted="false">Wollen Sie wirklich die Aufgabe \"%s\" entfernen?</string>
+    <string name="confirmation_text_change_household_name">Wollen Sie wirklich den Haushaltsnamen ändern?\nSie können die existierenden Daten nicht mehr verwenden!</string>
+    <string name="confirmation_text_participate_in_household" formatted="false">Wollen Sie wirklich am Haushalt \"%s\" teilnehmen?\nBisher existierende Daten können nicht mehr verwendet werden!</string>
+
+    <string name="edittext_hint_name">Name</string>
+    <string name="edittext_hint_value">Wert</string>
+
+    <string name="pref_title_household_name">Haushaltsname</string>
+    <string name="pref_summary_household_name">Der symbolische Name des Haushalts</string>
+
+    <string name="text_scan_qr_code_to_participate">Scannen Sie diesen Qr-Code mit einer anderen App ein, um in diesem Haushalt teilzunehmen.</string>
+</resources>
