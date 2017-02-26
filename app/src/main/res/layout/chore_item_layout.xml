@@ -11,7 +11,7 @@
         android:layout_gravity="center"/>
     <TextView
         android:id="@+id/chore_name"
-        android:text="Chore"
+        android:text="@string/layout_item_text_chore"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

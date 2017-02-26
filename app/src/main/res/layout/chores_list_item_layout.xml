@@ -12,7 +12,7 @@
         android:layout_marginBottom="16dp"/>
     <TextView
         android:id="@+id/chore_list_name"
-        android:text="Chore"
+        android:text="@string/layout_item_text_chore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

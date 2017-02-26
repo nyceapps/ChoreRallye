@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ChoreRallye</string>
 
+    <string name="layout_item_text_member">Person</string>
+    <string name="layout_item_text_chore">Chore</string>
+
     <string name="dialog_text_choose_image">Choose image</string>
     <string name="dialog_text_capture_camera_image">Capture camera image</string>
     <string name="dialog_text_choose_gallery_image">Choose image from gallery</string>
