@@ -26,6 +26,7 @@ public class LocalHistory {
     private final static String TAG = LocalHistory.class.getSimpleName();
 
     private final Context context;
+
     List<String> entries;
 
     public LocalHistory(Context pContext) {
@@ -43,6 +44,10 @@ public class LocalHistory {
         }
 
         return null;
+    }
+
+    public List<String> getEntries() {
+        return entries;
     }
 
     public void load() {

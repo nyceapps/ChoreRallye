@@ -14,6 +14,20 @@ public class Race {
         raceItems = new ArrayList<>();
     }
 
+    /*
+    public RaceItem getRaceItem(String pUid) {
+        if (raceItems != null) {
+            for (RaceItem raceItem : raceItems) {
+                if (raceItem.getUid().equals(pUid)) {
+                    return raceItem;
+                }
+            }
+        }
+
+        return null;
+    }
+    */
+
     public void setRaceItem(List<RaceItem> pRaceItems) {
         raceItems = pRaceItems;
     }

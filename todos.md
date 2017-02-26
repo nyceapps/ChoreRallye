@@ -29,3 +29,5 @@
 * Icons
   * https://developer.android.com/guide/practices/ui_guidelines/icon_design_menu.html
   * https://developer.android.com/guide/practices/ui_guidelines/icon_design_launcher.html
+* App-Store-Beta
+  * https://support.google.com/googleplay/android-developer/answer/3131213?hl=de

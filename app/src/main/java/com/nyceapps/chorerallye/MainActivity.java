@@ -417,6 +417,64 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        /*
+        Funktioniert so nicht, da das neue Item nicht in Race enthalten ist,
+        weil der addValueEventListener eventuell noch nicht getriggert wurde!!!
+        raceDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                RaceItem addedRaceItem = dataSnapshot.getValue(RaceItem.class);
+                String addedUid = addedRaceItem.getUid();
+                if (!localHistory.getEntries().contains(addedUid)) {
+                    RaceItem raceItem = data.getRace().getRaceItem(addedUid);
+                    if (raceItem != null) {
+                        String memberUid = raceItem.getMemberUid();
+                        String choreUid = raceItem.getChoreUid();
+
+                        if (!TextUtils.isEmpty(memberUid) && !TextUtils.isEmpty(choreUid)) {
+                            MemberItem member = null;
+                            ChoreItem chore = null;
+                            for (MemberItem mi : data.getMembers()) {
+                                if (memberUid.equals(mi.getUid())) {
+                                    member = mi;
+                                    break;
+                                }
+                            }
+                            for (ChoreItem ci : data.getChores()) {
+                                if (choreUid.equals(ci.getUid())) {
+                                    chore = ci;
+                                    break;
+                                }
+                            }
+                            if (member != null && chore != null) {
+                                showPointsToast(member, chore);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        */
     }
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {
