@@ -34,3 +34,4 @@
 * RaceItem um Infos ergänzen: Datum, Member- & Chore-Name
 * LocalHistory speichert nicht
 * Effekt für die Bilder?
+* Icon-Rechte klären
