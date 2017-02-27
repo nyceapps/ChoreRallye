@@ -32,6 +32,5 @@
   * https://support.google.com/googleplay/android-developer/answer/3131213?hl=de
 * Backup per JSON-Datei
 * RaceItem um Infos ergänzen: Datum, Member- & Chore-Name
-* LocalHistory speichert nicht
 * Effekt für die Bilder?
 * Icon-Rechte klären
