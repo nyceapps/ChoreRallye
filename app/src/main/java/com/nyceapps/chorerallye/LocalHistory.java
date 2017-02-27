@@ -65,7 +65,7 @@ public class LocalHistory {
                 sb.append(line);
             }
             String json = sb.toString();
-            if (TextUtils.isEmpty(json)) {
+            if (!TextUtils.isEmpty(json)) {
                 entries = new Gson().fromJson(json, new TypeToken<List<String>>(){}.getType());
             }
         } catch (FileNotFoundException e) {
