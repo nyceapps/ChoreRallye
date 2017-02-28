@@ -37,6 +37,14 @@ public class Utils {
         return Math.round(pTotal > 0 ? (pPart * 100f) / pTotal : 0);
     }
 
+    public static String makeRaceItemText(MemberItem pMember, ChoreItem pChore, Context pContext) {
+        return makeRaceItemText(pMember.getName(), pChore.getName(), pChore.getValue(), pContext);
+    }
+
+    public static String makeRaceItemText(String pMemberName, String pChoreName, int pChoreValue, Context pContext) {
+        return String.format(pContext.getString(R.string.toast_text_member_points_for_chore), pMemberName, pChoreValue, pChoreName);
+    }
+
     public static String makeRacePointsText(RallyeData pData) {
         String pointsText = "";
 

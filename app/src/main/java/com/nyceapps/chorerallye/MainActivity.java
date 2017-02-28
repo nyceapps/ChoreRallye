@@ -227,6 +227,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_scan_household_qr_code:
                 scanHouseholdQRCode();
                 break;
+            case R.id.action_manage_history:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    manageHistory();
+                }
+                break;
             case R.id.action_manage_preferences:
                 managePreferences();
                 break;
@@ -303,6 +310,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void manageHistory() {
+        enterInit = true;
+
+        Intent intent = new Intent(this, RaceHistoryActivity.class);
+        startActivity(intent);
     }
 
     private void managePreferences() {
@@ -508,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
-        String toastText = String.format(getString(R.string.toast_text_member_points_for_chore), pMember.getName(), pChore.getValue(), pChore.getName());
+        String toastText = Utils.makeRaceItemText(pMember, pChore, this);
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
     }
 }

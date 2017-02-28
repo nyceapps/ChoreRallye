@@ -18,12 +18,14 @@
     <string name="activity_label_members">Personen</string>
     <string name="activity_label_chores">Aufgaben</string>
     <string name="activity_label_qr_code">QR-Code</string>
+    <string name="activity_label_history">Verlauf</string>
 
     <string name="main_menu_undo">Rückgängig</string>
     <string name="main_menu_manage_members">Personen</string>
     <string name="main_menu_manage_chores">Aufgaben</string>
     <string name="main_menu_show_household_qr_code">QR-Code anzeigen</string>
     <string name="main_menu_scan_household_qr_code">QR-Code einscannen</string>
+    <string name="main_menu_manage_history">Verlauf</string>
     <string name="main_menu_manage_preferences">Einstellungen</string>
 
     <string name="list_menu_action_add">Hinzufügen</string>

@@ -3,6 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nyceapps.chorerallye">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:name=".RallyeApplication"
         android:allowBackup="true"
@@ -19,22 +28,24 @@
         </activity>
         <activity
             android:name=".MembersListActivity"
-            android:label="@string/activity_label_members"/>
+            android:label="@string/activity_label_members" />
         <activity
             android:name=".ChoresListActivity"
             android:label="@string/activity_label_chores" />
-        <activity
-            android:name=".MemberDetailActivity" />
-        <activity
-            android:name=".ChoreDetailActivity" />
-        <activity
-            android:name=".SettingsActivity"/>
+        <activity android:name=".MemberDetailActivity" />
+        <activity android:name=".ChoreDetailActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity
             android:name=".ShowQRCodeActivity"
-            android:label="@string/activity_label_qr_code"/>
+            android:label="@string/activity_label_qr_code" />
         <activity
             android:name=".ScanQRCodeActivity"
-            android:label="@string/activity_label_qr_code"/>
+            android:label="@string/activity_label_qr_code" />
+
+        <activity
+            android:name=".RaceHistoryActivity"
+            android:label="@string/activity_label_history" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -44,14 +55,8 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
     </application>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
 </manifest>

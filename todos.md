@@ -2,6 +2,7 @@
   * Rallye starten beenden
   * Icons
 * History bearbeiten
+  * http://www.vogella.com/tutorials/AndroidListView/article.html#arrayAdapter
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn

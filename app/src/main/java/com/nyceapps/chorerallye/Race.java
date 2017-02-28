@@ -32,6 +32,10 @@ public class Race {
         raceItems = pRaceItems;
     }
 
+    public List<RaceItem> getRaceItems() {
+        return raceItems;
+    }
+
     public int getPoints(MemberItem pMember) {
         int memberPoints = 0;
         String uid = pMember.getUid();
