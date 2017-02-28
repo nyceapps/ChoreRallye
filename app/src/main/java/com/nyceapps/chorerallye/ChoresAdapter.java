@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.readystatesoftware.viewbadger.BadgeView;
+
 import java.util.List;
 
 /**
@@ -59,6 +61,7 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
                 return true;
             }
         });
+        holder.valueBadgeView.setText(String.valueOf(chore.getValue()));
     }
 
     public void updateList(List<ChoreItem> pChores) {
@@ -71,11 +74,16 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public ImageView imageImageView;
+        public BadgeView valueBadgeView;
 
         public ViewHolder(View v) {
             super(v);
             nameTextView = (TextView) v.findViewById(R.id.chore_name);
             imageImageView = (ImageView) v.findViewById(R.id.chore_image);
+            valueBadgeView = new BadgeView(callingActivity, imageImageView);
+            valueBadgeView.setBadgePosition(BadgeView.POSITION_BOTTOM_RIGHT);
+            valueBadgeView.setText("0");
+            valueBadgeView.show();
         }
 
     }

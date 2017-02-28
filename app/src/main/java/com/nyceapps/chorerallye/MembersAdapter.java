@@ -12,14 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.readystatesoftware.viewbadger.BadgeView;
+
 import java.util.List;
 
 /**
  * Created by lugosi on 06.02.17.
  */
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> {
-    private static final float CORNER_RADIUS_FOR_MEMBER_IMAGE = 45;
-
     private RallyeData data;
     private MainActivity callingActivity;
 
@@ -35,7 +35,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         MemberItem member = data.getMembers().get(position);
 
         holder.nameTextView.setText(member.getName());
@@ -49,24 +49,20 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                 switch (action) {
                     case DragEvent.ACTION_DRAG_STARTED:
                         break;
-
                     case DragEvent.ACTION_DRAG_ENTERED:
                         break;
-
                     case DragEvent.ACTION_DRAG_EXITED:
                         break;
-
                     case DragEvent.ACTION_DROP:
                         MemberItem member = (MemberItem) v.getTag();
                         ChoreItem chore = (ChoreItem) event.getLocalState();
 
                         callingActivity.updatePoints(member, chore);
 
+                        holder.valueBadgeView.increment(chore.getValue());
                         break;
-
                     case DragEvent.ACTION_DRAG_ENDED:
                         break;
-
                     default:
                         break;
                 }
@@ -74,6 +70,8 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                 return true;
             }
         });
+        int memberPoints = data.getRace().getPoints(member);
+        holder.valueBadgeView.setText(String.valueOf(memberPoints));
     }
 
     public void updateList(List<MemberItem> pMembers) {
@@ -86,11 +84,16 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public ImageView imageImageView;
+        public BadgeView valueBadgeView;
 
         public ViewHolder(View v) {
             super(v);
             nameTextView = (TextView) v.findViewById(R.id.member_name);
             imageImageView = (ImageView) v.findViewById(R.id.member_image);
+            valueBadgeView = new BadgeView(callingActivity, imageImageView);
+            valueBadgeView.setBadgePosition(BadgeView.POSITION_BOTTOM_RIGHT);
+            valueBadgeView.setText("0");
+            valueBadgeView.show();
         }
     }
 

@@ -424,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
                     raceItems.add(raceItem);
                 }
                 data.getRace().setRaceItem(raceItems);
+                membersAdapter.notifyDataSetChanged();
                 showPointsText();
             }
 
