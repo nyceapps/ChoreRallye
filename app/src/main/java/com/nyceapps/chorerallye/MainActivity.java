@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
@@ -481,20 +482,23 @@ public class MainActivity extends AppCompatActivity {
         RaceItem raceItem = new RaceItem();
         String uid = raceDatabase.push().getKey();
         raceItem.setUid(uid);
+        raceItem.setDate(new Date());
         raceItem.setMemberUid(pMember.getUid());
+        raceItem.setMemberName(pMember.getName());
         raceItem.setChoreUid(pChore.getUid());
+        raceItem.setChoreName(pChore.getName());
         raceItem.setChoreValue(pChore.getValue());
         raceDatabase.child(uid).setValue(raceItem);
 
-        localHistory.add(uid);
+        localHistory.add(raceItem);
 
         showPointsToast(pMember, pChore);
     }
 
     private void undoPoints() {
-        String lastLocalHistoryId = localHistory.undo();
-        if (lastLocalHistoryId != null) {
-            raceDatabase.child(lastLocalHistoryId).removeValue();
+        RaceItem raceItem = localHistory.undo();
+        if (raceItem != null) {
+            raceDatabase.child(raceItem.getUid()).removeValue();
         }
     }
 
