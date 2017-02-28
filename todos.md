@@ -34,3 +34,5 @@
 * RaceItem um Infos ergänzen: Datum, Member- & Chore-Name
 * Effekt für die Bilder?
 * Icon-Rechte klären
+* Fortschritt: Rennen der Männchen
+* "Bitte warten"-Dialog bis die DB-Listener fertig sind
