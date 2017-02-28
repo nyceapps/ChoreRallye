@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="rallye_item_height">64dp</dimen>
     <dimen name="rallye_item_width">64dp</dimen>
+    <dimen name="race_runner_height">24dp</dimen>
+    <dimen name="race_runner_width">24dp</dimen>
 </resources>

@@ -48,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView pointsTextView;
     private MembersAdapter membersAdapter;
     private ChoresAdapter choresAdapter;
+    private RaceAdapter raceAdapter;
+
     private DatabaseReference membersDatabase;
     private DatabaseReference choresDatabase;
-
     private DatabaseReference raceDatabase;
-    private FirebaseAuth rallyeAuth;
 
+    private FirebaseAuth rallyeAuth;
     private FirebaseAuth.AuthStateListener rallyeAuthListener;
     private AlertDialog membersDialog;
     private AlertDialog choresDialog;
@@ -117,11 +118,9 @@ public class MainActivity extends AppCompatActivity {
 
             initMembersView();
             initChoresView();
-            initPointsView();
+            initRaceView();
 
             initDatabases();
-
-            showPointsText();
         }
     }
 
@@ -357,8 +356,16 @@ public class MainActivity extends AppCompatActivity {
         choresView.setAdapter(choresAdapter);
     }
 
-    private void initPointsView() {
-        pointsTextView = (TextView) findViewById(R.id.points_view);
+    private void initRaceView() {
+        RecyclerView raceView = (RecyclerView) findViewById(R.id.race_view);
+
+        raceView.setHasFixedSize(true);
+
+        LinearLayoutManager raceLayoutManager = new LinearLayoutManager(this);
+        raceView.setLayoutManager(raceLayoutManager);
+
+        raceAdapter = new RaceAdapter(data, this);
+        raceView.setAdapter(raceAdapter);
     }
 
     private void initDatabases() {
@@ -380,8 +387,6 @@ public class MainActivity extends AppCompatActivity {
                 if (members.size() == 0) {
                     showGotoMembersDialog();
                 }
-
-                showPointsText();
             }
 
             @Override
@@ -404,8 +409,6 @@ public class MainActivity extends AppCompatActivity {
                 if (chores.size() == 0) {
                     showGotoChoresDialog();
                 }
-
-                showPointsText();
             }
 
             @Override
@@ -424,8 +427,9 @@ public class MainActivity extends AppCompatActivity {
                     raceItems.add(raceItem);
                 }
                 data.getRace().setRaceItem(raceItems);
+
                 membersAdapter.notifyDataSetChanged();
-                showPointsText();
+                raceAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -515,11 +519,6 @@ public class MainActivity extends AppCompatActivity {
         if (raceItem != null) {
             raceDatabase.child(raceItem.getUid()).removeValue();
         }
-    }
-
-    private void showPointsText() {
-        String pointsText = Utils.makeRacePointsText(data);
-        pointsTextView.setText(pointsText);
     }
 
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {

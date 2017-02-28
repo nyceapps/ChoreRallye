@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/race_member_image"
+        android:src="@drawable/member_runner"
+        android:layout_width="@dimen/race_runner_width"
+        android:layout_height="@dimen/race_runner_height"
+        android:layout_marginLeft="0dp"/>
+    <TextView
+        android:id="@+id/race_member_name"
+        android:text="@string/layout_item_text_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"/>
+</LinearLayout>
