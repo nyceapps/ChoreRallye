@@ -49,6 +49,7 @@ dependencies {
     // QRCodeReaderView
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.1'
     // Android ViewBadger
+    // https://github.com/jgilfelt/android-viewbadger
     //compile files('libs/android-viewbadger.jar')
     testCompile 'junit:junit:4.12'
 }
