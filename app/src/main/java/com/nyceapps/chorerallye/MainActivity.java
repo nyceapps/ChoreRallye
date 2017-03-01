@@ -380,7 +380,11 @@ public class MainActivity extends AppCompatActivity {
                     MemberItem member = memberDataSnapshot.getValue(MemberItem.class);
                     members.add(member);
                 }
-                membersAdapter.updateList(members);
+                if (membersAdapter.updateList(members)) {
+                    if (raceAdapter != null) {
+                        raceAdapter.setMaxMemberTextWidth(Utils.calculateMaxMemberTextWidth(members, MainActivity.this));
+                    }
+                }
 
                 if (members.size() == 0) {
                     showGotoMembersDialog();
@@ -427,7 +431,6 @@ public class MainActivity extends AppCompatActivity {
                 data.getRace().setRaceItem(raceItems);
 
                 membersAdapter.notifyDataSetChanged();
-                raceAdapter.setMaxMemberTextWidth(Utils.calculateMaxMemberTextWidth(raceItems, MainActivity.this));
                 raceAdapter.notifyDataSetChanged();
             }
 

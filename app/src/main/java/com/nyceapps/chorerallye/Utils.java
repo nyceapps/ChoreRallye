@@ -155,13 +155,12 @@ public class Utils {
         editor.commit();
     }
 
-    public static int calculateMaxMemberTextWidth(List<RaceItem> pRaceItems, Context pContext) {
+    public static int calculateMaxMemberTextWidth(List<MemberItem> pMembers, Context pContext) {
         int maxMemberTextWidth = 0;
 
         TextView textView = new TextView(pContext);
-        for (RaceItem raceItem : pRaceItems) {
-            String memberText = raceItem.getMemberName() + " (100%)";
-            //textView.setText(memberText);
+        for (MemberItem memberItem : pMembers) {
+            String memberText = memberItem.getName() + " (100%)";
             Rect bounds = new Rect();
             Paint textPaint = textView.getPaint();
             textPaint.getTextBounds(memberText, 0, memberText.length(), bounds);
@@ -170,4 +169,21 @@ public class Utils {
 
         return maxMemberTextWidth;
     }
+
+    /*
+    public static int calculateMaxMemberTextWidth(List<RaceItem> pRaceItems, Context pContext) {
+        int maxMemberTextWidth = 0;
+
+        TextView textView = new TextView(pContext);
+        for (RaceItem raceItem : pRaceItems) {
+            String memberText = raceItem.getMemberName() + " (100%)";
+            Rect bounds = new Rect();
+            Paint textPaint = textView.getPaint();
+            textPaint.getTextBounds(memberText, 0, memberText.length(), bounds);
+            maxMemberTextWidth = Math.max(bounds.width(), maxMemberTextWidth);
+        }
+
+        return maxMemberTextWidth;
+    }
+    */
 }

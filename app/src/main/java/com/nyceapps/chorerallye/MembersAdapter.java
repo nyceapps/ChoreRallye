@@ -73,11 +73,14 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         holder.valueBadgeView.setText(String.valueOf(memberPoints));
     }
 
-    public void updateList(List<MemberItem> pMembers) {
+    public boolean updateList(List<MemberItem> pMembers) {
         if (pMembers.size() != data.getMembers().size() || !data.getMembers().containsAll(pMembers)) {
             data.setMembers(pMembers);
             notifyDataSetChanged();
+            return true;
         }
+
+        return false;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

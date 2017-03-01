@@ -37,3 +37,4 @@
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
+* Update des maxMemberTextWidth nur, wenn es neue Members gibt
