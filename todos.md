@@ -9,6 +9,7 @@
   * Geschenk oder Pott
     * Bei Pott: Höhe des Potts
 * Neu-Berechnung des aktuellen Standes bei
+  * Erstmal verhindern, wenn schon im Gebrauch
   * Bei Entfernen eines Members oder Chores
   * Veränderung des Wertes eines Chores
 * Notifications
@@ -18,7 +19,7 @@
   * Druck
 * Freie Chores
   * Bewertung durch Abstimmung
-* Komplette Anzeige von Titel und Wert im Chores-Grid
+* Komplette Anzeige von Titel im Chores-Grid
 * Übersetzungen
   * https://developer.android.com/studio/write/translations-editor.html
   * https://developer.android.com/distribute/tools/localization-checklist.html
@@ -36,5 +37,5 @@
 * Effekt für die Bilder?
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
+  * Hintergrund, graue Linie?
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
-* Update des maxMemberTextWidth nur, wenn es neue Members gibt
