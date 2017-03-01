@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
@@ -43,23 +47,6 @@ public class Utils {
 
     public static String makeRaceItemText(String pMemberName, String pChoreName, int pChoreValue, Context pContext) {
         return String.format(pContext.getString(R.string.toast_text_member_points_for_chore), pMemberName, pChoreValue, pChoreName);
-    }
-
-    public static String makeRacePointsText(RallyeData pData) {
-        String pointsText = "";
-
-        int totalPoints = pData.getRace().getTotalPoints();
-        for (int i = 0; i < pData.getMembers().size(); i++) {
-            MemberItem member = pData.getMembers().get(i);
-            int memberPoints = pData.getRace().getPoints(member);
-            int memberPercentage = Utils.calculatePercentage(memberPoints, totalPoints);
-            pointsText += member.getName() + " - " + memberPoints + " (" + memberPercentage + "%)";
-            if (i < pData.getMembers().size() - 1) {
-                pointsText += "\n";
-            }
-        }
-
-        return pointsText;
     }
 
     public static String convertFileToString(File pFile) {
@@ -166,5 +153,21 @@ public class Utils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
         editor.commit();
+    }
+
+    public static int calculateMaxMemberTextWidth(List<RaceItem> pRaceItems, Context pContext) {
+        int maxMemberTextWidth = 0;
+
+        TextView textView = new TextView(pContext);
+        for (RaceItem raceItem : pRaceItems) {
+            String memberText = raceItem.getMemberName() + " (100%)";
+            //textView.setText(memberText);
+            Rect bounds = new Rect();
+            Paint textPaint = textView.getPaint();
+            textPaint.getTextBounds(memberText, 0, memberText.length(), bounds);
+            maxMemberTextWidth = Math.max(bounds.width(), maxMemberTextWidth);
+        }
+
+        return maxMemberTextWidth;
     }
 }

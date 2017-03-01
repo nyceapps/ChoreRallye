@@ -1,35 +1,43 @@
 package com.nyceapps.chorerallye;
 
-import android.content.ClipData;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.readystatesoftware.viewbadger.BadgeView;
-
-import java.util.List;
-
 /**
  * Created by lugosi on 06.02.17.
  */
 public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> implements Constants {
-    private RallyeData data;
+    //private static final String TAG = RaceAdapter.class.getSimpleName();
+
     private MainActivity callingActivity;
+
+    private RallyeData data;
+
+    private int raceViewWidth;
+
+    private int maxMemberTextWidth;
 
     public RaceAdapter(RallyeData pData, MainActivity pCallingActivity) {
         data = pData;
         callingActivity = pCallingActivity;
+
+        maxMemberTextWidth = 0;
+    }
+
+    public void setMaxMemberTextWidth(int pMaxMemberTextWidth) {
+        maxMemberTextWidth = pMaxMemberTextWidth;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.race_item_layout, parent, false);
+        raceViewWidth = parent.getWidth();
         return new ViewHolder(v);
     }
 
@@ -44,8 +52,12 @@ public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> im
 
         holder.raceNameTextView.setText(memberText);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(memberPercentage, 0, 0, 0);
+        int onePercent = (raceViewWidth - maxMemberTextWidth) / 100;
+        int leftMargin = onePercent * memberPercentage;
+
+        //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(R.dimen.race_runner_width, R.dimen.race_runner_height);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(leftMargin, 0, 0, 0);
         holder.raceImageImageView.setLayoutParams(lp);
     }
 
