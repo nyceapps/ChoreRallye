@@ -35,7 +35,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         MemberItem member = data.getMembers().get(position);
 
         holder.nameTextView.setText(member.getName());
@@ -59,7 +59,6 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
                         callingActivity.updatePoints(member, chore);
 
-                        holder.valueBadgeView.increment(chore.getValue());
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
                         break;
