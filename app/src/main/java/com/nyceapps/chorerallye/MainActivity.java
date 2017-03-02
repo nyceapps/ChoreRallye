@@ -1,6 +1,7 @@
 package com.nyceapps.chorerallye;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog membersDialog;
     private AlertDialog choresDialog;
     private AlertDialog participateHouseholdDialog;
+    private ProgressDialog loadingDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(householdId)) {
             showGotoPreferencesDialog();
         } else {
+            showLoadingDataDialog();
+
             initData();
 
             initMembersView();
@@ -389,11 +393,13 @@ public class MainActivity extends AppCompatActivity {
                 if (members.size() == 0) {
                     showGotoMembersDialog();
                 }
+
+                hideLoadingDataDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                hideLoadingDataDialog();
             }
         });
 
@@ -411,11 +417,13 @@ public class MainActivity extends AppCompatActivity {
                 if (chores.size() == 0) {
                     showGotoChoresDialog();
                 }
+
+                hideLoadingDataDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                hideLoadingDataDialog();
             }
         });
 
@@ -432,71 +440,15 @@ public class MainActivity extends AppCompatActivity {
 
                 membersAdapter.notifyDataSetChanged();
                 raceAdapter.notifyDataSetChanged();
+
+                hideLoadingDataDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                hideLoadingDataDialog();
             }
         });
-        /*
-        Funktioniert so nicht, da das neue Item nicht in Race enthalten ist,
-        weil der addValueEventListener eventuell noch nicht getriggert wurde!!!
-        raceDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                RaceItem addedRaceItem = dataSnapshot.getValue(RaceItem.class);
-                String addedUid = addedRaceItem.getUid();
-                if (!localHistory.getEntries().contains(addedUid)) {
-                    RaceItem raceItem = data.getRace().getRaceItem(addedUid);
-                    if (raceItem != null) {
-                        String memberUid = raceItem.getMemberUid();
-                        String choreUid = raceItem.getChoreUid();
-
-                        if (!TextUtils.isEmpty(memberUid) && !TextUtils.isEmpty(choreUid)) {
-                            MemberItem member = null;
-                            ChoreItem chore = null;
-                            for (MemberItem mi : data.getMembers()) {
-                                if (memberUid.equals(mi.getUid())) {
-                                    member = mi;
-                                    break;
-                                }
-                            }
-                            for (ChoreItem ci : data.getChores()) {
-                                if (choreUid.equals(ci.getUid())) {
-                                    chore = ci;
-                                    break;
-                                }
-                            }
-                            if (member != null && chore != null) {
-                                showPointsToast(member, chore);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        */
     }
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {
@@ -526,5 +478,18 @@ public class MainActivity extends AppCompatActivity {
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
         String toastText = Utils.makeRaceItemText(pMember, pChore, this);
         Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLoadingDataDialog() {
+        if (loadingDataDialog != null && loadingDataDialog.isShowing()) {
+            return;
+        }
+        loadingDataDialog = ProgressDialog.show(this, getString(R.string.dialog_text_loading_data), getString(R.string.dialog_text_please_wait), true);
+    }
+
+    private void hideLoadingDataDialog() {
+        if (loadingDataDialog != null && loadingDataDialog.isShowing()) {
+            loadingDataDialog.dismiss();
+        }
     }
 }

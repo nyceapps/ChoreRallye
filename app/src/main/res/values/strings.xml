@@ -10,6 +10,8 @@
     <string name="dialog_text_no_members">You have not added any persons yet.\nYou need them to use the app.</string>
     <string name="dialog_text_no_chores">You have not added any chores yet.\nYou need them to use the app.</string>
     <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings or scan a QR code.</string>
+    <string name="dialog_text_loading_data">Loading data</string>
+    <string name="dialog_text_please_wait">Please wait...</string>
 
     <string name="dialog_button_text_ok">OK</string>
     <string name="dialog_button_text_cancel">Cancel</string>
