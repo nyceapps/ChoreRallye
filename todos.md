@@ -5,7 +5,7 @@
   * http://www.vogella.com/tutorials/AndroidListView/article.html#arrayAdapter
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
-  * x% bis zum Gewinn
+  * x% bis zum Gewinn (Standard: 67%)
   * Geschenk oder Pott
     * Bei Pott: Höhe des Potts
 * Neu-Berechnung des aktuellen Standes bei
@@ -37,5 +37,9 @@
 * Effekt für die Bilder?
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
-  * Hintergrund, graue Linie?
+  * Spur der Mänchen, graue Linie?
+  * schwarze Linie 0%, 100%
+  * rote Linie bei konfigurierten %
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
+  * ProgressDialog dialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
+* Trennlinien UI
