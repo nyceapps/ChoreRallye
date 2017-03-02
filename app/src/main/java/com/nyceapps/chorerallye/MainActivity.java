@@ -4,8 +4,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +42,7 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.Constants.PREF_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
 public class MainActivity extends AppCompatActivity {
@@ -370,6 +378,44 @@ public class MainActivity extends AppCompatActivity {
         raceView.setAdapter(raceAdapter);
     }
 
+    private void setRaceViewBackground(int pMaxMemberTextWidth) {
+        RecyclerView raceView = (RecyclerView) findViewById(R.id.race_view);
+
+        int raceRunnerWidth = (int) getResources().getDimension(R.dimen.race_runner_width);
+        int raceRunnerHeight = (int) getResources().getDimension(R.dimen.race_runner_height);
+
+        int raceViewWidth = raceView.getWidth();
+        int raceViewHeight = data.getMembers().size() * raceRunnerHeight;
+
+        if (raceViewHeight > 0) {
+            int startX = 0;
+            int finishX = raceViewWidth - pMaxMemberTextWidth;
+            int onePercent = finishX / 100;
+            int goalX = Math.round(onePercent * PREF_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE);
+
+            finishX -= raceRunnerWidth;
+
+            Paint primary = new Paint();
+            primary.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            Paint dark = new Paint();
+            dark.setColor(Color.BLACK);
+
+            Bitmap bitmap = Bitmap.createBitmap(raceViewWidth, raceViewHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            canvas.drawLine(startX, 0, startX, raceViewHeight, dark);
+            canvas.drawLine(goalX, 0, goalX, raceViewHeight, primary);
+            canvas.drawLine(finishX, 0, finishX, raceViewHeight, dark);
+
+            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                raceView.setBackground(drawable);
+            } else {
+                raceView.setBackgroundDrawable(drawable);
+            }
+        }
+    }
+
     private void initDatabases() {
         Log.d(TAG, "Initializing databases...");
 
@@ -386,7 +432,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (membersAdapter.updateList(members)) {
                     if (raceAdapter != null) {
-                        raceAdapter.setMaxMemberTextWidth(Utils.calculateMaxMemberTextWidth(members, MainActivity.this));
+                        int maxMemberTextWidth = Utils.calculateMaxMemberTextWidth(members, MainActivity.this);
+                        raceAdapter.setMaxMemberTextWidth(maxMemberTextWidth);
+                        setRaceViewBackground(maxMemberTextWidth);
                     }
                 }
 
