@@ -41,6 +41,7 @@
   * schwarze Linie 0%, 100%
   * rote Linie bei konfigurierten %
   * Background-Task für die Bewegung
+    * https://developer.android.com/reference/android/animation/ValueAnimator.html
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
   * ProgressDialog dialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
 * Trennlinien UI
