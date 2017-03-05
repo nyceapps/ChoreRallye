@@ -44,6 +44,4 @@
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
   * ProgressDialog dialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
 * Trennlinien UI
-* Linien werden bei älteren SDK-Verisonen nicht angezeigt
-* Werte im Chores-Grid entfernen
 * &gt; activityStartDate &amp;&amp; &gt; oldRaceItemsCount &amp;&amp; !localHistory.contains

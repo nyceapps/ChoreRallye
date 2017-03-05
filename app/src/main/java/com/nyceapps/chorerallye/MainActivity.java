@@ -2,6 +2,7 @@ package com.nyceapps.chorerallye;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -489,6 +490,15 @@ public class MainActivity extends AppCompatActivity {
                 membersAdapter.notifyDataSetChanged();
                 raceAdapter.notifyDataSetChanged();
 
+                List<RaceItem> localHistoryEntries = localHistory.getEntries();
+                for (int i = raceItems.size() - 1; i >= 0; i--) {
+                    RaceItem raceItem = raceItems.get(i);
+                    if (!localHistoryEntries.contains(raceItem)) {
+                        showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
+                        break;
+                    }
+                }
+
                 hideLoadingDataDialog();
             }
 
@@ -521,6 +531,11 @@ public class MainActivity extends AppCompatActivity {
         if (raceItem != null) {
             raceDatabase.child(raceItem.getUid()).removeValue();
         }
+    }
+
+    private void showPointsToast(String pMemberName, String pChoreName, int pChoreValue) {
+        String toastText = Utils.makeRaceItemText(pMemberName, pChoreName, pChoreValue, this);
+        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
     }
 
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
