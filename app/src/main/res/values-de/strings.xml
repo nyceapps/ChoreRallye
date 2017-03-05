@@ -11,6 +11,8 @@
     <string name="dialog_text_no_members">Sie haben bisher keinen Personen hinzugefügt.\nSie benötigen Sie, um die App zu verwenden.</string>
     <string name="dialog_text_no_chores">Sie haben bisher keinen Aufgaben hinzugefügt.\nSie benötigen Sie, um die App zu verwenden.</string>
     <string name="dialog_text_no_household_name">Sie haben noch keinen Haushaltsnamen angegeben.\nBitte setzen Sie ihn in den Einstellungen oder scannen Sie einen QR-Code ein.</string>
+    <string name="dialog_text_loading_data">Lade Daten</string>
+    <string name="dialog_text_please_wait">Bitte warten...</string>
 
     <string name="dialog_button_text_cancel">Abbruch</string>
     <string name="dialog_button_text_ok">OK</string>
