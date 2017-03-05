@@ -40,11 +40,7 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         ChoreItem chore = data.getChores().get(position);
 
-        String choreText = chore.getName();
-        if (chore.getValue() > 0) {
-            choreText += " (" + chore.getValue() + ")";
-        }
-        holder.nameTextView.setText(choreText);
+        holder.nameTextView.setText(chore.getName());
 
         holder.imageImageView.setImageDrawable(chore.getDrawable(callingActivity.getBaseContext()));
         holder.imageImageView.setTag(chore);
