@@ -6,6 +6,8 @@
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn (Standard: 67%)
+  * %-Vorsprung, z. B. +5%
+  * Einfach-Gewinner
   * Geschenk oder Pott
     * Bei Pott: Höhe des Potts
 * Neu-Berechnung des aktuellen Standes bei
