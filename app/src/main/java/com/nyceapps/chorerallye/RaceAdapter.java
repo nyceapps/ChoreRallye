@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,7 +15,7 @@ import android.widget.TextView;
  * Created by lugosi on 06.02.17.
  */
 public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> implements Constants {
-    //private static final String TAG = RaceAdapter.class.getSimpleName();
+    private static final String TAG = RaceAdapter.class.getSimpleName();
 
     private MainActivity callingActivity;
 
@@ -42,7 +44,7 @@ public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> im
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         MemberItem member = data.getMembers().get(position);
 
         int totalPoints = data.getRace().getTotalPoints();
@@ -53,11 +55,30 @@ public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> im
         holder.raceNameTextView.setText(memberText);
 
         int onePercent = (raceViewWidth - maxMemberTextWidth) / 100;
-        int leftMargin = onePercent * memberPercentage;
+        final int newleftMargin = onePercent * memberPercentage;
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(leftMargin, 0, 0, 0);
-        holder.raceImageImageView.setLayoutParams(lp);
+        /*
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(newleftMargin, 0, 0, 0);
+        holder.raceImageImageView.setLayoutParams(layoutParams);
+        */
+
+        final LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.raceImageImageView.getLayoutParams();
+        final int oldLeftMargin = layoutParams.leftMargin;
+
+        final int leftMarginDiff = newleftMargin - oldLeftMargin;
+
+        Animation raceAnimation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                int animationStep = (int) (leftMarginDiff * interpolatedTime);
+                int animationLeftMargin = oldLeftMargin + animationStep;
+                layoutParams.leftMargin = animationLeftMargin;
+                holder.raceImageImageView.setLayoutParams(layoutParams);
+            }
+        };
+        raceAnimation.setDuration(500);
+        holder.raceImageImageView.startAnimation(raceAnimation);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
