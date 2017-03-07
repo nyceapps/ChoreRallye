@@ -35,7 +35,7 @@
 * App-Store-Beta
   * https://support.google.com/googleplay/android-developer/answer/3131213?hl=de
 * Backup per JSON-Datei
-* RaceItem um Infos ergänzen: Datum, Member- & Chore-Name
+* RaceItem um Infos ergänzen: Welche anonyme User-Id hat's erfasst
 * Effekt für die Bilder?
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
