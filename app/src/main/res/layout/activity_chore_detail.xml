@@ -11,13 +11,13 @@
         android:src="@drawable/chore_placeholder"/>
     <EditText
         android:id="@+id/chore_name"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:hint="@string/edittext_hint_name"/>
     <EditText
         android:id="@+id/chore_value"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:digits="0123456789"

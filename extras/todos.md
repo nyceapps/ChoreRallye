@@ -46,3 +46,4 @@
   * ProgressDialog dialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
 * Trennlinien UI
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
+* Tastatur im Editmode gleich öffnen
