@@ -21,5 +21,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:digits="0123456789"
+        android:inputType="number"
         android:hint="@string/edittext_hint_value"/>
 </LinearLayout>
