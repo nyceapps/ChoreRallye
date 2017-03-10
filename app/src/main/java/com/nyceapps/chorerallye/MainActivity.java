@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
@@ -45,8 +44,8 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
-import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_SCAN_QR_CODE;
+import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         Log.d(TAG, "Initializing...");
-        String householdId = Settings.getHouseholdId(this);
+        String householdId = Utils.getHouseholdId(this);
 
         if (TextUtils.isEmpty(householdId)) {
             showGotoPreferencesDialog();
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem itemStartStop = menu.findItem(R.id.action_start_stop_race);
         if (itemStartStop != null) {
-            boolean isRunning = Settings.isRunning(data);
+            boolean isRunning = data.getSettings().isRunning();
             if (isRunning) {
                 itemStartStop.setTitle(R.string.main_menu_stop_race);
             } else {
@@ -216,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String householdId = Settings.getHouseholdId(this);
+        String householdId = Utils.getHouseholdId(this);
         switch (item.getItemId()) {
             case R.id.action_undo:
                 if (householdId == null) {
@@ -226,14 +225,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_start_stop_race:
-                boolean isRunning = Settings.isRunning(data);
+                boolean isRunning = data.getSettings().isRunning();
                 if (isRunning) {
                     stopRace();
                 } else {
                     startRace();
                 }
                 isRunning = !isRunning;
-                Settings.setRunning(isRunning, data, settingsDatabase);
+                data.getSettings().setRunning(isRunning);
+                settingsDatabase.setValue(data.getSettings());
                 break;
             case R.id.action_manage_members:
                 if (householdId == null) {
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
     private void showHouseholdQRCode() {
         enterInit = true;
 
-        String householdId = Settings.getHouseholdId(this);
+        String householdId = Utils.getHouseholdId(this);
 
         Intent intent = new Intent(this, ShowQRCodeActivity.class);
         intent.putExtra(EXTRA_MESSAGE_VALUE, householdId);
@@ -331,8 +331,8 @@ public class MainActivity extends AppCompatActivity {
                             builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
                                     .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            Settings.setHouseholdId(householdId, MainActivity.this);
-                                            Settings.setHouseholdName(householdName, MainActivity.this);
+                                            Utils.setHouseholdId(householdId, MainActivity.this);
+                                            Utils.setHouseholdName(householdName, MainActivity.this);
 
                                             finish();
                                             startActivity(getIntent());
@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDatabases() {
         Log.d(TAG, "Initializing databases...");
 
-        String householdId = Settings.getHouseholdId(this);
+        String householdId = Utils.getHouseholdId(this);
 
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
@@ -542,11 +542,9 @@ public class MainActivity extends AppCompatActivity {
         settingsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> settings = new HashMap<>();
-                for (DataSnapshot settingsDataSnapshot : dataSnapshot.getChildren()) {
-                    String key = settingsDataSnapshot.getKey();
-                    Object value = settingsDataSnapshot.getValue();
-                    settings.put(key, value);
+                Settings settings = dataSnapshot.getValue(Settings.class);
+                if (settings == null) {
+                    settings = new Settings();
                 }
                 data.setSettings(settings);
 

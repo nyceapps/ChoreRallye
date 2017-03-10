@@ -49,7 +49,7 @@ public class MembersListActivity extends AppCompatActivity {
         membersListAdapter = new MembersListAdapter(data, this);
         membersListView.setAdapter(membersListAdapter);
 
-        String householdId = Settings.getHouseholdId(this);
+        String householdId = Utils.getHouseholdId(this);
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
