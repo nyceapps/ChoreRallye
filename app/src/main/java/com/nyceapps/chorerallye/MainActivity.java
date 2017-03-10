@@ -230,12 +230,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_start_stop_race:
                 boolean isRunning = data.getSettings().isRunning();
-                data.getSettings().setRunning(!isRunning);
-                settingsDatabase.setValue(data.getSettings());
-
-                membersAdapter.notifyDataSetChanged();
-                choresAdapter.notifyDataSetChanged();
-
                 if (isRunning) {
                     stopRace();
                 } else {
@@ -284,13 +278,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRace() {
+        data.getSettings().setRunning(true);
+        settingsDatabase.setValue(data.getSettings());
+
         Date dateStarted = new Date();
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
+
+        membersAdapter.notifyDataSetChanged();
+        choresAdapter.notifyDataSetChanged();
     }
 
     private void stopRace() {
-        moveCurrentRaceToHistory();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirmation_text_end_rallye))
+                .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        data.getSettings().setRunning(false);
+                        settingsDatabase.setValue(data.getSettings());
+
+                        moveCurrentRaceToHistory();
+
+                        membersAdapter.notifyDataSetChanged();
+                        choresAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        AlertDialog stopRallyeConfirmationDialog = builder.create();
+        stopRallyeConfirmationDialog.show();
+
     }
 
     private void moveCurrentRaceToHistory() {
