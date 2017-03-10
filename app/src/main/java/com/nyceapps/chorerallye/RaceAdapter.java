@@ -57,12 +57,6 @@ public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> im
         int onePercent = (raceViewWidth - maxMemberTextWidth) / 100;
         final int newleftMargin = onePercent * memberPercentage;
 
-        /*
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(newleftMargin, 0, 0, 0);
-        holder.raceImageImageView.setLayoutParams(layoutParams);
-        */
-
         final LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.raceImageImageView.getLayoutParams();
         final int oldLeftMargin = layoutParams.leftMargin;
 

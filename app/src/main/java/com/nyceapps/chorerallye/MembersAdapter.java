@@ -42,33 +42,35 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
         holder.imageImageView.setImageDrawable(member.getDrawable(callingActivity.getBaseContext()));
         holder.imageImageView.setTag(member);
-        holder.imageImageView.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        break;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        break;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        break;
-                    case DragEvent.ACTION_DROP:
-                        MemberItem member = (MemberItem) v.getTag();
-                        ChoreItem chore = (ChoreItem) event.getLocalState();
+        if (data.getSettings().isRunning()) {
+            holder.imageImageView.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View v, DragEvent event) {
+                    int action = event.getAction();
+                    switch (action) {
+                        case DragEvent.ACTION_DRAG_STARTED:
+                            break;
+                        case DragEvent.ACTION_DRAG_ENTERED:
+                            break;
+                        case DragEvent.ACTION_DRAG_EXITED:
+                            break;
+                        case DragEvent.ACTION_DROP:
+                            MemberItem member = (MemberItem) v.getTag();
+                            ChoreItem chore = (ChoreItem) event.getLocalState();
 
-                        callingActivity.updatePoints(member, chore);
+                            callingActivity.updatePoints(member, chore);
 
-                        break;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        break;
-                    default:
-                        break;
+                            break;
+                        case DragEvent.ACTION_DRAG_ENDED:
+                            break;
+                        default:
+                            break;
+                    }
+
+                    return true;
                 }
-
-                return true;
-            }
-        });
+            });
+        }
         int memberPoints = data.getRace().getPoints(member);
         holder.valueBadgeView.setText(String.valueOf(memberPoints));
     }

@@ -44,19 +44,21 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
 
         holder.imageImageView.setImageDrawable(chore.getDrawable(callingActivity.getBaseContext()));
         holder.imageImageView.setTag(chore);
-        holder.imageImageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    v.startDragAndDrop(data, shadowBuilder, v.getTag(), 0);
-                } else {
-                    v.startDrag(data, shadowBuilder, v.getTag(), 0);
+        if (data.getSettings().isRunning()) {
+            holder.imageImageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    ClipData data = ClipData.newPlainText("", "");
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        v.startDragAndDrop(data, shadowBuilder, v.getTag(), 0);
+                    } else {
+                        v.startDrag(data, shadowBuilder, v.getTag(), 0);
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
         holder.valueBadgeView.setText(String.valueOf(chore.getValue()));
     }
 

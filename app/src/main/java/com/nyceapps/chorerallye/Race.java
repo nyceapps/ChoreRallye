@@ -1,6 +1,7 @@
 package com.nyceapps.chorerallye;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,32 +9,24 @@ import java.util.List;
  */
 
 public class Race {
+    Date dateStarted;
     List<RaceItem> raceItems;
 
     public Race() {
+        dateStarted = new Date();
         raceItems = new ArrayList<>();
     }
 
-    /*
-    public RaceItem getRaceItem(String pUid) {
-        if (raceItems != null) {
-            for (RaceItem raceItem : raceItems) {
-                if (raceItem.getUid().equals(pUid)) {
-                    return raceItem;
-                }
-            }
-        }
-
-        return null;
-    }
-    */
-
-    public void setRaceItems(List<RaceItem> pRaceItems) {
-        raceItems = pRaceItems;
+    public Date getDateStarted() {
+        return dateStarted;
     }
 
     public List<RaceItem> getRaceItems() {
         return raceItems;
+    }
+
+    public void setRaceItems(List<RaceItem> pRaceItems) {
+        raceItems = pRaceItems;
     }
 
     public int getPoints(MemberItem pMember) {

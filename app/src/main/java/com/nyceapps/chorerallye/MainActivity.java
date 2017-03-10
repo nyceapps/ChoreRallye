@@ -34,11 +34,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_HISTORY;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_SETTINGS;
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference membersDatabase;
     private DatabaseReference choresDatabase;
     private DatabaseReference raceDatabase;
+    private DatabaseReference historyDatabase;
 
     private FirebaseAuth rallyeAuth;
     private FirebaseAuth.AuthStateListener rallyeAuthListener;
@@ -226,14 +227,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_start_stop_race:
                 boolean isRunning = data.getSettings().isRunning();
+                data.getSettings().setRunning(!isRunning);
+                settingsDatabase.setValue(data.getSettings());
+
+                membersAdapter.notifyDataSetChanged();
+                choresAdapter.notifyDataSetChanged();
+
                 if (isRunning) {
                     stopRace();
                 } else {
                     startRace();
                 }
-                isRunning = !isRunning;
-                data.getSettings().setRunning(isRunning);
-                settingsDatabase.setValue(data.getSettings());
                 break;
             case R.id.action_manage_members:
                 if (householdId == null) {
@@ -259,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_scan_household_qr_code:
                 scanHouseholdQRCode();
                 break;
-            case R.id.action_manage_history:
+            case R.id.action_manage_race_history:
                 if (householdId == null) {
                     showGotoPreferencesDialog();
                 } else {
-                    manageHistory();
+                    manageRaceHistory();
                 }
                 break;
             case R.id.action_manage_preferences:
@@ -277,11 +281,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRace() {
-        Toast.makeText(this, "DUMMY: Starting Race...", Toast.LENGTH_LONG).show();
     }
 
     private void stopRace() {
-        Toast.makeText(this, "DUMMY: Stopping Race...", Toast.LENGTH_LONG).show();
     }
 
     private void manageMembers() {
@@ -352,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void manageHistory() {
+    private void manageRaceHistory() {
         enterInit = true;
 
         Intent intent = new Intent(this, RaceHistoryActivity.class);
@@ -550,6 +552,9 @@ public class MainActivity extends AppCompatActivity {
 
                 invalidateOptionsMenu();
 
+                membersAdapter.notifyDataSetChanged();
+                choresAdapter.notifyDataSetChanged();
+
                 hideLoadingDataDialog();
             }
 
@@ -558,6 +563,8 @@ public class MainActivity extends AppCompatActivity {
                 hideLoadingDataDialog();
             }
         });
+
+        historyDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_HISTORY);
     }
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {

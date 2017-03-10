@@ -28,11 +28,10 @@ public interface Constants {
     String DATABASE_SUBPATH_MEMBERS = "members";
     String DATABASE_SUBPATH_CHORES = "chores";
     String DATABASE_SUBPATH_RACE = "race";
+    String DATABASE_SUBPATH_HISTORY = "history";
 
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
-
-    String SETTINGS_KEY_IS_RUNNING = "is_running";
 
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
