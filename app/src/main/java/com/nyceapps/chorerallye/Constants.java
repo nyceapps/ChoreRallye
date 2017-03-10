@@ -29,6 +29,10 @@ public interface Constants {
     String DATABASE_SUBPATH_CHORES = "chores";
     String DATABASE_SUBPATH_RACE = "race";
     String DATABASE_SUBPATH_HISTORY = "history";
+    String DATABASE_SUBPATH_META = "meta";
+    String DATABASE_SUBPATH_ITEMS = "items";
+
+    String DATABASE_KEY_DATE_STARTED = "dateStarted";
 
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";

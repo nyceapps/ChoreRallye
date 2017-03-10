@@ -21,6 +21,10 @@ public class Race {
         return dateStarted;
     }
 
+    public void setDateStarted(Date pDateStarted) {
+        dateStarted = pDateStarted;
+    }
+
     public List<RaceItem> getRaceItems() {
         return raceItems;
     }

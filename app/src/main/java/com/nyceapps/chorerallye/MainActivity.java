@@ -37,9 +37,12 @@ import java.util.Date;
 import java.util.List;
 
 import static com.nyceapps.chorerallye.Constants.CHORE_COLUMNS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_KEY_DATE_STARTED;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_HISTORY;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_META;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
@@ -281,9 +284,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRace() {
+        Date dateStarted = new Date();
+        raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
+        raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
     }
 
     private void stopRace() {
+        moveCurrentRaceToHistory();
+    }
+
+    private void moveCurrentRaceToHistory() {
+        // TODO: Move current Race to History database!
     }
 
     private void manageMembers() {
@@ -512,8 +523,11 @@ public class MainActivity extends AppCompatActivity {
         raceDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Date dateStarted = dataSnapshot.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).getValue(Date.class);
+                data.getRace().setDateStarted(dateStarted);
+
                 List<RaceItem> raceItems = new ArrayList<>();
-                for (DataSnapshot raceDataSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot raceDataSnapshot : dataSnapshot.child(DATABASE_SUBPATH_ITEMS).getChildren()) {
                     RaceItem raceItem = raceDataSnapshot.getValue(RaceItem.class);
                     raceItems.add(raceItem);
                 }
@@ -569,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {
         RaceItem raceItem = new RaceItem();
-        String uid = raceDatabase.push().getKey();
+        String uid = raceDatabase.child(DATABASE_SUBPATH_ITEMS).push().getKey();
         raceItem.setUid(uid);
         raceItem.setDate(new Date());
         raceItem.setMemberUid(pMember.getUid());
@@ -577,7 +591,7 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreUid(pChore.getUid());
         raceItem.setChoreName(pChore.getName());
         raceItem.setChoreValue(pChore.getValue());
-        raceDatabase.child(uid).setValue(raceItem);
+        raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
 
         localHistory.add(raceItem);
 
@@ -587,7 +601,7 @@ public class MainActivity extends AppCompatActivity {
     private void undoPoints() {
         RaceItem raceItem = localHistory.undo();
         if (raceItem != null) {
-            raceDatabase.child(raceItem.getUid()).removeValue();
+            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).removeValue();
         }
     }
 
