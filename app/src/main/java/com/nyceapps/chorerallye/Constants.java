@@ -24,17 +24,17 @@ public interface Constants {
     int CONTEXT_MENU_ACTION_EDIT = 0;
     int CONTEXT_MENU_ACTION_REMOVE = 1;
 
+    String DATABASE_SUBPATH_SETTINGS = "settings";
     String DATABASE_SUBPATH_MEMBERS = "members";
     String DATABASE_SUBPATH_CHORES = "chores";
     String DATABASE_SUBPATH_RACE = "race";
 
-    int IMAGE_WIDTH = 64;
-    int IMAGE_HEIGHT = 64;
-
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
 
-    int PREF_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
+    String SETTINGS_KEY_IS_RUNNING = "is_running";
+
+    int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
     String HOUSEHOLD_ID_INFIX = "___";
 

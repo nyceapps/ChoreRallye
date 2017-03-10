@@ -81,7 +81,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     public void setHouseholdId() {
         String householdName = prefHouseholdName.getText();
-        Utils.setHouseholdIdByName(householdName, this);
+        Settings.setHouseholdIdByName(householdName, this);
     }
 
     private void setHouseholdNameSummary() {

@@ -22,6 +22,8 @@
     <string name="activity_label_history">History</string>
 
     <string name="main_menu_undo">Undo</string>
+    <string name="main_menu_start_race">Start Rallye</string>
+    <string name="main_menu_stop_race">Stop Rallye</string>
     <string name="main_menu_manage_members">Persons</string>
     <string name="main_menu_manage_chores">Chores</string>
     <string name="main_menu_show_household_qr_code">Show QR code</string>

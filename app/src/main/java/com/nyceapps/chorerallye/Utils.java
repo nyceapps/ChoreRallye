@@ -32,7 +32,7 @@ import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
  * Created by bela on 08.02.17.
  */
 
-public class Utils {
+public final class Utils {
     private static final String TAG = Utils.class.getSimpleName();
 
     private Utils() {}
@@ -124,35 +124,6 @@ public class Utils {
         }
 
         return stringBitmapDrawable;
-    }
-
-    public static String getHouseholdId(Context pContext) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String householdId = sharedPreferences.getString(PREF_KEY_HOUSEHOLD_ID, null);
-        Log.d(TAG, String.format("householdId = [%s]", householdId));
-        return householdId;
-    }
-
-    public static void setHouseholdIdByName(String pHouseholdName, Context pContext) {
-        String householdId = null;
-        if (!TextUtils.isEmpty(pHouseholdName)) {
-            householdId = pHouseholdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
-        }
-        setHouseholdId(householdId, pContext);
-    }
-
-    public static void setHouseholdId(String pHouseholdId, Context pContext) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_HOUSEHOLD_ID, pHouseholdId);
-        editor.commit();
-    }
-
-    public static void setHouseholdName(String pHouseholdName, Context pContext) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
-        editor.commit();
     }
 
     public static int calculateMaxMemberTextWidth(List<MemberItem> pMembers, Context pContext) {

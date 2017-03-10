@@ -28,7 +28,7 @@ public class Race {
     }
     */
 
-    public void setRaceItem(List<RaceItem> pRaceItems) {
+    public void setRaceItems(List<RaceItem> pRaceItems) {
         raceItems = pRaceItems;
     }
 

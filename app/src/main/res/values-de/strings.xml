@@ -23,6 +23,8 @@
     <string name="activity_label_history">Verlauf</string>
 
     <string name="main_menu_undo">Rückgängig</string>
+    <string name="main_menu_start_race">Rallye starten</string>
+    <string name="main_menu_stop_race">Rallye stoppen</string>
     <string name="main_menu_manage_members">Personen</string>
     <string name="main_menu_manage_chores">Aufgaben</string>
     <string name="main_menu_show_household_qr_code">QR-Code anzeigen</string>

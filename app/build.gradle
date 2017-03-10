@@ -37,11 +37,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
     compile 'com.google.firebase:firebase-database:10.2.0'
-    // Lower version for the emulator
-    /*
-    compile 'com.google.firebase:firebase-auth:9.2.0'
-    compile 'com.google.firebase:firebase-database:9.2.0'
-    */
     // Croperino
     compile 'com.github.ekimual:croperino:1.0.9'
     // QRGen
