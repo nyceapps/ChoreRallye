@@ -25,7 +25,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="16dp"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:background="@drawable/layout_background"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chores_view"

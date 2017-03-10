@@ -43,6 +43,5 @@
   * rote Linie bei konfigurierten %
 * "Bitte warten"-Dialog bis die DB-Listener fertig sind
   * ProgressDialog dialog = ProgressDialog.show(context, "Loading", "Please wait...", true);
-* Trennlinien UI
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
