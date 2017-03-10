@@ -294,7 +294,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveCurrentRaceToHistory() {
-        // TODO: Move current Race to History database!
+        String uid = historyDatabase.push().getKey();
+        historyDatabase.child(uid).child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(data.getRace().getDateStarted());
+        for (RaceItem raceItem : data.getRace().getRaceItems()) {
+            historyDatabase.child(uid).child(DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).setValue(raceItem);
+        }
     }
 
     private void manageMembers() {
