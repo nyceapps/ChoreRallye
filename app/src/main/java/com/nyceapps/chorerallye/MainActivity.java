@@ -205,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        MenuItem itemStartStop = menu.findItem(R.id.action_start_stop_race);
-        if (itemStartStop != null) {
-            if (data != null && data.getSettings() != null) {
+        if (data != null) {
+            MenuItem itemStartStop = menu.findItem(R.id.action_start_stop_race);
+            if (itemStartStop != null) {
                 boolean isRunning = data.getSettings().isRunning();
                 if (isRunning) {
                     itemStartStop.setTitle(R.string.main_menu_stop_race);
