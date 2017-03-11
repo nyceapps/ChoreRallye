@@ -207,11 +207,13 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem itemStartStop = menu.findItem(R.id.action_start_stop_race);
         if (itemStartStop != null) {
-            boolean isRunning = data.getSettings().isRunning();
-            if (isRunning) {
-                itemStartStop.setTitle(R.string.main_menu_stop_race);
-            } else {
-                itemStartStop.setTitle(R.string.main_menu_start_race);
+            if (data != null && data.getSettings() != null) {
+                boolean isRunning = data.getSettings().isRunning();
+                if (isRunning) {
+                    itemStartStop.setTitle(R.string.main_menu_stop_race);
+                } else {
+                    itemStartStop.setTitle(R.string.main_menu_start_race);
+                }
             }
         }
         return true;
