@@ -40,6 +40,21 @@ public class LocalHistory {
         return null;
     }
 
+    public void init() {
+        entries = new ArrayList<>();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int localHistoryCount = sharedPreferences.getInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+        if (localHistoryCount > 0) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+            for (int i = 0; i < entries.size(); i++) {
+                String key = PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
+                editor.remove(key);
+            }
+            editor.commit();
+        }
+    }
+
     public void load() {
         entries = new ArrayList<>();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

@@ -21,11 +21,6 @@
   * Druck
 * Freie Chores
   * Bewertung durch Abstimmung
-* Komplette Anzeige von Titel im Chores-Grid
-* Übersetzungen
-  * https://developer.android.com/studio/write/translations-editor.html
-  * https://developer.android.com/distribute/tools/localization-checklist.html
-  * https://developer.android.com/guide/topics/resources/localization.html
 * Icons
   * https://developer.android.com/guide/practices/ui_guidelines/icon_design_menu.html
   * https://developer.android.com/guide/practices/ui_guidelines/icon_design_launcher.html

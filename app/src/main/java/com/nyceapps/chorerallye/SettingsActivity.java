@@ -9,35 +9,41 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 
+import java.io.Serializable;
+
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.Constants.PREF_KEY_WINNING_PERCENTAGE;
+import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
 
 /**
  * Created by bela on 22.02.17.
  */
 
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+    private RallyeData data;
     private String previousHouseholdName;
 
     private SharedPreferences sharedPreferences;
+
     private EditTextPreference prefHouseholdName;
+    private EditTextPreference prefWinningPercentage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        prefHouseholdName = (EditTextPreference) findPreference(PREF_KEY_HOUSEHOLD_NAME);
-        prefHouseholdName.setOnPreferenceChangeListener(this);
-        previousHouseholdName = prefHouseholdName.getText();
-
+        data = ((RallyeApplication) this.getApplication()).getRallyeData();
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
 
-        setHouseholdNameSummary();
+        setHouseholdNamePreference();
+        setWinningPercentagePreference();
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, final Object newValue) {
-        if (PREF_KEY_HOUSEHOLD_NAME.equals(preference.getKey())) {
+        String prefKey = preference.getKey();
+        if (PREF_KEY_HOUSEHOLD_NAME.equals(prefKey)) {
             if (newValue instanceof String) {
                 final String householdName = (String) newValue;
                 if (!TextUtils.isEmpty(householdName) && !householdName.equals(previousHouseholdName)) {
@@ -60,9 +66,47 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 }
             }
             return false;
+        } else if (PREF_KEY_WINNING_PERCENTAGE.equals(prefKey)) {
+            if (newValue instanceof String) {
+                String winningPerecentageStr = (String) newValue;
+                int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+                if (TextUtils.isDigitsOnly(winningPerecentageStr)) {
+                    winningPercentage = Integer.parseInt(winningPerecentageStr);
+                }
+                data.getSettings().setWinningPercentage(winningPercentage);
+                setWinningPercentageSummary();
+            }
         }
 
         return true;
+    }
+
+    private void setHouseholdNamePreference() {
+        prefHouseholdName = (EditTextPreference) findPreference(PREF_KEY_HOUSEHOLD_NAME);
+        prefHouseholdName.setOnPreferenceChangeListener(this);
+        previousHouseholdName = prefHouseholdName.getText();
+
+        setHouseholdNameSummary();
+    }
+
+    private void setHouseholdNameSummary() {
+        String householdNameSummary = prefHouseholdName.getText();
+        if (TextUtils.isEmpty(householdNameSummary)) {
+            householdNameSummary = getString(R.string.pref_summary_household_name);
+        }
+        prefHouseholdName.setSummary(householdNameSummary);
+    }
+
+    private void setWinningPercentagePreference() {
+        prefWinningPercentage = (EditTextPreference) findPreference(PREF_KEY_WINNING_PERCENTAGE);
+        prefWinningPercentage.setOnPreferenceChangeListener(this);
+
+        setWinningPercentageSummary();
+    }
+
+    private void setWinningPercentageSummary() {
+        int winningPercentage = data.getSettings().getWinningPercentage();
+        prefWinningPercentage.setSummary(String.valueOf(winningPercentage));
     }
 
     private void setHouseholdData(String pHouseholdName) {
@@ -82,13 +126,5 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     public void setHouseholdId() {
         String householdName = prefHouseholdName.getText();
         Utils.setHouseholdIdByName(householdName, this);
-    }
-
-    private void setHouseholdNameSummary() {
-        String householdNameSummary = prefHouseholdName.getText();
-        if (TextUtils.isEmpty(householdNameSummary)) {
-            householdNameSummary = getString(R.string.pref_summary_household_name);
-        }
-        prefHouseholdName.setSummary(householdNameSummary);
     }
 }

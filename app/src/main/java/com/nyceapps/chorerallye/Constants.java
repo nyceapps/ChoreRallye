@@ -20,6 +20,7 @@ public interface Constants {
     int REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA = 5;
     int REQUEST_CODE_SCAN_QR_CODE = 6;
     int REQUEST_CODE_PERMISSION_REQUEST_CAMERA = 7;
+    int REQUEST_CODE_MANAGE_PREFERENCES = 8;
 
     int CONTEXT_MENU_ACTION_EDIT = 0;
     int CONTEXT_MENU_ACTION_REMOVE = 1;
@@ -37,6 +38,7 @@ public interface Constants {
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
     String PREF_KEY_LASTDISPLAYEDRACEITEMUID = "pref_key_last_displayed_race_item_uid";
+    String PREF_KEY_WINNING_PERCENTAGE = "pref_key_winning_percentage";
 
     String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
     String PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY = "pref_key_prefeix_local_history_entry_";
@@ -44,6 +46,4 @@ public interface Constants {
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
     String HOUSEHOLD_ID_INFIX = "___";
-
-    String FILE_NAME_LOCAL_HISTORY = "local_history";
 }

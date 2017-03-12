@@ -47,8 +47,8 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_SCAN_QR_CODE;
-import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -103,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         rallyeAuth.addAuthStateListener(rallyeAuthListener);
-
-        localHistory = new LocalHistory(this);
     }
 
     @Override
@@ -115,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
             rallyeAuth.removeAuthStateListener(rallyeAuthListener);
         }
 
-        localHistory.save();
+        if (localHistory != null) {
+            localHistory.save();
+        }
     }
 
     private void signIn() {
@@ -283,6 +283,8 @@ public class MainActivity extends AppCompatActivity {
         data.getSettings().setRunning(true);
         settingsDatabase.setValue(data.getSettings());
 
+        localHistory.init();
+
         Date dateStarted = new Date();
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
@@ -354,43 +356,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_SCAN_QR_CODE);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE_SCAN_QR_CODE) {
-                final String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
-                if (!TextUtils.isEmpty(householdId)) {
-                    Log.d(TAG, String.format("householdId from scan = [%s]", householdId));
-                    String[] parts = TextUtils.split(householdId, HOUSEHOLD_ID_INFIX);
-                    if (parts != null && parts.length > 0) {
-                        final String householdName = parts[0];
-                        if (!TextUtils.isEmpty(householdName)) {
-                            Log.d(TAG, String.format("householdName from scan = [%s]", householdName));
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                            builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
-                                    .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Utils.setHouseholdId(householdId, MainActivity.this);
-                                            Utils.setHouseholdName(householdName, MainActivity.this);
-
-                                            finish();
-                                            startActivity(getIntent());
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            // User cancelled the dialog
-                                        }
-                                    });
-                            participateHouseholdDialog = builder.create();
-                            participateHouseholdDialog.show();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private void manageRaceHistory() {
         enterInit = true;
 
@@ -402,7 +367,49 @@ public class MainActivity extends AppCompatActivity {
         enterInit = true;
 
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_MANAGE_PREFERENCES);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case REQUEST_CODE_SCAN_QR_CODE:
+                if (resultCode == RESULT_OK) {
+                    final String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
+                    if (!TextUtils.isEmpty(householdId)) {
+                        Log.d(TAG, String.format("householdId from scan = [%s]", householdId));
+                        String[] parts = TextUtils.split(householdId, HOUSEHOLD_ID_INFIX);
+                        if (parts != null && parts.length > 0) {
+                            final String householdName = parts[0];
+                            if (!TextUtils.isEmpty(householdName)) {
+                                Log.d(TAG, String.format("householdName from scan = [%s]", householdName));
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
+                                        .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                Utils.setHouseholdId(householdId, MainActivity.this);
+                                                Utils.setHouseholdName(householdName, MainActivity.this);
+
+                                                finish();
+                                                startActivity(getIntent());
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                // User cancelled the dialog
+                                            }
+                                        });
+                                participateHouseholdDialog = builder.create();
+                                participateHouseholdDialog.show();
+                            }
+                        }
+                    }
+                }
+                break;
+            case REQUEST_CODE_MANAGE_PREFERENCES:
+                settingsDatabase.setValue(data.getSettings());
+                break;
+        }
     }
 
     private void initData() {
@@ -410,6 +417,8 @@ public class MainActivity extends AppCompatActivity {
 
         data = new RallyeData();
         ((RallyeApplication) this.getApplication()).setRallyeData(data);
+
+        localHistory = new LocalHistory(this);
     }
 
     private void initMembersView() {
@@ -461,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
             int startX = 0;
             int finishX = raceViewWidth - pMaxMemberTextWidth;
             int onePercent = finishX / 100;
-            int goalX = Math.round(onePercent * SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE);
+            int goalX = Math.round(onePercent * data.getSettings().getWinningPercentage());
 
             finishX -= raceRunnerWidth;
 
@@ -478,11 +487,7 @@ public class MainActivity extends AppCompatActivity {
 
             Drawable drawable = new BitmapDrawable(getResources(), bitmap);
 
-            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                raceView.setBackground(drawable);
-            } else {
-                raceView.setBackgroundDrawable(drawable);
-            }
+            raceView.setBackground(drawable);
         }
     }
 
@@ -490,6 +495,30 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Initializing databases...");
 
         String householdId = Utils.getHouseholdId(this);
+
+        settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_SETTINGS);
+        settingsDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Settings settings = dataSnapshot.getValue(Settings.class);
+                if (settings == null) {
+                    settings = new Settings();
+                }
+                data.setSettings(settings);
+
+                invalidateOptionsMenu();
+
+                membersAdapter.notifyDataSetChanged();
+                choresAdapter.notifyDataSetChanged();
+
+                hideLoadingDataDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                hideLoadingDataDialog();
+            }
+        });
 
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
@@ -576,30 +605,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() - 1).getUid(), MainActivity.this);
                 }
-
-                hideLoadingDataDialog();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                hideLoadingDataDialog();
-            }
-        });
-
-        settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_SETTINGS);
-        settingsDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Settings settings = dataSnapshot.getValue(Settings.class);
-                if (settings == null) {
-                    settings = new Settings();
-                }
-                data.setSettings(settings);
-
-                invalidateOptionsMenu();
-
-                membersAdapter.notifyDataSetChanged();
-                choresAdapter.notifyDataSetChanged();
 
                 hideLoadingDataDialog();
             }

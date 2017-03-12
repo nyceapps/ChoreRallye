@@ -4,4 +4,8 @@
         android:key="pref_key_household_name"
         android:title="@string/pref_title_household_name"
         android:order="0"/>
+    <EditTextPreference
+        android:key="pref_key_winning_percentage"
+        android:title="@string/pref_title_winning_percentage"
+        android:order="1"/>
 </PreferenceScreen>

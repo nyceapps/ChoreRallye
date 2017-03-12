@@ -51,6 +51,7 @@
 
     <string name="pref_title_household_name">Household name</string>
     <string name="pref_summary_household_name">The symbolic name of your household</string>
+    <string name="pref_title_winning_percentage">Winning percentage</string>
 
     <string name="text_scan_qr_code_to_participate">Scan this QR code with another app to participate in the same household.</string>
 </resources>
