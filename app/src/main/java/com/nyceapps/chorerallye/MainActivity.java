@@ -562,13 +562,19 @@ public class MainActivity extends AppCompatActivity {
                 membersAdapter.notifyDataSetChanged();
                 raceAdapter.notifyDataSetChanged();
 
-                List<RaceItem> localHistoryEntries = localHistory.getEntries();
-                for (int i = raceItems.size() - 1; i >= 0; i--) {
-                    RaceItem raceItem = raceItems.get(i);
-                    if (!localHistoryEntries.contains(raceItem)) {
-                        showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
-                        break;
+                if (raceItems.size() > 0) {
+                    String lastDisplayedRaceItemUid = Utils.getLastDisplayedRaceItemUid(MainActivity.this);
+                    if (!TextUtils.isEmpty(lastDisplayedRaceItemUid)) {
+                        for (int i = raceItems.size() - 1; i >= 0; i--) {
+                            RaceItem raceItem = raceItems.get(i);
+                            if (!lastDisplayedRaceItemUid.equals(raceItem.getUid())) {
+                                showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
+                            } else {
+                                break;
+                            }
+                        }
                     }
+                    Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() - 1).getUid(), MainActivity.this);
                 }
 
                 hideLoadingDataDialog();
@@ -622,11 +628,13 @@ public class MainActivity extends AppCompatActivity {
         localHistory.add(raceItem);
 
         showPointsToast(pMember, pChore);
+        Utils.setLastDisplayedRaceItemUid(raceItem.getUid(), this);
     }
 
     private void undoPoints() {
         RaceItem raceItem = localHistory.undo();
         if (raceItem != null) {
+            Utils.setLastDisplayedRaceItemUid(raceItem.getUid(), MainActivity.this);
             raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).removeValue();
         }
     }

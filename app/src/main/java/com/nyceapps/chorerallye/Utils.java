@@ -27,6 +27,7 @@ import java.util.UUID;
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID;
 
 /**
  * Created by bela on 08.02.17.
@@ -170,20 +171,17 @@ public final class Utils {
         editor.commit();
     }
 
-    /*
-    public static int calculateMaxMemberTextWidth(List<RaceItem> pRaceItems, Context pContext) {
-        int maxMemberTextWidth = 0;
-
-        TextView textView = new TextView(pContext);
-        for (RaceItem raceItem : pRaceItems) {
-            String memberText = raceItem.getMemberName() + " (100%)";
-            Rect bounds = new Rect();
-            Paint textPaint = textView.getPaint();
-            textPaint.getTextBounds(memberText, 0, memberText.length(), bounds);
-            maxMemberTextWidth = Math.max(bounds.width(), maxMemberTextWidth);
-        }
-
-        return maxMemberTextWidth;
+    public static String getLastDisplayedRaceItemUid(Context pContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        String LastDisplayedRaceItemUid = sharedPreferences.getString(PREF_KEY_LASTDISPLAYEDRACEITEMUID, null);
+        Log.d(TAG, String.format("LastDisplayedRaceItemUid = [%s]", LastDisplayedRaceItemUid));
+        return LastDisplayedRaceItemUid;
     }
-    */
+
+    public static void setLastDisplayedRaceItemUid(String pLastDisplayedRaceItemUid, Context pContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(PREF_KEY_LASTDISPLAYEDRACEITEMUID, pLastDisplayedRaceItemUid);
+        editor.commit();
+    }
 }

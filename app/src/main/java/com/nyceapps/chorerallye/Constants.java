@@ -36,6 +36,7 @@ public interface Constants {
 
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
+    String PREF_KEY_LASTDISPLAYEDRACEITEMUID = "pref_key_last_displayed_race_item_uid";
 
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
