@@ -9,8 +9,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 
-import java.io.Serializable;
-
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.Constants.PREF_KEY_WINNING_PERCENTAGE;
 import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
@@ -74,11 +72,31 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                     winningPercentage = Integer.parseInt(winningPerecentageStr);
                 }
                 data.getSettings().setWinningPercentage(winningPercentage);
+                setWinningPercentageValue();
                 setWinningPercentageSummary();
             }
         }
 
         return true;
+    }
+
+    private void setHouseholdData(String pHouseholdName) {
+        setHouseholdName(pHouseholdName);
+        setHouseholdId();
+        setHouseholdNameSummary();
+    }
+
+    private void setHouseholdName(String pHouseholdName) {
+        if (!TextUtils.isEmpty(pHouseholdName)) {
+            String householdName = pHouseholdName.trim().toUpperCase();
+            previousHouseholdName = householdName;
+            prefHouseholdName.setText(householdName);
+        }
+    }
+
+    public void setHouseholdId() {
+        String householdName = prefHouseholdName.getText();
+        Utils.setHouseholdIdByName(householdName, this);
     }
 
     private void setHouseholdNamePreference() {
@@ -101,30 +119,17 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         prefWinningPercentage = (EditTextPreference) findPreference(PREF_KEY_WINNING_PERCENTAGE);
         prefWinningPercentage.setOnPreferenceChangeListener(this);
 
+        setWinningPercentageValue();
         setWinningPercentageSummary();
+    }
+
+    private void setWinningPercentageValue() {
+        int winningPercentage = data.getSettings().getWinningPercentage();
+        prefWinningPercentage.setText(String.valueOf(winningPercentage));
     }
 
     private void setWinningPercentageSummary() {
         int winningPercentage = data.getSettings().getWinningPercentage();
         prefWinningPercentage.setSummary(String.valueOf(winningPercentage));
-    }
-
-    private void setHouseholdData(String pHouseholdName) {
-        setHouseholdName(pHouseholdName);
-        setHouseholdId();
-        setHouseholdNameSummary();
-    }
-
-    private void setHouseholdName(String pHouseholdName) {
-        if (!TextUtils.isEmpty(pHouseholdName)) {
-            String householdName = pHouseholdName.trim().toUpperCase();
-            previousHouseholdName = householdName;
-            prefHouseholdName.setText(householdName);
-        }
-    }
-
-    public void setHouseholdId() {
-        String householdName = prefHouseholdName.getText();
-        Utils.setHouseholdIdByName(householdName, this);
     }
 }
