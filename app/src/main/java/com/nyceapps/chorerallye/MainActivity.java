@@ -625,17 +625,20 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreValue(pChore.getValue());
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
 
-        localHistory.add(raceItem);
+        localHistory.add(raceItem.getUid());
 
         showPointsToast(pMember, pChore);
         Utils.setLastDisplayedRaceItemUid(raceItem.getUid(), this);
     }
 
     private void undoPoints() {
-        RaceItem raceItem = localHistory.undo();
-        if (raceItem != null) {
-            Utils.setLastDisplayedRaceItemUid(raceItem.getUid(), MainActivity.this);
-            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).removeValue();
+        String raceItemUid = localHistory.undo();
+        if (raceItemUid != null) {
+            List<RaceItem> raceItems = data.getRace().getRaceItems();
+            if (raceItems.size() > 1) {
+                Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() -2).getUid(), MainActivity.this);
+            }
+            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItemUid).removeValue();
         }
     }
 

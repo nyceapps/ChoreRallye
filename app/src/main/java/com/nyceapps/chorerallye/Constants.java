@@ -38,6 +38,9 @@ public interface Constants {
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
     String PREF_KEY_LASTDISPLAYEDRACEITEMUID = "pref_key_last_displayed_race_item_uid";
 
+    String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
+    String PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY = "pref_key_prefeix_local_history_entry_";
+
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
     String HOUSEHOLD_ID_INFIX = "___";

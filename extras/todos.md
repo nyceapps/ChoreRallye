@@ -1,6 +1,6 @@
 * Hauptmenü
   * Rallye starten beenden
-    * ANgabe von %, Dauer
+    * Angabe von %, Dauer
   * Icons
 * History bearbeiten
   * http://www.vogella.com/tutorials/AndroidListView/article.html#arrayAdapter
