@@ -20,10 +20,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_CHORE_NAME;
+import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_CHORE_VALUE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_CHORE;
@@ -33,6 +40,7 @@ public class ChoresListActivity extends AppCompatActivity {
     private RallyeData data;
     private ChoresListAdapter choresListAdapter;
     private DatabaseReference choresDatabase;
+    private DatabaseReference raceDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,8 @@ public class ChoresListActivity extends AppCompatActivity {
 
             }
         });
+
+        raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
     }
 
     @Override
@@ -100,7 +110,9 @@ public class ChoresListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ChoreDetailActivity.class);
         intent.putExtra(EXTRA_MESSAGE_UID, pChore.getUid());
         intent.putExtra(EXTRA_MESSAGE_NAME, pChore.getName());
+        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pChore.getName());
         intent.putExtra(EXTRA_MESSAGE_VALUE, pChore.getValue());
+        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, pChore.getValue());
         intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pChore.getImageString());
         startActivityForResult(intent, REQUEST_CODE_EDIT_CHORE);
     }
@@ -110,6 +122,12 @@ public class ChoresListActivity extends AppCompatActivity {
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_chore), pChore.getName()))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (data.getRace().hasChore(pChore.getUid())) {
+                            Set<String> removedRaceItems = data.getRace().removeChores(pChore.getUid());
+                            for (String removedUid : removedRaceItems) {
+                                raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(removedUid).removeValue();
+                            }
+                        }
                         choresDatabase.child(pChore.getUid()).removeValue();
                     }
                 })
@@ -124,10 +142,13 @@ public class ChoresListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
+            boolean databaseUpdateNeedsConfirmation = false;
+            boolean updateChoreNamesInDatabase = false;
+
             String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
             int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
             if (!TextUtils.isEmpty(choreName) && choreValue > 0) {
-                ChoreItem chore = new ChoreItem();
+                final ChoreItem chore = new ChoreItem();
                 String uid = null;
                 switch (requestCode) {
                     case REQUEST_CODE_ADD_CHORE:
@@ -135,6 +156,15 @@ public class ChoresListActivity extends AppCompatActivity {
                         break;
                     case REQUEST_CODE_EDIT_CHORE:
                         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
+                        int choreOriginalValue = intent.getIntExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, -1);
+                        if (choreValue != choreOriginalValue && data.getRace().hasChore(uid)) {
+                            databaseUpdateNeedsConfirmation = (data.getRace().hasChore(uid));
+                        }
+                        String choreOriginalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
+                        if (!choreName.equals(choreOriginalName) && data.getRace().hasChore(uid)) {
+                            updateChoreNamesInDatabase = true;
+                        }
+
                         break;
                 }
                 chore.setUid(uid);
@@ -145,7 +175,41 @@ public class ChoresListActivity extends AppCompatActivity {
                     chore.setImageString(choreImageString);
                 }
 
-                choresDatabase.child(uid).setValue(chore);
+                if (databaseUpdateNeedsConfirmation) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    final boolean finalUpdateChoreNamesInDatabase = updateChoreNamesInDatabase;
+                    builder.setMessage(String.format(getString(R.string.confirmation_text_update_chore_value), chore.getName()))
+                            .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Set<String> updatedRaceItemsForValue = data.getRace().updateChoreValues(chore.getUid(), chore.getValue());
+                                    for (String updatedUid : updatedRaceItemsForValue) {
+                                        raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_CHORE_VALUE).setValue(chore.getValue());
+                                    }
+                                    if (finalUpdateChoreNamesInDatabase) {
+                                        Set<String> updatedRaceItemsForName = data.getRace().updateChoreNames(chore.getUid(), chore.getName());
+                                        for (String updatedUid : updatedRaceItemsForName) {
+                                            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_CHORE_NAME).setValue(chore.getName());
+                                        }
+                                    }
+                                    choresDatabase.child(chore.getUid()).setValue(chore);
+                                }
+                            })
+                            .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                    builder.create().show();
+
+                } else {
+                    if (updateChoreNamesInDatabase) {
+                        Set<String> updatedRaceItems = data.getRace().updateChoreNames(uid, choreName);
+                        for (String updatedUid : updatedRaceItems) {
+                            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_CHORE_NAME).setValue(choreName);
+                        }
+                    }
+                    choresDatabase.child(uid).setValue(chore);
+                }
             }
         }
     }

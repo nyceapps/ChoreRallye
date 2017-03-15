@@ -11,10 +11,6 @@
   * Einfach-Gewinner
   * Geschenk oder Pott
     * Bei Pott: Höhe des Potts
-* Neu-Berechnung des aktuellen Standes bei
-  * Bei Entfernen eines Members oder Chores
-  * Veränderung des Wertes eines Chores
-  * Erstmal verhindern, wenn schon im Gebrauch
 * Notifications
 * Statistiken
   * Diagramme
@@ -36,3 +32,4 @@
   * rote Linie bei konfigurierten %
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
+* Members, Chores sortieren

@@ -23,17 +23,20 @@ import java.io.File;
 
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
 
 public class ChoreDetailActivity extends AppCompatActivity {
     private String uid;
+    private String originalName;
+    private int originalValue;
     private String choreFileString;
 
     private boolean cameraPhotoWasChosen;
     private File tempCameraFile;
-
     private ImageView choreImageImageView;
     private EditText choreNameEditText;
     private EditText choreValueEditText;
@@ -45,6 +48,8 @@ public class ChoreDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
+        originalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
+        originalValue = intent.getIntExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, -1);
 
         choreImageImageView = (ImageView) findViewById(R.id.chore_image);
         choreFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
@@ -113,8 +118,8 @@ public class ChoreDetailActivity extends AppCompatActivity {
                 case CroperinoConfig.REQUEST_CROP_PHOTO:
                     if (tempCameraFile != null) {
                         cameraPhotoWasChosen = true;
-                        Uri memberImageUri = Uri.fromFile(tempCameraFile);
-                        choreImageImageView.setImageURI(memberImageUri);
+                        Uri choreImageUri = Uri.fromFile(tempCameraFile);
+                        choreImageImageView.setImageURI(choreImageUri);
                     }
                     break;
             }
@@ -136,7 +141,9 @@ public class ChoreDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_MESSAGE_UID, uid);
                 intent.putExtra(EXTRA_MESSAGE_NAME, choreNameEditText.getText().toString());
+                intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, originalName);
                 intent.putExtra(EXTRA_MESSAGE_VALUE, Integer.valueOf(choreValueEditText.getText().toString()));
+                intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, originalValue);
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
                     intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);

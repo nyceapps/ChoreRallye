@@ -2,7 +2,9 @@ package com.nyceapps.chorerallye;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lugosi on 06.02.17.
@@ -54,5 +56,92 @@ public class Race {
         }
 
         return totalPoints;
+    }
+
+    public boolean hasMember(String pMemberUid) {
+        for (RaceItem raceItem : raceItems) {
+            if (raceItem.getMemberUid().equals(pMemberUid)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Set<String> removeMembers(String pMemberUid) {
+        Set<String> removedRaceItems = new HashSet<>();
+
+        for (int i = raceItems.size() - 1; i >= 0; i--) {
+            RaceItem raceItem = raceItems.get(i);
+            if (raceItem.getMemberUid().equals(pMemberUid)) {
+                removedRaceItems.add(raceItem.getUid());
+                raceItems.remove(i);
+            }
+        }
+
+        return removedRaceItems;
+    }
+
+    public Set<String> updateMemberNames(String pMemberUid, String pMemberName) {
+        Set<String> updatedRaceItems = new HashSet<>();
+
+        for (RaceItem raceItem : raceItems) {
+            if (raceItem.getMemberUid().equals(pMemberUid)) {
+                updatedRaceItems.add(raceItem.getUid());
+                raceItem.setMemberName(pMemberName);
+            }
+        }
+
+        return updatedRaceItems;
+    }
+
+    public boolean hasChore(String pChoreUid) {
+        for (RaceItem raceItem : raceItems) {
+            if (raceItem.getChoreUid().equals(pChoreUid)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Set<String> removeChores(String pChoreUid) {
+        Set<String> removedRaceItems = new HashSet<>();
+
+        for (int i = raceItems.size() - 1; i >= 0; i--) {
+            RaceItem raceItem = raceItems.get(i);
+            if (raceItem.getChoreUid().equals(pChoreUid)) {
+                removedRaceItems.add(raceItem.getUid());
+                raceItems.remove(i);
+            }
+        }
+
+        return removedRaceItems;
+    }
+
+    public Set<String> updateChoreNames(String pChoreUid, String pChoreName) {
+        Set<String> updatedRaceItems = new HashSet<>();
+
+        for (RaceItem raceItem : raceItems) {
+            if (raceItem.getChoreUid().equals(pChoreUid)) {
+                updatedRaceItems.add(raceItem.getUid());
+                raceItem.setChoreName(pChoreName);
+            }
+        }
+
+        return updatedRaceItems;
+    }
+
+    public Set<String> updateChoreValues(String pChoreUid, int pChoreValue) {
+        Set<String> updatedRaceItems = new HashSet<>();
+
+        for (RaceItem raceItem : raceItems) {
+            if (raceItem.getChoreUid().equals(pChoreUid)) {
+                updatedRaceItems.add(raceItem.getUid());
+                raceItem.setChoreValue(pChoreValue);
+            }
+        }
+
+        return updatedRaceItems;
     }
 }

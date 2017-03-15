@@ -20,10 +20,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_MEMBER_NAME;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_MEMBER;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_MEMBER;
@@ -32,6 +37,7 @@ public class MembersListActivity extends AppCompatActivity {
     private RallyeData data;
     private MembersListAdapter membersListAdapter;
     private DatabaseReference membersDatabase;
+    private DatabaseReference raceDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,8 @@ public class MembersListActivity extends AppCompatActivity {
 
             }
         });
+
+        raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
     }
 
     @Override
@@ -99,6 +107,7 @@ public class MembersListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MemberDetailActivity.class);
         intent.putExtra(EXTRA_MESSAGE_UID, pMember.getUid());
         intent.putExtra(EXTRA_MESSAGE_NAME, pMember.getName());
+        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pMember.getName());
         intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pMember.getImageString());
         startActivityForResult(intent, REQUEST_CODE_EDIT_MEMBER);
     }
@@ -108,6 +117,12 @@ public class MembersListActivity extends AppCompatActivity {
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_member), pMember.getName()))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (data.getRace().hasMember(pMember.getUid())) {
+                            Set<String> removedRaceItems = data.getRace().removeMembers(pMember.getUid());
+                            for (String removedUid : removedRaceItems) {
+                                raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(removedUid).removeValue();
+                            }
+                        }
                         membersDatabase.child(pMember.getUid()).removeValue();
                     }
                 })
@@ -132,6 +147,13 @@ public class MembersListActivity extends AppCompatActivity {
                         break;
                     case REQUEST_CODE_EDIT_MEMBER:
                         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
+                        String memberOriginalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
+                        if (!memberName.equals(memberOriginalName) && data.getRace().hasMember(uid)) {
+                            Set<String> updatedRaceItems = data.getRace().updateMemberNames(uid, memberName);
+                            for (String updatedUid : updatedRaceItems) {
+                                raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_MEMBER_NAME).setValue(memberName);
+                            }
+                        }
                         break;
                 }
                 member.setUid(uid);

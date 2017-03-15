@@ -10,7 +10,9 @@ public interface Constants {
 
     String EXTRA_MESSAGE_UID = "com.nyceapps.chorerallye.MESSAGE_UID";
     String EXTRA_MESSAGE_NAME = "com.nyceapps.chorerallye.MESSAGE_NAME";
+    String EXTRA_MESSAGE_ORIGINAL_NAME = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_NAME";
     String EXTRA_MESSAGE_VALUE = "com.nyceapps.chorerallye.MESSAGE_VALUE";
+    String EXTRA_MESSAGE_ORIGINAL_VALUE = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_VALUE";
     String EXTRA_MESSAGE_FILE_STRING = "com.nyceapps.chorerallye.MESSAGE_FILE_STRING";
 
     int REQUEST_CODE_ADD_MEMBER = 1;
@@ -32,6 +34,10 @@ public interface Constants {
     String DATABASE_SUBPATH_HISTORY = "history";
     String DATABASE_SUBPATH_META = "meta";
     String DATABASE_SUBPATH_ITEMS = "items";
+
+    String DATABASE_CHILD_KEY_MEMBER_NAME = "memberName";
+    String DATABASE_CHILD_KEY_CHORE_NAME = "choreName";
+    String DATABASE_CHILD_KEY_CHORE_VALUE = "choreValue";
 
     String DATABASE_KEY_DATE_STARTED = "dateStarted";
 
