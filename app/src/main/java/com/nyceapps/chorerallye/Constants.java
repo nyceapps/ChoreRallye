@@ -49,6 +49,10 @@ public interface Constants {
     String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
     String PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY = "pref_key_prefeix_local_history_entry_";
 
+    String DISPLAY_MODE_RALLYE = "RALLYE";
+    String DISPLAY_MODE_LOG = "LOG";
+
+    String SETTINGS_DEFAULT_VALUE_DISPLAY_MODE = DISPLAY_MODE_RALLYE;
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
 
     String HOUSEHOLD_ID_INFIX = "___";

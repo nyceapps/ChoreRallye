@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +46,8 @@ import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_META;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
 import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_SETTINGS;
+import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_LOG;
+import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
 import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
@@ -70,10 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth rallyeAuth;
     private FirebaseAuth.AuthStateListener rallyeAuthListener;
+
     private AlertDialog membersDialog;
     private AlertDialog choresDialog;
     private AlertDialog participateHouseholdDialog;
     private ProgressDialog loadingDataDialog;
+
+    private RecyclerView raceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +221,19 @@ public class MainActivity extends AppCompatActivity {
                     itemStartStop.setTitle(R.string.main_menu_start_race);
                 }
             }
+
+            MenuItem itemSwitchDisplayMode = menu.findItem(R.id.action_switch_display_mode);
+            if (itemSwitchDisplayMode != null) {
+                String displayMode = data.getSettings().getDisplayMode();
+                switch (displayMode) {
+                    case DISPLAY_MODE_RALLYE:
+                        itemSwitchDisplayMode.setTitle(R.string.main_menu_display_mode_log);
+                        break;
+                    case DISPLAY_MODE_LOG:
+                        itemSwitchDisplayMode.setTitle(R.string.main_menu_display_mode_rallye);
+                        break;
+                }
+            }
         }
         return true;
     }
@@ -267,6 +286,17 @@ public class MainActivity extends AppCompatActivity {
                     showGotoPreferencesDialog();
                 } else {
                     manageRaceHistory();
+                }
+                break;
+            case R.id.action_switch_display_mode:
+                String displayMode = data.getSettings().getDisplayMode();
+                switch (displayMode) {
+                    case DISPLAY_MODE_RALLYE:
+                        switchDisplayMode(DISPLAY_MODE_LOG);
+                        break;
+                    case DISPLAY_MODE_LOG:
+                        switchDisplayMode(DISPLAY_MODE_RALLYE);
+                        break;
                 }
                 break;
             case R.id.action_manage_preferences:
@@ -363,6 +393,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void switchDisplayMode(String pDisplayMode) {
+        data.getSettings().setDisplayMode(pDisplayMode);
+        settingsDatabase.setValue(data.getSettings());
+    }
+
     private void managePreferences() {
         enterInit = true;
 
@@ -446,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRaceView() {
-        RecyclerView raceView = (RecyclerView) findViewById(R.id.race_view);
+        raceView = (RecyclerView) findViewById(R.id.race_view);
 
         raceView.setHasFixedSize(true);
 
@@ -458,8 +493,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRaceViewBackground(int pMaxMemberTextWidth) {
-        RecyclerView raceView = (RecyclerView) findViewById(R.id.race_view);
-
         int raceRunnerWidth = (int) getResources().getDimension(R.dimen.race_runner_width);
         int raceRunnerHeight = (int) getResources().getDimension(R.dimen.race_runner_height);
 
@@ -510,6 +543,17 @@ public class MainActivity extends AppCompatActivity {
 
                 membersAdapter.notifyDataSetChanged();
                 choresAdapter.notifyDataSetChanged();
+
+                if (raceView != null) {
+                    switch (settings.getDisplayMode()) {
+                        case DISPLAY_MODE_RALLYE:
+                            raceView.setVisibility(View.VISIBLE);
+                            break;
+                        case DISPLAY_MODE_LOG:
+                            raceView.setVisibility(View.GONE);
+                            break;
+                    }
+                }
 
                 hideLoadingDataDialog();
             }
@@ -648,13 +692,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPointsToast(String pMemberName, String pChoreName, int pChoreValue) {
-        String toastText = Utils.makeRaceItemText(pMemberName, pChoreName, pChoreValue, this);
-        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+        if (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
+            String toastText = Utils.makeRaceItemText(pMemberName, pChoreName, pChoreValue, this, true);
+            Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
-        String toastText = Utils.makeRaceItemText(pMember, pChore, this);
-        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+        if (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
+            String toastText = Utils.makeRaceItemText(pMember, pChore, this, true);
+            Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showLoadingDataDialog() {

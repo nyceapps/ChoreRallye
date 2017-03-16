@@ -12,6 +12,7 @@
     <string name="dialog_text_no_chores">Sie haben bisher keinen Aufgaben hinzugefügt.\nSie benötigen Sie, um die App zu verwenden.</string>
     <string name="dialog_text_no_household_name">Sie haben noch keinen Haushaltsnamen angegeben.\nBitte setzen Sie ihn in den Einstellungen oder scannen Sie einen QR-Code ein.</string>
     <string name="dialog_text_loading_data">Lade Daten</string>
+    <string name="dialog_text_saving_data">Speichere Daten</string>
     <string name="dialog_text_please_wait">Bitte warten...</string>
 
     <string name="dialog_button_text_cancel">Abbruch</string>
@@ -30,13 +31,16 @@
     <string name="main_menu_show_household_qr_code">QR-Code anzeigen</string>
     <string name="main_menu_scan_household_qr_code">QR-Code einscannen</string>
     <string name="main_menu_manage_history">Verlauf</string>
+    <string name="main_menu_display_mode_log">Zum Log-Modus</string>
+    <string name="main_menu_display_mode_rallye">Zum Rallye-Modus</string>
     <string name="main_menu_manage_preferences">Einstellungen</string>
 
     <string name="list_menu_action_add">Hinzufügen</string>
 
     <string name="detail_menu_action_save">Speichern</string>
 
-    <string name="toast_text_member_points_for_chore" formatted="false">%s bekommt %d Punkte für %s</string>
+    <string name="race_item_text_member_points_for_chore" formatted="false">%s bekommt %d Punkte für %s</string>
+    <string name="race_item_text_member_chore" formatted="false">%s erledigte %s.</string>
 
     <string name="list_context_menu_edit">Ändern</string>
     <string name="list_context_menu_remove">Entfernen</string>

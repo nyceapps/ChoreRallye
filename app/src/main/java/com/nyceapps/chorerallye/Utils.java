@@ -42,12 +42,18 @@ public final class Utils {
         return Math.round(pTotal > 0 ? (pPart * 100f) / pTotal : 0);
     }
 
-    public static String makeRaceItemText(MemberItem pMember, ChoreItem pChore, Context pContext) {
-        return makeRaceItemText(pMember.getName(), pChore.getName(), pChore.getValue(), pContext);
+    public static String makeRaceItemText(MemberItem pMember, ChoreItem pChore, Context pContext, boolean pIncludePoints) {
+        return makeRaceItemText(pMember.getName(), pChore.getName(), pChore.getValue(), pContext, pIncludePoints);
     }
 
-    public static String makeRaceItemText(String pMemberName, String pChoreName, int pChoreValue, Context pContext) {
-        return String.format(pContext.getString(R.string.toast_text_member_points_for_chore), pMemberName, pChoreValue, pChoreName);
+    public static String makeRaceItemText(String pMemberName, String pChoreName, int pChoreValue, Context pContext, boolean pIncludePoints) {
+        String raceItemString = null;
+        if (pIncludePoints) {
+            raceItemString = String.format(pContext.getString(R.string.race_item_text_member_points_for_chore), pMemberName, pChoreValue, pChoreName);
+        } else {
+            raceItemString = String.format(pContext.getString(R.string.race_item_text_member_chore), pMemberName, pChoreName);
+        }
+        return String.format(raceItemString, pMemberName, pChoreValue, pChoreName);
     }
 
     public static String convertFileToString(File pFile) {

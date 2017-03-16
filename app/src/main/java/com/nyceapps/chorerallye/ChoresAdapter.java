@@ -59,7 +59,16 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
                 }
             });
         }
-        holder.valueBadgeView.setText(String.valueOf(chore.getValue()));
+
+        switch (data.getSettings().getDisplayMode()) {
+            case DISPLAY_MODE_RALLYE:
+                holder.valueBadgeView.setVisibility(View.VISIBLE);
+                holder.valueBadgeView.setText(String.valueOf(chore.getValue()));
+                break;
+            case DISPLAY_MODE_LOG:
+                holder.valueBadgeView.setVisibility(View.INVISIBLE);
+                break;
+        }
     }
 
     public void updateList(List<ChoreItem> pChores) {

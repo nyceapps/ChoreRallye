@@ -8,6 +8,8 @@ import android.widget.ListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
+
 public class RaceHistoryActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +19,8 @@ public class RaceHistoryActivity extends ListActivity {
 
         final List<String> list = new ArrayList<>();
         for (RaceItem raceItem : data.getRace().getRaceItems()) {
-            String historyItem = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), this);
+            boolean includePoints = (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode()));
+            String historyItem = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), this, includePoints);
             list.add(historyItem);
         }
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);

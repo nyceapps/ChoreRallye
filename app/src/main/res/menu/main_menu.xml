@@ -24,6 +24,9 @@
         android:id="@+id/action_manage_race_history"
         android:title="@string/main_menu_manage_history"/>
     <item
+        android:id="@+id/action_switch_display_mode"
+        android:title="@string/main_menu_display_mode_log"/>
+    <item
         android:id="@+id/action_manage_preferences"
         android:title="@string/main_menu_manage_preferences"/>
 </menu>

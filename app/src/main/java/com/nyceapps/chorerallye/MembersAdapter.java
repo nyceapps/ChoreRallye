@@ -16,6 +16,9 @@ import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
+import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_LOG;
+import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
+
 /**
  * Created by lugosi on 06.02.17.
  */
@@ -71,8 +74,17 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                 }
             });
         }
-        int memberPoints = data.getRace().getPoints(member);
-        holder.valueBadgeView.setText(String.valueOf(memberPoints));
+
+        switch (data.getSettings().getDisplayMode()) {
+            case DISPLAY_MODE_RALLYE:
+                holder.valueBadgeView.setVisibility(View.VISIBLE);
+                int memberPoints = data.getRace().getPoints(member);
+                holder.valueBadgeView.setText(String.valueOf(memberPoints));
+                break;
+            case DISPLAY_MODE_LOG:
+                holder.valueBadgeView.setVisibility(View.INVISIBLE);
+                break;
+        }
     }
 
     public boolean updateList(List<MemberItem> pMembers) {

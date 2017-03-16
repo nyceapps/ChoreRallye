@@ -11,6 +11,7 @@
     <string name="dialog_text_no_chores">You have not added any chores yet.\nYou need them to use the app.</string>
     <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings or scan a QR code.</string>
     <string name="dialog_text_loading_data">Loading data</string>
+    <string name="dialog_text_saving_data">Saving data</string>
     <string name="dialog_text_please_wait">Please wait...</string>
 
     <string name="dialog_button_text_ok">OK</string>
@@ -29,13 +30,16 @@
     <string name="main_menu_show_household_qr_code">Show QR code</string>
     <string name="main_menu_scan_household_qr_code">Scan QR code</string>
     <string name="main_menu_manage_history">History</string>
+    <string name="main_menu_display_mode_log">Switch to log mode</string>
+    <string name="main_menu_display_mode_rallye">Switch to Rallye mode</string>
     <string name="main_menu_manage_preferences">Preferences</string>
 
     <string name="list_menu_action_add">Add</string>
 
     <string name="detail_menu_action_save">Save</string>
 
-    <string name="toast_text_member_points_for_chore" formatted="false">%s gets %d points for doing %s.</string>
+    <string name="race_item_text_member_points_for_chore" formatted="false">%s gets %d points for doing %s.</string>
+    <string name="race_item_text_member_chore" formatted="false">%s did %s.</string>
 
     <string name="list_context_menu_edit">Edit</string>
     <string name="list_context_menu_remove">Remove</string>
