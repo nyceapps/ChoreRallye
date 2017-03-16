@@ -1,6 +1,7 @@
 package com.nyceapps.chorerallye;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class ChoresListActivity extends AppCompatActivity {
     private ChoresListAdapter choresListAdapter;
     private DatabaseReference choresDatabase;
     private DatabaseReference raceDatabase;
+    private ProgressDialog savingDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,8 @@ public class ChoresListActivity extends AppCompatActivity {
             String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
             int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
             if (!TextUtils.isEmpty(choreName) && choreValue > 0) {
+                showSavingDataDialog();
+
                 final ChoreItem chore = new ChoreItem();
                 String uid = null;
                 switch (requestCode) {
@@ -181,6 +185,8 @@ public class ChoresListActivity extends AppCompatActivity {
                     builder.setMessage(String.format(getString(R.string.confirmation_text_update_chore_value), chore.getName()))
                             .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    showSavingDataDialog();
+
                                     Set<String> updatedRaceItemsForValue = data.getRace().updateChoreValues(chore.getUid(), chore.getValue());
                                     for (String updatedUid : updatedRaceItemsForValue) {
                                         raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_CHORE_VALUE).setValue(chore.getValue());
@@ -192,6 +198,8 @@ public class ChoresListActivity extends AppCompatActivity {
                                         }
                                     }
                                     choresDatabase.child(chore.getUid()).setValue(chore);
+
+                                    hideSavingDataDialog();
                                 }
                             })
                             .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -210,7 +218,22 @@ public class ChoresListActivity extends AppCompatActivity {
                     }
                     choresDatabase.child(uid).setValue(chore);
                 }
+
+                hideSavingDataDialog();
             }
+        }
+    }
+
+    private void showSavingDataDialog() {
+        if (savingDataDialog != null && savingDataDialog.isShowing()) {
+            return;
+        }
+        savingDataDialog = ProgressDialog.show(this, getString(R.string.dialog_text_saving_data), getString(R.string.dialog_text_please_wait), true);
+    }
+
+    private void hideSavingDataDialog() {
+        if (savingDataDialog != null && savingDataDialog.isShowing()) {
+            savingDataDialog.dismiss();
         }
     }
 }

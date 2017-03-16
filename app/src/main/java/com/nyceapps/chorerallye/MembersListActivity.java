@@ -1,6 +1,7 @@
 package com.nyceapps.chorerallye;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class MembersListActivity extends AppCompatActivity {
     private MembersListAdapter membersListAdapter;
     private DatabaseReference membersDatabase;
     private DatabaseReference raceDatabase;
+    private ProgressDialog savingDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,8 @@ public class MembersListActivity extends AppCompatActivity {
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_member), pMember.getName()))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        showSavingDataDialog();
+
                         if (data.getRace().hasMember(pMember.getUid())) {
                             Set<String> removedRaceItems = data.getRace().removeMembers(pMember.getUid());
                             for (String removedUid : removedRaceItems) {
@@ -124,6 +128,8 @@ public class MembersListActivity extends AppCompatActivity {
                             }
                         }
                         membersDatabase.child(pMember.getUid()).removeValue();
+
+                        hideSavingDataDialog();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -139,6 +145,8 @@ public class MembersListActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             String memberName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
             if (!TextUtils.isEmpty(memberName)) {
+                showSavingDataDialog();
+
                 MemberItem member = new MemberItem();
                 String uid = null;
                 switch (requestCode) {
@@ -164,7 +172,22 @@ public class MembersListActivity extends AppCompatActivity {
                 }
 
                 membersDatabase.child(uid).setValue(member);
+
+                hideSavingDataDialog();
             }
+        }
+    }
+
+    private void showSavingDataDialog() {
+        if (savingDataDialog != null && savingDataDialog.isShowing()) {
+            return;
+        }
+        savingDataDialog = ProgressDialog.show(this, getString(R.string.dialog_text_saving_data), getString(R.string.dialog_text_please_wait), true);
+    }
+
+    private void hideSavingDataDialog() {
+        if (savingDataDialog != null && savingDataDialog.isShowing()) {
+            savingDataDialog.dismiss();
         }
     }
 }
