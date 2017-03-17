@@ -21,8 +21,6 @@
 * App-Store-Beta
   * https://support.google.com/googleplay/android-developer/answer/3131213?hl=de
 * Backup per JSON-Datei
-* RaceItem um Infos ergänzen: Welche anonyme User-Id hat's erfasst
-  * Nicht mehr nörig, wegen Anzeige auf anderen Apps
 * Effekt für die Bilder?
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
@@ -31,4 +29,4 @@
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
-* About und Lizenzen
+* About, Lizenzen, Icons
