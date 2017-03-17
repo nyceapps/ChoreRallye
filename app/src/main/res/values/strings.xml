@@ -3,6 +3,7 @@
 
     <string name="layout_item_text_member">Person</string>
     <string name="layout_item_text_chore">Chore</string>
+    <string name="layout_item_text_race_history_item">Race history Item</string>
 
     <string name="dialog_text_choose_image">Choose image</string>
     <string name="dialog_text_capture_camera_image">Capture camera image</string>
@@ -46,6 +47,7 @@
 
     <string name="confirmation_text_remove_member" formatted="false">Do you really want to remove person \"%s\"?</string>
     <string name="confirmation_text_remove_chore" formatted="false">Do you really want to remove chore \"%s\"?</string>
+    <string name="confirmation_text_remove_race_history_item">Do you really want to remove this entry?</string>
     <string name="confirmation_text_update_chore_value" formatted="false">Do you really want to change the value for chore \"%s\"?</string>
     <string name="confirmation_text_change_household_name">Do you really want to change the household name?\nYou cannot use the existing data anymore!</string>
     <string name="confirmation_text_participate_in_household" formatted="false">Do you really want to participate in Household \"%s\"?\nAny previous existing data cannot be used anymore!</string>

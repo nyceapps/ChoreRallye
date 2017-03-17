@@ -4,6 +4,7 @@
 
     <string name="layout_item_text_chore">Aufgabe</string>
     <string name="layout_item_text_member">Person</string>
+    <string name="layout_item_text_race_history_item">Verlaufseintrag</string>
 
     <string name="dialog_text_choose_image">Bild auswählen</string>
     <string name="dialog_text_capture_camera_image">Bild mir der Kamera aufnehmen</string>
@@ -45,8 +46,9 @@
     <string name="list_context_menu_edit">Ändern</string>
     <string name="list_context_menu_remove">Entfernen</string>
 
-    <string name="confirmation_text_remove_member" formatted="false">Wollen Sie wirklich die Person \"%s\" entfernen?</string>
-    <string name="confirmation_text_remove_chore" formatted="false">Wollen Sie wirklich die Aufgabe \"%s\" entfernen?</string>
+    <string name="confirmation_text_remove_member" formatted="false">Wollen Sie die Person \"%s\" wirklich entfernen?</string>
+    <string name="confirmation_text_remove_chore" formatted="false">Wollen Sie die Aufgabe \"%s\" wirklich entfernen?</string>
+    <string name="confirmation_text_remove_race_history_item">Wollen Sie diesen Eintrag wirklich entfernen?</string>
     <string name="confirmation_text_change_household_name">Wollen Sie wirklich den Haushaltsnamen ändern?\nSie können die existierenden Daten nicht mehr verwenden!</string>
     <string name="confirmation_text_participate_in_household" formatted="false">Wollen Sie wirklich am Haushalt \"%s\" teilnehmen?\nBisher existierende Daten können nicht mehr verwendet werden!</string>
     <string name="confirmation_text_end_rallye">Wollen Sie die Rallye wirklich beenden?</string>
