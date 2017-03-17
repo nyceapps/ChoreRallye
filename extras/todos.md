@@ -3,9 +3,9 @@
     * Angabe von %, Dauer
   * Icons
 * History
-  * bearbeiten
-    * http://www.vogella.com/tutorials/AndroidListView/article.html#arrayAdapter
   * Datumsheader
+    * http://stackoverflow.com/questions/36907711/how-to-implement-recyclerview-with-section-header-depending-on-category
+    * https://gist.github.com/gabrielemariotti/4c189fb1124df4556058
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn (Standard: 67%)
@@ -35,4 +35,4 @@
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
-* Scrolling im Choregrid
+* Scrolling im Choregrid ohne Drag&Drop auszulösen
