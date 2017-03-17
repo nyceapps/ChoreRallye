@@ -1,28 +1,36 @@
 package com.nyceapps.chorerallye;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.truizlop.sectionedrecyclerview.SimpleSectionedAdapter;
 
-import static com.nyceapps.chorerallye.Constants.CONTEXT_MENU_ACTION_EDIT;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.nyceapps.chorerallye.Constants.CONTEXT_MENU_ACTION_REMOVE;
 import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
 
 /**
  * Created by lugosi on 06.02.17.
  */
-public class RaceHistoryListAdapter extends RecyclerView.Adapter<RaceHistoryListAdapter.ViewHolder> {
+public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryListAdapter.ViewHolder> {
     private RallyeData data;
     private RaceHistoryActivity callingActivity;
-    private final boolean includePoints;
+    private boolean includePoints;
+    private List<String> raceHistorySections;
+    private Map<String, List<String>> raceHistoryItems;
+    private java.text.DateFormat dateFormat;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RaceHistoryListAdapter(RallyeData pData, RaceHistoryActivity pCallingActivity) {
@@ -30,30 +38,55 @@ public class RaceHistoryListAdapter extends RecyclerView.Adapter<RaceHistoryList
         callingActivity = pCallingActivity;
 
         includePoints = (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode()));
+        dateFormat = DateFormat.getDateFormat(pCallingActivity);
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.race_history_list_item_layout, parent, false);
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindItemViewHolder(ViewHolder holder, int section, int position) {
         RaceItem raceItem = data.getRace().getRaceItems().get(position);
 
-        String raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
+        String sectionKey = raceHistorySections.get(section);
+        String raceHistoryItemText = "";
+        List<String> raceHistoryItemList = raceHistoryItems.get(sectionKey);
+        if (raceHistoryItemList != null) {
+            raceHistoryItemText = raceHistoryItemList.get(position);
+        }
+
         holder.raceHistoryItemTextView.setText(raceHistoryItemText);
         holder.raceHistoryItemTextView.setTag(raceItem);
     }
 
     public void updateList(List<RaceItem> pRaceItems) {
         if (pRaceItems.size() != data.getMembers().size() || !data.getMembers().containsAll(pRaceItems)) {
+            prepareSectionData(pRaceItems);
             data.getRace().setRaceItems(pRaceItems);
             notifyDataSetChanged();
+        }
+    }
+
+    private void prepareSectionData(List<RaceItem> pRaceItems) {
+        raceHistorySections = new ArrayList<>();
+        raceHistoryItems = new HashMap<>();
+
+        for (RaceItem raceItem : pRaceItems) {
+            Date raceItemDate = raceItem.getDate();
+            String raceItemDateStr = dateFormat.format(raceItemDate);
+            if (!raceHistorySections.contains(raceItemDateStr)) {
+                raceHistorySections.add(raceItemDateStr);
+                raceHistoryItems.put(raceItemDateStr, new ArrayList<String>());
+            }
+
+            List<String> raceHistoryItemList = raceHistoryItems.get(raceItemDateStr);
+            String raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
+            raceHistoryItemList.add(raceHistoryItemText);
+            raceHistoryItems.put(raceItemDateStr, raceHistoryItemList);
         }
     }
 
@@ -90,9 +123,32 @@ public class RaceHistoryListAdapter extends RecyclerView.Adapter<RaceHistoryList
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public int getItemCount() {
-        return data.getRace().getRaceItems().size();
+    protected String getSectionHeaderTitle(int section) {
+        if (raceHistorySections == null) {
+            return "";
+        }
+        return raceHistorySections.get(section);
+    }
+
+    @Override
+    protected int getSectionCount() {
+        if (raceHistorySections == null) {
+            return 0;
+        }
+        return raceHistorySections.size();
+    }
+
+    @Override
+    protected int getItemCountForSection(int section) {
+        if (raceHistorySections == null) {
+            return 0;
+        }
+        String sectionKey = raceHistorySections.get(section);
+        List<String> raceHistoryItemList = raceHistoryItems.get(sectionKey);
+        if (raceHistoryItemList == null) {
+            return 0;
+        }
+        return raceHistoryItemList.size();
     }
 }

@@ -35,4 +35,3 @@
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
-* Scrolling im Choregrid ohne Drag&Drop auszulösen

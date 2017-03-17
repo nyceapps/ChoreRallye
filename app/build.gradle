@@ -43,6 +43,8 @@ dependencies {
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
     // QRCodeReaderView
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.1'
+    // SectionedRecyclerView
+    compile 'com.truizlop.sectionedrecyclerview:library:1.2.0'
     // Android ViewBadger
     // https://github.com/jgilfelt/android-viewbadger
     //compile files('libs/android-viewbadger.jar')
