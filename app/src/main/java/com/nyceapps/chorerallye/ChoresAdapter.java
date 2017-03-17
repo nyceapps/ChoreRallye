@@ -45,9 +45,9 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
         holder.imageImageView.setImageDrawable(chore.getDrawable(callingActivity.getBaseContext()));
         holder.imageImageView.setTag(chore);
         if (data.getSettings().isRunning()) {
-            holder.imageImageView.setOnTouchListener(new View.OnTouchListener() {
+            holder.imageImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
+                public boolean onLongClick(View v) {
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
