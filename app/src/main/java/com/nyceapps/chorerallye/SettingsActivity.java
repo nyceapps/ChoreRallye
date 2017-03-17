@@ -124,12 +124,18 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentageValue() {
-        int winningPercentage = data.getSettings().getWinningPercentage();
+        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        if (data != null) {
+            winningPercentage = data.getSettings().getWinningPercentage();
+        }
         prefWinningPercentage.setText(String.valueOf(winningPercentage));
     }
 
     private void setWinningPercentageSummary() {
-        int winningPercentage = data.getSettings().getWinningPercentage();
+        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        if (data != null) {
+            winningPercentage = data.getSettings().getWinningPercentage();
+        }
         prefWinningPercentage.setSummary(String.valueOf(winningPercentage));
     }
 }

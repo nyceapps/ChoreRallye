@@ -35,6 +35,7 @@
     <string name="main_menu_display_mode_log">Zum Log-Modus</string>
     <string name="main_menu_display_mode_rallye">Zum Rallye-Modus</string>
     <string name="main_menu_manage_preferences">Einstellungen</string>
+    <string name="main_menu_submenu_more">Mehr...</string>
 
     <string name="list_menu_action_add">Hinzufügen</string>
 

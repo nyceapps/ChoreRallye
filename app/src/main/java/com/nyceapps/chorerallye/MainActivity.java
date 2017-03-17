@@ -250,11 +250,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_start_stop_race:
-                boolean isRunning = data.getSettings().isRunning();
-                if (isRunning) {
-                    stopRace();
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
                 } else {
-                    startRace();
+                    boolean isRunning = data.getSettings().isRunning();
+                    if (isRunning) {
+                        stopRace();
+                    } else {
+                        startRace();
+                    }
                 }
                 break;
             case R.id.action_manage_members:
@@ -289,14 +293,18 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_switch_display_mode:
-                String displayMode = data.getSettings().getDisplayMode();
-                switch (displayMode) {
-                    case DISPLAY_MODE_RALLYE:
-                        switchDisplayMode(DISPLAY_MODE_LOG);
-                        break;
-                    case DISPLAY_MODE_LOG:
-                        switchDisplayMode(DISPLAY_MODE_RALLYE);
-                        break;
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    String displayMode = data.getSettings().getDisplayMode();
+                    switch (displayMode) {
+                        case DISPLAY_MODE_RALLYE:
+                            switchDisplayMode(DISPLAY_MODE_LOG);
+                            break;
+                        case DISPLAY_MODE_LOG:
+                            switchDisplayMode(DISPLAY_MODE_RALLYE);
+                            break;
+                    }
                 }
                 break;
             case R.id.action_manage_preferences:
@@ -442,7 +450,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_CODE_MANAGE_PREFERENCES:
-                settingsDatabase.setValue(data.getSettings());
+                if (data != null) {
+                    settingsDatabase.setValue(data.getSettings());
+                }
                 break;
         }
     }
