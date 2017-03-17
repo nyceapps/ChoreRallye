@@ -2,10 +2,6 @@
   * Rallye starten beenden
     * Angabe von %, Dauer
   * Icons
-* History
-  * Datumsheader
-    * http://stackoverflow.com/questions/36907711/how-to-implement-recyclerview-with-section-header-depending-on-category
-    * https://gist.github.com/gabrielemariotti/4c189fb1124df4556058
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn (Standard: 67%)
@@ -35,3 +31,4 @@
 * Anzeige bisherige Dauer, Restdauer, Ziel Rallye
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
+* About und Lizenzen
