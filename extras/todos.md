@@ -2,7 +2,6 @@
 * Hauptmenü
   * Rallye starten beenden
     * Angabe von %, Dauer
-  * Icons
 * Rallye-Einstellungen in der Datenbank
   * Länge des Rennens
   * x% bis zum Gewinn (Standard: 67%)
@@ -26,7 +25,6 @@
 * Icon-Rechte klären
 * Fortschritt: Rennen der Männchen
   * Spur der Mänchen, graue Linie?
-  * rote Linie bei konfigurierten %
 * Anzeige Ziel Rallye?
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren

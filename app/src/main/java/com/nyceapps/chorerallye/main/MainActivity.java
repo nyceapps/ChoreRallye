@@ -556,7 +556,9 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = Bitmap.createBitmap(raceViewWidth, raceViewHeight, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             canvas.drawLine(startX, 0, startX, raceViewHeight, dark);
+            canvas.drawLine(goalX - 1, 0, goalX - 1, raceViewHeight, primary);
             canvas.drawLine(goalX, 0, goalX, raceViewHeight, primary);
+            canvas.drawLine(goalX + 1, 0, goalX + 1, raceViewHeight, primary);
             canvas.drawLine(finishX, 0, finishX, raceViewHeight, dark);
 
             Drawable drawable = new BitmapDrawable(getResources(), bitmap);
