@@ -78,7 +78,8 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
         raceHistorySections = new ArrayList<>();
         raceHistoryItems = new HashMap<>();
 
-        for (RaceItem raceItem : pRaceItems) {
+        for (int i = pRaceItems.size() - 1; i >= 0; i--) {
+            RaceItem raceItem = pRaceItems.get(i);
             Date raceItemDate = raceItem.getDate();
             String raceItemDateStr = dateFormat.format(raceItemDate);
             if (!raceHistorySections.contains(raceItemDateStr)) {
