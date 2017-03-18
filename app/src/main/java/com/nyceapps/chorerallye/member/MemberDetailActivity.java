@@ -1,10 +1,15 @@
 package com.nyceapps.chorerallye.member;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -13,12 +18,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.mikelau.croperino.Croperino;
 import com.mikelau.croperino.CroperinoConfig;
 import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.ScanQRCodeActivity;
 import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
@@ -28,6 +35,7 @@ import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA;
 
 public class MemberDetailActivity extends AppCompatActivity {
     private String uid;
@@ -37,6 +45,7 @@ public class MemberDetailActivity extends AppCompatActivity {
     private boolean cameraPhotoWasChosen;
     private File tempCameraFile;
 
+    private ViewGroup mainLayout;
     private ImageView memberImageImageView;
     private EditText memberNameEditText;
 
@@ -44,6 +53,8 @@ public class MemberDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_detail);
+
+        mainLayout = (ViewGroup) findViewById(R.id.member_detail_main_layout);
 
         Intent intent = getIntent();
         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
@@ -58,7 +69,11 @@ public class MemberDetailActivity extends AppCompatActivity {
         memberImageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage();
+                if (ActivityCompat.checkSelfPermission(MemberDetailActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    chooseImage();
+                } else {
+                    requestCameraPermission();
+                }
             }
         });
 
@@ -84,6 +99,39 @@ public class MemberDetailActivity extends AppCompatActivity {
         });
 
         cameraPhotoWasChosen = false;
+    }
+
+    private void requestCameraPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
+            Snackbar.make(mainLayout, "Camera access is required to display the camera preview.",
+                    Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                    ActivityCompat.requestPermissions(MemberDetailActivity.this, new String[] {
+                            android.Manifest.permission.CAMERA
+                    }, REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
+                }
+            }).show();
+        } else {
+            Snackbar.make(mainLayout, "Permission is not available. Requesting camera permission.",
+                    Snackbar.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.CAMERA
+            }, REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
+        }
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                                     @NonNull int[] grantResults) {
+        if (requestCode != REQUEST_CODE_PERMISSION_REQUEST_CAMERA) {
+            return;
+        }
+
+        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Snackbar.make(mainLayout, "Camera permission was granted.", Snackbar.LENGTH_SHORT).show();
+            chooseImage();
+        } else {
+            Snackbar.make(mainLayout, "Camera permission request was denied.", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     public void chooseImage() {
