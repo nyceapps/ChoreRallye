@@ -6,4 +6,6 @@
     <dimen name="rallye_item_width">64dp</dimen>
     <dimen name="race_runner_height">24dp</dimen>
     <dimen name="race_runner_width">24dp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <dimen name="font_size_normal">14sp</dimen>
 </resources>

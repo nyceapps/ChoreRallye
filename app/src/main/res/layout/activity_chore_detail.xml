@@ -12,12 +12,14 @@
         android:src="@drawable/chore_placeholder"/>
     <EditText
         android:id="@+id/chore_name"
+        android:textSize="@dimen/font_size_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:hint="@string/edittext_hint_name"/>
     <EditText
         android:id="@+id/chore_value"
+        android:textSize="@dimen/font_size_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

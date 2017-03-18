@@ -12,6 +12,7 @@
     <TextView
         android:id="@+id/race_member_name"
         android:text="@string/layout_item_text_member"
+        android:textSize="@dimen/font_size_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"/>

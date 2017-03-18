@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_scan_qr_code_to_participate"
+        android:textSize="@dimen/font_size_normal"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"/>

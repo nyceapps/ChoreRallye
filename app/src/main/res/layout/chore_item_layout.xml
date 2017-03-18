@@ -12,6 +12,7 @@
     <TextView
         android:id="@+id/chore_name"
         android:text="@string/layout_item_text_chore"
+        android:textSize="@dimen/font_size_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="2"
