@@ -9,18 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nyceapps.chorerallye.main.Constants;
-import com.nyceapps.chorerallye.main.MainActivity;
 import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.MainActivity;
 import com.nyceapps.chorerallye.main.RallyeData;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
+
 /**
  * Created by lugosi on 06.02.17.
  */
-public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder> implements Constants {
+public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder> {
     private RallyeData data;
     private MainActivity callingActivity;
 

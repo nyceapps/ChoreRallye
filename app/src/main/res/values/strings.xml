@@ -4,6 +4,7 @@
     <string name="layout_item_text_member">Person</string>
     <string name="layout_item_text_chore">Chore</string>
     <string name="layout_item_text_race_history_item">Race history Item</string>
+    <string name="layout_item_text_rallye_info">Rallye info</string>
 
     <string name="dialog_text_choose_image">Choose image</string>
     <string name="dialog_text_capture_camera_image">Capture camera image</string>
@@ -43,6 +44,9 @@
     <string name="race_item_text_member_points_for_chore" formatted="false">%s gets %d points for doing %s.</string>
     <string name="race_item_text_member_chore" formatted="false">%s did %s.</string>
 
+    <string name="race_info_text_not_running">No Rallye running.</string>
+    <string name="race_info_text_running" formatted="false">Period: %s, days left: %d</string>
+
     <string name="list_context_menu_edit">Edit</string>
     <string name="list_context_menu_remove">Remove</string>
 
@@ -60,6 +64,7 @@
     <string name="pref_title_household_name">Household name</string>
     <string name="pref_summary_household_name">The symbolic name of your household</string>
     <string name="pref_title_winning_percentage">Winning percentage</string>
+    <string name="pref_title_rallye_length">Length of Rallye in days</string>
 
     <string name="text_scan_qr_code_to_participate">Scan this QR code with another app to participate in the same household.</string>
 </resources>

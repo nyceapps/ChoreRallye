@@ -10,9 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nyceapps.chorerallye.main.Constants;
-import com.nyceapps.chorerallye.main.MainActivity;
 import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.MainActivity;
 import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;
 import com.nyceapps.chorerallye.member.MemberItem;
@@ -20,7 +19,7 @@ import com.nyceapps.chorerallye.member.MemberItem;
 /**
  * Created by lugosi on 06.02.17.
  */
-public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> implements Constants {
+public class RaceAdapter extends RecyclerView.Adapter<RaceAdapter.ViewHolder> {
     private static final String TAG = RaceAdapter.class.getSimpleName();
 
     private MainActivity callingActivity;

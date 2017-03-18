@@ -40,11 +40,13 @@ public interface Constants {
     String DATABASE_CHILD_KEY_CHORE_VALUE = "choreValue";
 
     String DATABASE_KEY_DATE_STARTED = "dateStarted";
+    String DATABASE_KEY_DATE_ENDING = "dateEnding";
 
     String PREF_KEY_HOUSEHOLD_ID = "pref_key_household_id";
     String PREF_KEY_HOUSEHOLD_NAME = "pref_key_household_name";
-    String PREF_KEY_LASTDISPLAYEDRACEITEMUID = "pref_key_last_displayed_race_item_uid";
+    String PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID = "pref_key_last_displayed_race_item_uid";
     String PREF_KEY_WINNING_PERCENTAGE = "pref_key_winning_percentage";
+    String PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS = "pref_key_length_of_rallye_in_days";
 
     String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
     String PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY = "pref_key_prefeix_local_history_entry_";
@@ -54,6 +56,7 @@ public interface Constants {
 
     String SETTINGS_DEFAULT_VALUE_DISPLAY_MODE = DISPLAY_MODE_RALLYE;
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
+    int SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS = 30;
 
     String HOUSEHOLD_ID_INFIX = "___";
 }

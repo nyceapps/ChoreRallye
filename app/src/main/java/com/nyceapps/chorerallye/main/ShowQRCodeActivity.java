@@ -13,6 +13,8 @@ import com.nyceapps.chorerallye.R;
 
 import net.glxn.qrgen.android.QRCode;
 
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+
 public class ShowQRCodeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +22,7 @@ public class ShowQRCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_qr_code);
 
         Intent intent = getIntent();
-        String householdId = intent.getStringExtra(Constants.EXTRA_MESSAGE_VALUE);
+        String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
 
         if (!TextUtils.isEmpty(householdId)) {
             WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);

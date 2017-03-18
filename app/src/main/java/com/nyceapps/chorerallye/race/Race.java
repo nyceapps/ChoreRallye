@@ -14,6 +14,7 @@ import java.util.Set;
 
 public class Race {
     private Date dateStarted;
+    private Date dateEnding;
     private List<RaceItem> raceItems;
 
     public Race() {
@@ -27,6 +28,14 @@ public class Race {
 
     public void setDateStarted(Date pDateStarted) {
         dateStarted = pDateStarted;
+    }
+
+    public Date getDateEnding() {
+        return dateEnding;
+    }
+
+    public void setDateEnding(Date pDateEnding) {
+        dateEnding = pDateEnding;
     }
 
     public List<RaceItem> getRaceItems() {

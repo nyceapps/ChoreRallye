@@ -9,6 +9,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LOCAL_HISTORY_COUNT;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY;
+
 /**
  * Created by lugosi on 26.02.17.
  */
@@ -40,12 +43,12 @@ public class LocalHistory {
     public void init() {
         entries = new ArrayList<>();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int localHistoryCount = sharedPreferences.getInt(Constants.PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+        int localHistoryCount = sharedPreferences.getInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
         if (localHistoryCount > 0) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(Constants.PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+            editor.putInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
             for (int i = 0; i < entries.size(); i++) {
-                String key = Constants.PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
+                String key = PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
                 editor.remove(key);
             }
             editor.commit();
@@ -55,10 +58,10 @@ public class LocalHistory {
     private void load() {
         entries = new ArrayList<>();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int localHistoryCount = sharedPreferences.getInt(Constants.PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+        int localHistoryCount = sharedPreferences.getInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
         Log.d(TAG, String.format("localHistoryCount = [%d]", localHistoryCount));
         for (int i = 0; i < localHistoryCount; i++) {
-            String key = Constants.PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
+            String key = PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
             String value = sharedPreferences.getString(key, null);
             if (!TextUtils.isEmpty(value)) {
                 entries.add(value);
@@ -70,9 +73,9 @@ public class LocalHistory {
         if (entries != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(Constants.PREF_KEY_LOCAL_HISTORY_COUNT, entries.size());
+            editor.putInt(PREF_KEY_LOCAL_HISTORY_COUNT, entries.size());
             for (int i = 0; i < entries.size(); i++) {
-                String key = Constants.PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
+                String key = PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY + i;
                 editor.putString(key, entries.get(i));
             }
             editor.commit();

@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.nyceapps.chorerallye.R;
 
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA;
+
 public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
     private ViewGroup mainLayout;
 
@@ -50,7 +53,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeReade
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
         Intent intent = new Intent();
-        intent.putExtra(Constants.EXTRA_MESSAGE_VALUE, text);
+        intent.putExtra(EXTRA_MESSAGE_VALUE, text);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -62,7 +65,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeReade
                 @Override public void onClick(View view) {
                     ActivityCompat.requestPermissions(ScanQRCodeActivity.this, new String[] {
                             android.Manifest.permission.CAMERA
-                    }, Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
+                    }, REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
                 }
             }).show();
         } else {
@@ -70,13 +73,13 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeReade
                     Snackbar.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.CAMERA
-            }, Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
+            }, REQUEST_CODE_PERMISSION_REQUEST_CAMERA);
         }
     }
 
     @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                                      @NonNull int[] grantResults) {
-        if (requestCode != Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA) {
+        if (requestCode != REQUEST_CODE_PERMISSION_REQUEST_CAMERA) {
             return;
         }
 

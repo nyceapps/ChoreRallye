@@ -7,6 +7,15 @@
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:orientation="vertical">
+    <TextView
+        android:id="@+id/info_view"
+        android:text="@string/layout_item_text_rallye_info"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="4dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/race_view"
         android:scrollbars="none"

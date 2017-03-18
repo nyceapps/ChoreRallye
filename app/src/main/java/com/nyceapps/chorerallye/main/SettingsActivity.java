@@ -11,6 +11,12 @@ import android.text.TextUtils;
 
 import com.nyceapps.chorerallye.R;
 
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_WINNING_PERCENTAGE;
+import static com.nyceapps.chorerallye.main.Constants.SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS;
+import static com.nyceapps.chorerallye.main.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+
 /**
  * Created by bela on 22.02.17.
  */
@@ -23,6 +29,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     private EditTextPreference prefHouseholdName;
     private EditTextPreference prefWinningPercentage;
+    private EditTextPreference prefLengthOfRallyeInDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +41,14 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         setHouseholdNamePreference();
         setWinningPercentagePreference();
+        setLengthOfRallyeInDaysPreference();
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, final Object newValue) {
         String prefKey = preference.getKey();
-        if (Constants.PREF_KEY_HOUSEHOLD_NAME.equals(prefKey)) {
-            if (newValue instanceof String) {
+        if (newValue instanceof String) {
+            if (PREF_KEY_HOUSEHOLD_NAME.equals(prefKey)) {
                 final String householdName = (String) newValue;
                 if (!TextUtils.isEmpty(householdName) && !householdName.equals(previousHouseholdName)) {
                     if (!TextUtils.isEmpty(previousHouseholdName)) {
@@ -60,18 +68,25 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                         setHouseholdData(householdName);
                     }
                 }
-            }
-            return false;
-        } else if (Constants.PREF_KEY_WINNING_PERCENTAGE.equals(prefKey)) {
-            if (newValue instanceof String) {
-                String winningPerecentageStr = (String) newValue;
-                int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
-                if (!TextUtils.isEmpty(winningPerecentageStr) && TextUtils.isDigitsOnly(winningPerecentageStr)) {
-                    winningPercentage = Integer.parseInt(winningPerecentageStr);
+                return false;
+            } else if (PREF_KEY_WINNING_PERCENTAGE.equals(prefKey)) {
+                String winningPercentageStr = (String) newValue;
+                int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+                if (!TextUtils.isEmpty(winningPercentageStr) && TextUtils.isDigitsOnly(winningPercentageStr)) {
+                    winningPercentage = Integer.parseInt(winningPercentageStr);
                 }
                 data.getSettings().setWinningPercentage(winningPercentage);
                 setWinningPercentageValue();
                 setWinningPercentageSummary();
+            } else if (PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS.equals(prefKey)) {
+                String lengthOfRallyeInDaysStr = (String) newValue;
+                int lengthOfRallyeInDays = SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS;
+                if (!TextUtils.isEmpty(lengthOfRallyeInDaysStr) && TextUtils.isDigitsOnly(lengthOfRallyeInDaysStr)) {
+                    lengthOfRallyeInDays = Integer.parseInt(lengthOfRallyeInDaysStr);
+                }
+                data.getSettings().setLengthOfRallyeInDays(lengthOfRallyeInDays);
+                setLengthOfRallyeInDaysValue();
+                setLengthOfRallyeInDaysSummary();
             }
         }
 
@@ -98,7 +113,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setHouseholdNamePreference() {
-        prefHouseholdName = (EditTextPreference) findPreference(Constants.PREF_KEY_HOUSEHOLD_NAME);
+        prefHouseholdName = (EditTextPreference) findPreference(PREF_KEY_HOUSEHOLD_NAME);
         prefHouseholdName.setOnPreferenceChangeListener(this);
         previousHouseholdName = prefHouseholdName.getText();
 
@@ -114,7 +129,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentagePreference() {
-        prefWinningPercentage = (EditTextPreference) findPreference(Constants.PREF_KEY_WINNING_PERCENTAGE);
+        prefWinningPercentage = (EditTextPreference) findPreference(PREF_KEY_WINNING_PERCENTAGE);
         prefWinningPercentage.setOnPreferenceChangeListener(this);
 
         setWinningPercentageValue();
@@ -122,7 +137,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentageValue() {
-        int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
         if (data != null) {
             winningPercentage = data.getSettings().getWinningPercentage();
         }
@@ -130,10 +145,34 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentageSummary() {
-        int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
         if (data != null) {
             winningPercentage = data.getSettings().getWinningPercentage();
         }
         prefWinningPercentage.setSummary(String.valueOf(winningPercentage));
+    }
+
+    private void setLengthOfRallyeInDaysPreference() {
+        prefLengthOfRallyeInDays = (EditTextPreference) findPreference(PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS);
+        prefLengthOfRallyeInDays.setOnPreferenceChangeListener(this);
+
+        setLengthOfRallyeInDaysValue();
+        setLengthOfRallyeInDaysSummary();
+    }
+
+    private void setLengthOfRallyeInDaysValue() {
+        int lengthOfRallyeInDays = SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS;
+        if (data != null) {
+            lengthOfRallyeInDays = data.getSettings().getLengthOfRallyeInDays();
+        }
+        prefLengthOfRallyeInDays.setText(String.valueOf(lengthOfRallyeInDays));
+    }
+
+    private void setLengthOfRallyeInDaysSummary() {
+        int lengthOfRallyeInDays = SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS;
+        if (data != null) {
+            lengthOfRallyeInDays = data.getSettings().getLengthOfRallyeInDays();
+        }
+        prefLengthOfRallyeInDays.setSummary(String.valueOf(lengthOfRallyeInDays));
     }
 }

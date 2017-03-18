@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,9 +25,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
+
+import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_ID;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID;
 
 /**
  * Created by bela on 08.02.17.
@@ -149,7 +158,7 @@ public final class Utils {
 
     public static String getHouseholdId(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String householdId = sharedPreferences.getString(Constants.PREF_KEY_HOUSEHOLD_ID, null);
+        String householdId = sharedPreferences.getString(PREF_KEY_HOUSEHOLD_ID, null);
         Log.d(TAG, String.format("householdId = [%s]", householdId));
         return householdId;
     }
@@ -157,7 +166,7 @@ public final class Utils {
     public static void setHouseholdIdByName(String pHouseholdName, Context pContext) {
         String householdId = null;
         if (!TextUtils.isEmpty(pHouseholdName)) {
-            householdId = pHouseholdName + Constants.HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
+            householdId = pHouseholdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
         }
         setHouseholdId(householdId, pContext);
     }
@@ -165,28 +174,58 @@ public final class Utils {
     public static void setHouseholdId(String pHouseholdId, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Constants.PREF_KEY_HOUSEHOLD_ID, pHouseholdId);
+        editor.putString(PREF_KEY_HOUSEHOLD_ID, pHouseholdId);
         editor.commit();
     }
 
     public static void setHouseholdName(String pHouseholdName, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Constants.PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
+        editor.putString(PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
         editor.commit();
     }
 
     public static String getLastDisplayedRaceItemUid(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String LastDisplayedRaceItemUid = sharedPreferences.getString(Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID, null);
-        Log.d(TAG, String.format("LastDisplayedRaceItemUid = [%s]", LastDisplayedRaceItemUid));
-        return LastDisplayedRaceItemUid;
+        String lastDisplayedRaceItemUid = sharedPreferences.getString(PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID, null);
+        Log.d(TAG, String.format("lastDisplayedRaceItemUid = [%s]", lastDisplayedRaceItemUid));
+        return lastDisplayedRaceItemUid;
     }
 
     public static void setLastDisplayedRaceItemUid(String pLastDisplayedRaceItemUid, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID, pLastDisplayedRaceItemUid);
+        editor.putString(PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID, pLastDisplayedRaceItemUid);
         editor.commit();
+    }
+
+    public static Date getDateEndingForRace(Date pDateStarted, int pLengthOfRallyeInDays) {
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+        cal.setTime(pDateStarted);
+        cal.add(Calendar.DAY_OF_MONTH, pLengthOfRallyeInDays);
+        return cal.getTime();
+    }
+
+    public static String getRaceInfoText(RallyeData pData, Context pContext) {
+        String raceInfoText = pContext.getString(R.string.race_info_text_not_running);
+        if (pData != null) {
+            if (pData.getSettings().isRunning()) {
+                Date dateStarted = pData.getRace().getDateStarted();
+                Date dateEnding = pData.getRace().getDateEnding();
+
+                java.text.DateFormat dateFormat = DateFormat.getDateFormat(pContext);
+                String dateStartedStr = dateFormat.format(dateStarted);
+                String dateEndingStr = dateFormat.format(dateEnding);
+                String datePeriodStr = dateStartedStr + " - " + dateEndingStr;
+
+                long startTime = dateStarted.getTime();
+                long endTime = dateEnding.getTime();
+                long diffTime = endTime - startTime;
+                long daysLeft = (diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                raceInfoText = String.format(pContext.getString(R.string.race_info_text_running), datePeriodStr, daysLeft);
+            }
+        }
+        return raceInfoText;
     }
 }

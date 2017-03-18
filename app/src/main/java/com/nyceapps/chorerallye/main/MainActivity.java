@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +47,23 @@ import com.nyceapps.chorerallye.race.RaceItem;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.nyceapps.chorerallye.main.Constants.CHORE_COLUMNS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_ENDING;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_STARTED;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_HISTORY;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_META;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_SETTINGS;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -73,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog participateHouseholdDialog;
     private ProgressDialog loadingDataDialog;
 
+    private TextView infoView;
     private RecyclerView raceView;
 
     @Override
@@ -135,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
             initMembersView();
             initChoresView();
+            initInfoView();
             initRaceView();
 
             initDatabases();
@@ -220,10 +240,10 @@ public class MainActivity extends AppCompatActivity {
             if (itemSwitchDisplayMode != null) {
                 String displayMode = data.getSettings().getDisplayMode();
                 switch (displayMode) {
-                    case Constants.DISPLAY_MODE_RALLYE:
+                    case DISPLAY_MODE_RALLYE:
                         itemSwitchDisplayMode.setTitle(R.string.main_menu_display_mode_log);
                         break;
-                    case Constants.DISPLAY_MODE_LOG:
+                    case DISPLAY_MODE_LOG:
                         itemSwitchDisplayMode.setTitle(R.string.main_menu_display_mode_rallye);
                         break;
                 }
@@ -292,11 +312,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String displayMode = data.getSettings().getDisplayMode();
                     switch (displayMode) {
-                        case Constants.DISPLAY_MODE_RALLYE:
-                            switchDisplayMode(Constants.DISPLAY_MODE_LOG);
+                        case DISPLAY_MODE_RALLYE:
+                            switchDisplayMode(DISPLAY_MODE_LOG);
                             break;
-                        case Constants.DISPLAY_MODE_LOG:
-                            switchDisplayMode(Constants.DISPLAY_MODE_RALLYE);
+                        case DISPLAY_MODE_LOG:
+                            switchDisplayMode(DISPLAY_MODE_RALLYE);
                             break;
                     }
                 }
@@ -318,11 +338,15 @@ public class MainActivity extends AppCompatActivity {
         localHistory.init();
 
         Date dateStarted = new Date();
-        raceDatabase.child(Constants.DATABASE_SUBPATH_META).child(Constants.DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
-        raceDatabase.child(Constants.DATABASE_SUBPATH_ITEMS).removeValue();
+        Date dateEnding = Utils.getDateEndingForRace(dateStarted, data.getSettings().getLengthOfRallyeInDays());
+        raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
+        raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(dateEnding);
+        raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
 
         membersAdapter.notifyDataSetChanged();
         choresAdapter.notifyDataSetChanged();
+
+        setInfoText();
     }
 
     private void stopRace() {
@@ -337,6 +361,8 @@ public class MainActivity extends AppCompatActivity {
 
                         membersAdapter.notifyDataSetChanged();
                         choresAdapter.notifyDataSetChanged();
+
+                        setInfoText();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -351,9 +377,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveCurrentRaceToHistory() {
         String uid = historyDatabase.push().getKey();
-        historyDatabase.child(uid).child(Constants.DATABASE_SUBPATH_META).child(Constants.DATABASE_KEY_DATE_STARTED).setValue(data.getRace().getDateStarted());
+        historyDatabase.child(uid).child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(data.getRace().getDateStarted());
         for (RaceItem raceItem : data.getRace().getRaceItems()) {
-            historyDatabase.child(uid).child(Constants.DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).setValue(raceItem);
+            historyDatabase.child(uid).child(DATABASE_SUBPATH_ITEMS).child(raceItem.getUid()).setValue(raceItem);
         }
     }
 
@@ -377,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
         String householdId = Utils.getHouseholdId(this);
 
         Intent intent = new Intent(this, ShowQRCodeActivity.class);
-        intent.putExtra(Constants.EXTRA_MESSAGE_VALUE, householdId);
+        intent.putExtra(EXTRA_MESSAGE_VALUE, householdId);
         startActivity(intent);
     }
 
@@ -385,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
         enterInit = true;
 
         Intent intent = new Intent(this, ScanQRCodeActivity.class);
-        startActivityForResult(intent, Constants.REQUEST_CODE_SCAN_QR_CODE);
+        startActivityForResult(intent, REQUEST_CODE_SCAN_QR_CODE);
     }
 
     private void manageRaceHistory() {
@@ -404,18 +430,18 @@ public class MainActivity extends AppCompatActivity {
         enterInit = true;
 
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(intent, Constants.REQUEST_CODE_MANAGE_PREFERENCES);
+        startActivityForResult(intent, REQUEST_CODE_MANAGE_PREFERENCES);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
-            case Constants.REQUEST_CODE_SCAN_QR_CODE:
+            case REQUEST_CODE_SCAN_QR_CODE:
                 if (resultCode == RESULT_OK) {
-                    final String householdId = intent.getStringExtra(Constants.EXTRA_MESSAGE_VALUE);
+                    final String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
                     if (!TextUtils.isEmpty(householdId)) {
                         Log.d(TAG, String.format("householdId from scan = [%s]", householdId));
-                        String[] parts = TextUtils.split(householdId, Constants.HOUSEHOLD_ID_INFIX);
+                        String[] parts = TextUtils.split(householdId, HOUSEHOLD_ID_INFIX);
                         if (parts != null && parts.length > 0) {
                             final String householdName = parts[0];
                             if (!TextUtils.isEmpty(householdName)) {
@@ -443,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case Constants.REQUEST_CODE_MANAGE_PREFERENCES:
+            case REQUEST_CODE_MANAGE_PREFERENCES:
                 if (data != null) {
                     settingsDatabase.setValue(data.getSettings());
                 }
@@ -477,11 +503,22 @@ public class MainActivity extends AppCompatActivity {
 
         choresView.setHasFixedSize(true);
 
-        LinearLayoutManager choresLayoutManager = new GridLayoutManager(this, Constants.CHORE_COLUMNS);
+        LinearLayoutManager choresLayoutManager = new GridLayoutManager(this, CHORE_COLUMNS);
         choresView.setLayoutManager(choresLayoutManager);
 
         choresAdapter = new ChoresAdapter(data, this);
         choresView.setAdapter(choresAdapter);
+    }
+
+    private void initInfoView() {
+        infoView = (TextView) findViewById(R.id.info_view);
+
+        setInfoText();
+    }
+
+    private void setInfoText() {
+        String infoText = Utils.getRaceInfoText(data, this);
+        infoView.setText(infoText);
     }
 
     private void initRaceView() {
@@ -533,7 +570,7 @@ public class MainActivity extends AppCompatActivity {
 
         String householdId = Utils.getHouseholdId(this);
 
-        settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + Constants.DATABASE_SUBPATH_SETTINGS);
+        settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_SETTINGS);
         settingsDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -550,10 +587,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (raceView != null) {
                     switch (settings.getDisplayMode()) {
-                        case Constants.DISPLAY_MODE_RALLYE:
+                        case DISPLAY_MODE_RALLYE:
+                            infoView.setVisibility(View.VISIBLE);
                             raceView.setVisibility(View.VISIBLE);
                             break;
-                        case Constants.DISPLAY_MODE_LOG:
+                        case DISPLAY_MODE_LOG:
+                            infoView.setVisibility(View.GONE);
                             raceView.setVisibility(View.GONE);
                             break;
                     }
@@ -568,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + Constants.DATABASE_SUBPATH_MEMBERS);
+        membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
         membersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -598,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + Constants.DATABASE_SUBPATH_CHORES);
+        choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
         choresDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -622,15 +661,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + Constants.DATABASE_SUBPATH_RACE);
+        raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
         raceDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Date dateStarted = dataSnapshot.child(Constants.DATABASE_SUBPATH_META).child(Constants.DATABASE_KEY_DATE_STARTED).getValue(Date.class);
+                Date dateStarted = dataSnapshot.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).getValue(Date.class);
                 data.getRace().setDateStarted(dateStarted);
+                Date dateEnding = dataSnapshot.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).getValue(Date.class);
+                data.getRace().setDateEnding(dateEnding);
 
                 List<RaceItem> raceItems = new ArrayList<>();
-                for (DataSnapshot raceDataSnapshot : dataSnapshot.child(Constants.DATABASE_SUBPATH_ITEMS).getChildren()) {
+                for (DataSnapshot raceDataSnapshot : dataSnapshot.child(DATABASE_SUBPATH_ITEMS).getChildren()) {
                     RaceItem raceItem = raceDataSnapshot.getValue(RaceItem.class);
                     raceItems.add(raceItem);
                 }
@@ -654,6 +695,8 @@ public class MainActivity extends AppCompatActivity {
                     Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() - 1).getUid(), MainActivity.this);
                 }
 
+                setInfoText();
+
                 hideLoadingDataDialog();
             }
 
@@ -663,12 +706,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        historyDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + Constants.DATABASE_SUBPATH_HISTORY);
+        historyDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_HISTORY);
     }
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {
         RaceItem raceItem = new RaceItem();
-        String uid = raceDatabase.child(Constants.DATABASE_SUBPATH_ITEMS).push().getKey();
+        String uid = raceDatabase.child(DATABASE_SUBPATH_ITEMS).push().getKey();
         raceItem.setUid(uid);
         raceItem.setDate(new Date());
         raceItem.setMemberUid(pMember.getUid());
@@ -676,7 +719,7 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreUid(pChore.getUid());
         raceItem.setChoreName(pChore.getName());
         raceItem.setChoreValue(pChore.getValue());
-        raceDatabase.child(Constants.DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
+        raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
 
         localHistory.add(raceItem.getUid());
 
@@ -691,19 +734,19 @@ public class MainActivity extends AppCompatActivity {
             if (raceItems.size() > 1) {
                 Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() -2).getUid(), MainActivity.this);
             }
-            raceDatabase.child(Constants.DATABASE_SUBPATH_ITEMS).child(raceItemUid).removeValue();
+            raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItemUid).removeValue();
         }
     }
 
     private void showPointsToast(String pMemberName, String pChoreName, int pChoreValue) {
-        if (Constants.DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
+        if (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
             String toastText = Utils.makeRaceItemText(pMemberName, pChoreName, pChoreValue, this, true);
             Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showPointsToast(MemberItem pMember, ChoreItem pChore) {
-        if (Constants.DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
+        if (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode())) {
             String toastText = Utils.makeRaceItemText(pMember, pChore, this, true);
             Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
         }

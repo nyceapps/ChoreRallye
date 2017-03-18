@@ -5,6 +5,7 @@
     <string name="layout_item_text_chore">Aufgabe</string>
     <string name="layout_item_text_member">Person</string>
     <string name="layout_item_text_race_history_item">Verlaufseintrag</string>
+    <string name="layout_item_text_rallye_info">Rallye-Info</string>
 
     <string name="dialog_text_choose_image">Bild auswählen</string>
     <string name="dialog_text_capture_camera_image">Bild mir der Kamera aufnehmen</string>
@@ -44,6 +45,9 @@
     <string name="race_item_text_member_points_for_chore" formatted="false">%s bekommt %d Punkte für %s</string>
     <string name="race_item_text_member_chore" formatted="false">%s erledigte %s.</string>
 
+    <string name="race_info_text_not_running">Keine laufende Rallye derzeit.</string>
+    <string name="race_info_text_running" formatted="false">Zeitraum: %s, verbleibende Tage: %d</string>
+
     <string name="list_context_menu_edit">Ändern</string>
     <string name="list_context_menu_remove">Entfernen</string>
 
@@ -60,6 +64,7 @@
     <string name="pref_title_household_name">Haushaltsname</string>
     <string name="pref_summary_household_name">Der symbolische Name des Haushalts</string>
     <string name="pref_title_winning_percentage">Prozentsatz zum Gewinn</string>
+    <string name="pref_title_rallye_length">Länge der Rallye in Tagen</string>
 
     <string name="text_scan_qr_code_to_participate">Scannen Sie diesen Qr-Code mit einer anderen App ein, um in diesem Haushalt teilzunehmen.</string>
 </resources>
