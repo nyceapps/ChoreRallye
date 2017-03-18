@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.chore;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,24 +18,28 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeApplication;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_CHORE_NAME;
-import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_CHORE_VALUE;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_CHORES;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
-import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_CHORE;
-import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_CHORE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_CHORE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_CHORE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_CHORE;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_CHORE;
 
 public class ChoresListActivity extends AppCompatActivity {
     private RallyeData data;

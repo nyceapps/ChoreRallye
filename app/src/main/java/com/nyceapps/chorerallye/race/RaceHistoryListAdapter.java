@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.race;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.main.Utils;
 import com.truizlop.sectionedrecyclerview.SimpleSectionedAdapter;
 
 import java.util.ArrayList;
@@ -18,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nyceapps.chorerallye.Constants.CONTEXT_MENU_ACTION_REMOVE;
-import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
+import static com.nyceapps.chorerallye.main.Constants.CONTEXT_MENU_ACTION_REMOVE;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 
 /**
  * Created by lugosi on 06.02.17.

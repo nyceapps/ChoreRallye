@@ -1,6 +1,5 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.member;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -11,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeData;
+
 import java.util.List;
 
-import static com.nyceapps.chorerallye.Constants.CONTEXT_MENU_ACTION_EDIT;
-import static com.nyceapps.chorerallye.Constants.CONTEXT_MENU_ACTION_REMOVE;
+import static com.nyceapps.chorerallye.main.Constants.CONTEXT_MENU_ACTION_EDIT;
+import static com.nyceapps.chorerallye.main.Constants.CONTEXT_MENU_ACTION_REMOVE;
 
 /**
  * Created by lugosi on 06.02.17.

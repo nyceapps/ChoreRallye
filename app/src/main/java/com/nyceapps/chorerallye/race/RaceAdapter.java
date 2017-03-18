@@ -1,7 +1,6 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.race;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,13 @@ import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.nyceapps.chorerallye.main.Constants;
+import com.nyceapps.chorerallye.main.MainActivity;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.main.Utils;
+import com.nyceapps.chorerallye.member.MemberItem;
 
 /**
  * Created by lugosi on 06.02.17.

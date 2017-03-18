@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.main;
 
 /**
  * Created by lugosi on 06.02.17.

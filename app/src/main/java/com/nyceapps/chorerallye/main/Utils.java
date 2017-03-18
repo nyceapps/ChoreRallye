@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.main;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +14,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.chore.ChoreItem;
+import com.nyceapps.chorerallye.member.MemberItem;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,11 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import static com.nyceapps.chorerallye.Constants.HOUSEHOLD_ID_INFIX;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_ID;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID;
 
 /**
  * Created by bela on 08.02.17.
@@ -150,7 +149,7 @@ public final class Utils {
 
     public static String getHouseholdId(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String householdId = sharedPreferences.getString(PREF_KEY_HOUSEHOLD_ID, null);
+        String householdId = sharedPreferences.getString(Constants.PREF_KEY_HOUSEHOLD_ID, null);
         Log.d(TAG, String.format("householdId = [%s]", householdId));
         return householdId;
     }
@@ -158,7 +157,7 @@ public final class Utils {
     public static void setHouseholdIdByName(String pHouseholdName, Context pContext) {
         String householdId = null;
         if (!TextUtils.isEmpty(pHouseholdName)) {
-            householdId = pHouseholdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
+            householdId = pHouseholdName + Constants.HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
         }
         setHouseholdId(householdId, pContext);
     }
@@ -166,20 +165,20 @@ public final class Utils {
     public static void setHouseholdId(String pHouseholdId, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_HOUSEHOLD_ID, pHouseholdId);
+        editor.putString(Constants.PREF_KEY_HOUSEHOLD_ID, pHouseholdId);
         editor.commit();
     }
 
     public static void setHouseholdName(String pHouseholdName, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
+        editor.putString(Constants.PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
         editor.commit();
     }
 
     public static String getLastDisplayedRaceItemUid(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
-        String LastDisplayedRaceItemUid = sharedPreferences.getString(PREF_KEY_LASTDISPLAYEDRACEITEMUID, null);
+        String LastDisplayedRaceItemUid = sharedPreferences.getString(Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID, null);
         Log.d(TAG, String.format("LastDisplayedRaceItemUid = [%s]", LastDisplayedRaceItemUid));
         return LastDisplayedRaceItemUid;
     }
@@ -187,7 +186,7 @@ public final class Utils {
     public static void setLastDisplayedRaceItemUid(String pLastDisplayedRaceItemUid, Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(PREF_KEY_LASTDISPLAYEDRACEITEMUID, pLastDisplayedRaceItemUid);
+        editor.putString(Constants.PREF_KEY_LASTDISPLAYEDRACEITEMUID, pLastDisplayedRaceItemUid);
         editor.commit();
     }
 }

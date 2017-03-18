@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.chore;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,16 +18,18 @@ import android.widget.ImageView;
 
 import com.mikelau.croperino.Croperino;
 import com.mikelau.croperino.CroperinoConfig;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
 
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
-import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
 
 public class ChoreDetailActivity extends AppCompatActivity {
     private String uid;

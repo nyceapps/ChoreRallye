@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.member;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,11 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.firebase.database.Exclude;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.Utils;
 
-import static com.nyceapps.chorerallye.Constants.MEMBER_IMAGE_CORNER_RADIUS;
+import static com.nyceapps.chorerallye.main.Constants.MEMBER_IMAGE_CORNER_RADIUS;
 
 /**
  * Created by lugosi on 07.02.17.

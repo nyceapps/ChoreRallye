@@ -1,9 +1,5 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.member;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -12,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nyceapps.chorerallye.main.MainActivity;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
-import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_LOG;
-import static com.nyceapps.chorerallye.Constants.DISPLAY_MODE_RALLYE;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 
 /**
  * Created by lugosi on 06.02.17.

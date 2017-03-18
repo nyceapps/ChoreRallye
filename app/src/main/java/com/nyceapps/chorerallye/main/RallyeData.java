@@ -1,4 +1,8 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.main;
+
+import com.nyceapps.chorerallye.chore.ChoreItem;
+import com.nyceapps.chorerallye.member.MemberItem;
+import com.nyceapps.chorerallye.race.Race;
 
 import java.util.ArrayList;
 import java.util.List;

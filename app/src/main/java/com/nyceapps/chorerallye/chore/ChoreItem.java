@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.chore;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,10 @@ import android.graphics.BitmapFactory;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
+
+import com.nyceapps.chorerallye.member.MemberItem;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.Utils;
 
 /**
  * Created by lugosi on 06.02.17.

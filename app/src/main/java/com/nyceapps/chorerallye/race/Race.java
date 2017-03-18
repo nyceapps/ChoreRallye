@@ -1,4 +1,6 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.race;
+
+import com.nyceapps.chorerallye.member.MemberItem;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +13,8 @@ import java.util.Set;
  */
 
 public class Race {
-    Date dateStarted;
-    List<RaceItem> raceItems;
+    private Date dateStarted;
+    private List<RaceItem> raceItems;
 
     public Race() {
         dateStarted = new Date();

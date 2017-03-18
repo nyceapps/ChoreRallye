@@ -1,19 +1,18 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.chore;
 
 import android.content.ClipData;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nyceapps.chorerallye.main.Constants;
+import com.nyceapps.chorerallye.main.MainActivity;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeData;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;

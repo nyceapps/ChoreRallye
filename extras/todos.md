@@ -30,3 +30,8 @@
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
 * About, Lizenzen, Icons
+* Verlauf Datum absteigend
+* Zeitlich begrenzte Rallye
+* Log-Modus
+  * geheime Rallye
+  * dateEnding anpassen

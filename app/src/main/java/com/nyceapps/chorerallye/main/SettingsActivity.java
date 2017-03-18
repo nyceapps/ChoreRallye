@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,9 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_HOUSEHOLD_NAME;
-import static com.nyceapps.chorerallye.Constants.PREF_KEY_WINNING_PERCENTAGE;
-import static com.nyceapps.chorerallye.Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+import com.nyceapps.chorerallye.R;
 
 /**
  * Created by bela on 22.02.17.
@@ -41,7 +39,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public boolean onPreferenceChange(Preference preference, final Object newValue) {
         String prefKey = preference.getKey();
-        if (PREF_KEY_HOUSEHOLD_NAME.equals(prefKey)) {
+        if (Constants.PREF_KEY_HOUSEHOLD_NAME.equals(prefKey)) {
             if (newValue instanceof String) {
                 final String householdName = (String) newValue;
                 if (!TextUtils.isEmpty(householdName) && !householdName.equals(previousHouseholdName)) {
@@ -64,10 +62,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 }
             }
             return false;
-        } else if (PREF_KEY_WINNING_PERCENTAGE.equals(prefKey)) {
+        } else if (Constants.PREF_KEY_WINNING_PERCENTAGE.equals(prefKey)) {
             if (newValue instanceof String) {
                 String winningPerecentageStr = (String) newValue;
-                int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+                int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
                 if (TextUtils.isDigitsOnly(winningPerecentageStr)) {
                     winningPercentage = Integer.parseInt(winningPerecentageStr);
                 }
@@ -100,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setHouseholdNamePreference() {
-        prefHouseholdName = (EditTextPreference) findPreference(PREF_KEY_HOUSEHOLD_NAME);
+        prefHouseholdName = (EditTextPreference) findPreference(Constants.PREF_KEY_HOUSEHOLD_NAME);
         prefHouseholdName.setOnPreferenceChangeListener(this);
         previousHouseholdName = prefHouseholdName.getText();
 
@@ -116,7 +114,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentagePreference() {
-        prefWinningPercentage = (EditTextPreference) findPreference(PREF_KEY_WINNING_PERCENTAGE);
+        prefWinningPercentage = (EditTextPreference) findPreference(Constants.PREF_KEY_WINNING_PERCENTAGE);
         prefWinningPercentage.setOnPreferenceChangeListener(this);
 
         setWinningPercentageValue();
@@ -124,7 +122,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentageValue() {
-        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
         if (data != null) {
             winningPercentage = data.getSettings().getWinningPercentage();
         }
@@ -132,7 +130,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setWinningPercentageSummary() {
-        int winningPercentage = SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
+        int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
         if (data != null) {
             winningPercentage = data.getSettings().getWinningPercentage();
         }

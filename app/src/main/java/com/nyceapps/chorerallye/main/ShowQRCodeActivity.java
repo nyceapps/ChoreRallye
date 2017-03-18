@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.main;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,9 +9,9 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import net.glxn.qrgen.android.QRCode;
+import com.nyceapps.chorerallye.R;
 
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_VALUE;
+import net.glxn.qrgen.android.QRCode;
 
 public class ShowQRCodeActivity extends AppCompatActivity {
     @Override
@@ -20,7 +20,7 @@ public class ShowQRCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_qr_code);
 
         Intent intent = getIntent();
-        String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
+        String householdId = intent.getStringExtra(Constants.EXTRA_MESSAGE_VALUE);
 
         if (!TextUtils.isEmpty(householdId)) {
             WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);

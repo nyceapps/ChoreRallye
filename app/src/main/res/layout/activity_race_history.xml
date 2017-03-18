@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.nyceapps.chorerallye.MembersListActivity">
+    tools:context="com.nyceapps.chorerallye.member.MembersListActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/race_history_list_view"

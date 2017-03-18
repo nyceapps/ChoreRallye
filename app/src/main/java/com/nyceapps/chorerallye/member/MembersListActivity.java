@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.member;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,21 +18,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeApplication;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.nyceapps.chorerallye.Constants.DATABASE_CHILD_KEY_MEMBER_NAME;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_MEMBERS;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_ADD_MEMBER;
-import static com.nyceapps.chorerallye.Constants.REQUEST_CODE_EDIT_MEMBER;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_MEMBER_NAME;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_MEMBER;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_MEMBER;
 
 public class MembersListActivity extends AppCompatActivity {
     private RallyeData data;

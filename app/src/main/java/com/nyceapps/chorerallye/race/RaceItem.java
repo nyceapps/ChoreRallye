@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.race;
 
 import java.util.Date;
 
@@ -7,13 +7,13 @@ import java.util.Date;
  */
 
 public class RaceItem {
-    String uid;
-    Date date;
-    String memberUid;
-    String memberName;
-    String choreUid;
-    String choreName;
-    int choreValue;
+    private String uid;
+    private Date date;
+    private String memberUid;
+    private String memberName;
+    private String choreUid;
+    private String choreName;
+    private int choreValue;
 
     public String getUid() {
         return uid;

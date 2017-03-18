@@ -1,4 +1,4 @@
-package com.nyceapps.chorerallye;
+package com.nyceapps.chorerallye.race;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,13 +13,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.RallyeApplication;
+import com.nyceapps.chorerallye.main.RallyeData;
+import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_ITEMS;
-import static com.nyceapps.chorerallye.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
 
 public class RaceHistoryActivity extends AppCompatActivity {
     private RallyeData data;
