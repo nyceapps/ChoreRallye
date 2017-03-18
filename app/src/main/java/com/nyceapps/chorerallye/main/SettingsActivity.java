@@ -66,7 +66,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             if (newValue instanceof String) {
                 String winningPerecentageStr = (String) newValue;
                 int winningPercentage = Constants.SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE;
-                if (TextUtils.isDigitsOnly(winningPerecentageStr)) {
+                if (!TextUtils.isEmpty(winningPerecentageStr) && TextUtils.isDigitsOnly(winningPerecentageStr)) {
                     winningPercentage = Integer.parseInt(winningPerecentageStr);
                 }
                 data.getSettings().setWinningPercentage(winningPercentage);

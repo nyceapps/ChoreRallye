@@ -7,18 +7,20 @@
         android:icon="@drawable/ic_undo_white_48dp"
         app:showAsAction="always"/>
     <item
+        android:id="@+id/action_manage_race_history"
+        android:title="@string/main_menu_manage_history"
+        android:icon="@drawable/ic_history_white_48dp"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_start_stop_race"
         android:title="@string/main_menu_start_race"/>
     <item
         android:id="@+id/action_manage_members"
-        android:title="@string/main_menu_manage_members"
-        android:icon="@drawable/ic_group_black_48dp"/>
+        android:title="@string/main_menu_manage_members"/>
     <item
         android:id="@+id/action_manage_chores"
         android:title="@string/main_menu_manage_chores"/>
-    <item
-        android:id="@+id/action_manage_race_history"
-        android:title="@string/main_menu_manage_history"/>
     <item
         android:id="@+id/action_manage_preferences"
         android:title="@string/main_menu_manage_preferences"/>
