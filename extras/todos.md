@@ -27,11 +27,12 @@
 * Fortschritt: Rennen der Männchen
   * Spur der Mänchen, graue Linie?
   * rote Linie bei konfigurierten %
-* Anzeige bisherige Dauer, Restdauer, Ziel Rallye
+* Anzeige Ziel Rallye?
 * Tastatur im Editmode gleich öffnen
 * Members, Chores sortieren
 * About, Lizenzen, Icons
 * Zeitlich begrenzte Rallye
+  * Dialog bei Ende
 * Log-Modus
   * geheime Rallye
   * dateEnding anpassen
