@@ -218,7 +218,7 @@ public final class Utils {
                 String dateEndingStr = dateFormat.format(dateEnding);
                 String datePeriodStr = dateStartedStr + " - " + dateEndingStr;
 
-                long startTime = dateStarted.getTime();
+                long startTime = new Date().getTime();
                 long endTime = dateEnding.getTime();
                 long diffTime = endTime - startTime;
                 long daysLeft = (diffTime / (1000 * 60 * 60 * 24)) + 1;
