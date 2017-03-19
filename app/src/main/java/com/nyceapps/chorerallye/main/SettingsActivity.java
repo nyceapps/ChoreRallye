@@ -94,8 +94,14 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void setHouseholdData(String pHouseholdName) {
-        setHouseholdName(pHouseholdName);
-        setHouseholdId();
+        String[] householdIdWithName = Utils.getHouseholdIdWithName(pHouseholdName);
+        String householdId = householdIdWithName[0];
+        String householdName = householdIdWithName[1];
+
+        Utils.setHouseholdName(householdName, this);
+        Utils.setHouseholdId(householdId, this);
+
+        setHouseholdName(householdName);
         setHouseholdNameSummary();
     }
 
@@ -105,11 +111,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             previousHouseholdName = householdName;
             prefHouseholdName.setText(householdName);
         }
-    }
-
-    public void setHouseholdId() {
-        String householdName = prefHouseholdName.getText();
-        Utils.setHouseholdIdByName(householdName, this);
     }
 
     private void setHouseholdNamePreference() {

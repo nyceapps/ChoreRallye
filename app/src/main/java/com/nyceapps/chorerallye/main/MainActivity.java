@@ -61,7 +61,6 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
-import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
@@ -441,30 +440,27 @@ public class MainActivity extends AppCompatActivity {
                     final String householdId = intent.getStringExtra(EXTRA_MESSAGE_VALUE);
                     if (!TextUtils.isEmpty(householdId)) {
                         Log.d(TAG, String.format("householdId from scan = [%s]", householdId));
-                        String[] parts = TextUtils.split(householdId, HOUSEHOLD_ID_INFIX);
-                        if (parts != null && parts.length > 0) {
-                            final String householdName = parts[0];
-                            if (!TextUtils.isEmpty(householdName)) {
-                                Log.d(TAG, String.format("householdName from scan = [%s]", householdName));
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
-                                        .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                Utils.setHouseholdId(householdId, MainActivity.this);
-                                                Utils.setHouseholdName(householdName, MainActivity.this);
+                        final String householdName = Utils.getHouseholdNameFromId(householdId);
+                        if (!TextUtils.isEmpty(householdName)) {
+                            Log.d(TAG, String.format("householdName from scan = [%s]", householdName));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setMessage(String.format(getString(R.string.confirmation_text_participate_in_household), householdName))
+                                    .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Utils.setHouseholdId(householdId, MainActivity.this);
+                                            Utils.setHouseholdName(householdName, MainActivity.this);
 
-                                                finish();
-                                                startActivity(getIntent());
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                // User cancelled the dialog
-                                            }
-                                        });
-                                participateHouseholdDialog = builder.create();
-                                participateHouseholdDialog.show();
-                            }
+                                            finish();
+                                            startActivity(getIntent());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User cancelled the dialog
+                                        }
+                                    });
+                            participateHouseholdDialog = builder.create();
+                            participateHouseholdDialog.show();
                         }
                     }
                 }

@@ -31,8 +31,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
+import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_AT_NAME_ID_PATTERN_AT;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
+import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_NAME_ID_PATTERN;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_ID;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_NAME;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID;
@@ -156,6 +159,23 @@ public final class Utils {
         return maxMemberTextWidth;
     }
 
+    public static String[] getHouseholdIdWithName(String pHouseholdName) {
+        String householdName = pHouseholdName;
+        String householdUuidId = null;
+
+        Matcher matcher = HOUSEHOLD_AT_NAME_ID_PATTERN_AT.matcher(pHouseholdName);
+        if (matcher.matches() && matcher.groupCount() == 2) {
+            householdName = matcher.group(1);
+            householdUuidId = matcher.group(2);
+        }
+        if (TextUtils.isEmpty(householdUuidId)) {
+            householdUuidId = UUID.randomUUID().toString();
+        }
+        String householdId = householdName + HOUSEHOLD_ID_INFIX + householdUuidId;
+
+        return new String[]{householdId, householdName};
+    }
+
     public static String getHouseholdId(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         String householdId = sharedPreferences.getString(PREF_KEY_HOUSEHOLD_ID, null);
@@ -163,12 +183,14 @@ public final class Utils {
         return householdId;
     }
 
-    public static void setHouseholdIdByName(String pHouseholdName, Context pContext) {
-        String householdId = null;
-        if (!TextUtils.isEmpty(pHouseholdName)) {
-            householdId = pHouseholdName + HOUSEHOLD_ID_INFIX + UUID.randomUUID().toString();
+    public static String getHouseholdNameFromId(String pHouseholdId) {
+        Matcher matcher = HOUSEHOLD_NAME_ID_PATTERN.matcher(pHouseholdId);
+        if (matcher.matches() && matcher.groupCount() == 2) {
+            String householdName = matcher.group(1);
+            return householdName;
         }
-        setHouseholdId(householdId, pContext);
+
+        return null;
     }
 
     public static void setHouseholdId(String pHouseholdId, Context pContext) {

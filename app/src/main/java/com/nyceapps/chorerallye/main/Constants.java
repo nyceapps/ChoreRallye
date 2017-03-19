@@ -1,5 +1,7 @@
 package com.nyceapps.chorerallye.main;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by lugosi on 06.02.17.
  */
@@ -58,5 +60,7 @@ public interface Constants {
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
     int SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS = 30;
 
-    String HOUSEHOLD_ID_INFIX = "___";
+    String HOUSEHOLD_ID_INFIX = "@@@";
+    Pattern HOUSEHOLD_NAME_ID_PATTERN = Pattern.compile("(.+)@@@(.+)");
+    Pattern HOUSEHOLD_AT_NAME_ID_PATTERN_AT = Pattern.compile("@@@(.+)@@@(.+)@@@");
 }
