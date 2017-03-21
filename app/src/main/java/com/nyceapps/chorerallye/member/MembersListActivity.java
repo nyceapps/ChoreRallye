@@ -180,13 +180,14 @@ public class MembersListActivity extends AppCompatActivity {
                             }
                         }
                         membersDatabase.child(pMember.getUid()).removeValue();
+                        //membersListAdapter.notifyDataSetChanged();
 
                         hideSavingDataDialog();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        membersListAdapter.notifyDataSetChanged();
                     }
                 });
         builder.create().show();

@@ -175,6 +175,8 @@ public class ChoresListActivity extends AppCompatActivity {
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_chore), pChore.getName()))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        showSavingDataDialog();
+
                         if (data.getRace().hasChore(pChore.getUid())) {
                             Set<String> removedRaceItems = data.getRace().removeChores(pChore.getUid());
                             for (String removedUid : removedRaceItems) {
@@ -182,7 +184,9 @@ public class ChoresListActivity extends AppCompatActivity {
                             }
                         }
                         choresDatabase.child(pChore.getUid()).removeValue();
-                        choresListAdapter.notifyDataSetChanged();
+                        //choresListAdapter.notifyDataSetChanged();
+
+                        hideSavingDataDialog();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
