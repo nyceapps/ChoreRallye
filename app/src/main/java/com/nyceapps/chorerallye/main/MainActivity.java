@@ -43,6 +43,7 @@ import com.nyceapps.chorerallye.member.MembersListActivity;
 import com.nyceapps.chorerallye.race.RaceAdapter;
 import com.nyceapps.chorerallye.race.RaceHistoryActivity;
 import com.nyceapps.chorerallye.race.RaceItem;
+import com.nyceapps.chorerallye.race.RaceStatisticsActivity;
 
 import java.util.ArrayList;
 import java.util.Date;

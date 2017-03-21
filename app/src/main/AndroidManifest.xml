@@ -45,7 +45,7 @@
             android:name=".race.RaceHistoryActivity"
             android:label="@string/activity_label_history" />
         <activity
-            android:name=".main.RaceStatisticsActivity"
+            android:name=".race.RaceStatisticsActivity"
             android:label="@string/activity_label_statistics" />
 
         <provider
