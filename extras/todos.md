@@ -1,6 +1,3 @@
-* Members, Chores sortieren
-  * https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-6a6f0c422efd#.lmpw8oacg
-  * http://stackoverflow.com/questions/29901044/drag-and-drop-items-in-recyclerview-with-gridlayoutmanager
 * About (App-Version), Lizenzen, Icons
 * Zeitlich begrenzte Rallye
   * Dialog bei Ende
