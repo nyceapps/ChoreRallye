@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,15 +20,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.nyceapps.chorerallye.main.RallyeApplication;
 import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_MEMBER_NAME;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
@@ -61,9 +65,28 @@ public class MembersListActivity extends AppCompatActivity {
         membersListAdapter = new MembersListAdapter(data, this);
         membersListView.setAdapter(membersListAdapter);
 
+        ItemTouchHelper memberItemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        int fromPos = viewHolder.getAdapterPosition();
+                        int toPos = target.getAdapterPosition();
+                        swapMembers(fromPos, toPos);
+                        return true;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        int adapterPosition = viewHolder.getAdapterPosition();
+                        MemberItem member = data.getMembers().get(adapterPosition);
+                        removeMember(member);
+                    }
+                });
+        memberItemTouchHelper.attachToRecyclerView(membersListView);
+
         String householdId = Utils.getHouseholdId(this);
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
-        membersDatabase.addValueEventListener(new ValueEventListener() {
+        membersDatabase.orderByChild(DATABASE_KEY_ORDER_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<MemberItem> members = new ArrayList<>();
@@ -81,6 +104,17 @@ public class MembersListActivity extends AppCompatActivity {
         });
 
         raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        List<MemberItem> members = data.getMembers();
+        for (int i = 0; i < members.size(); i++) {
+            MemberItem member = members.get(i);
+            membersDatabase.child(member.getUid()).child(DATABASE_KEY_ORDER_KEY).setValue(i);
+        }
     }
 
     @Override
@@ -116,6 +150,20 @@ public class MembersListActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pMember.getName());
         intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pMember.getImageString());
         startActivityForResult(intent, REQUEST_CODE_EDIT_MEMBER);
+    }
+
+    private void swapMembers(int fromPos, int toPos) {
+        List<MemberItem> members = data.getMembers();
+        if (fromPos < toPos) {
+            for (int i = fromPos; i < toPos; i++) {
+                Collections.swap(members, i, i + 1);
+            }
+        } else {
+            for (int i = fromPos; i > toPos; i--) {
+                Collections.swap(members, i, i - 1);
+            }
+        }
+        membersListAdapter.notifyItemMoved(fromPos, toPos);
     }
 
     public void removeMember(final MemberItem pMember) {

@@ -607,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
-        membersDatabase.addValueEventListener(new ValueEventListener() {
+        membersDatabase.orderByChild(DATABASE_KEY_ORDER_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<MemberItem> members = new ArrayList<>();

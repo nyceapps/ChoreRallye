@@ -45,8 +45,6 @@ import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_CHORE;
 
 public class ChoresListActivity extends AppCompatActivity {
-    private static final String TAG = ChoresListActivity.class.getSimpleName();
-
     private RallyeData data;
     private ChoresListAdapter choresListAdapter;
     private DatabaseReference choresDatabase;
