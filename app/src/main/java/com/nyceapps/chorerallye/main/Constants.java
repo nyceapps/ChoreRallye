@@ -41,6 +41,7 @@ public interface Constants {
     String DATABASE_CHILD_KEY_CHORE_NAME = "choreName";
     String DATABASE_CHILD_KEY_CHORE_VALUE = "choreValue";
 
+    String DATABASE_KEY_ORDER_KEY = "orderKey";
     String DATABASE_KEY_DATE_STARTED = "dateStarted";
     String DATABASE_KEY_DATE_ENDING = "dateEnding";
 

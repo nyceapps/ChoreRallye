@@ -10,11 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +31,7 @@ import java.util.Set;
 
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_CHORE_NAME;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_CHILD_KEY_CHORE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
@@ -91,7 +90,7 @@ public class ChoresListActivity extends AppCompatActivity {
 
         String householdId = Utils.getHouseholdId(this);
         choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
-        choresDatabase.addValueEventListener(new ValueEventListener() {
+        choresDatabase.orderByChild(DATABASE_KEY_ORDER_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<ChoreItem> chores = new ArrayList<>();
@@ -115,7 +114,11 @@ public class ChoresListActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        // TODO: Index in den Daten für die Sortierung
+        List<ChoreItem> chores = data.getChores();
+        for (int i = 0; i < chores.size(); i++) {
+            ChoreItem chore = chores.get(i);
+            choresDatabase.child(chore.getUid()).child(DATABASE_KEY_ORDER_KEY).setValue(i);
+        }
     }
 
     @Override

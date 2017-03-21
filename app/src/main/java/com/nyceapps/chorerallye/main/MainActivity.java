@@ -51,6 +51,7 @@ import java.util.List;
 import static com.nyceapps.chorerallye.main.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_ENDING;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_STARTED;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_HISTORY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
@@ -636,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
-        choresDatabase.addValueEventListener(new ValueEventListener() {
+        choresDatabase.orderByChild(DATABASE_KEY_ORDER_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<ChoreItem> chores = new ArrayList<>();
