@@ -45,6 +45,8 @@ dependencies {
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.1'
     // SectionedRecyclerView
     compile 'com.truizlop.sectionedrecyclerview:library:1.2.0'
+    // MPAndroidChart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     // Android ViewBadger
     // https://github.com/jgilfelt/android-viewbadger
     //compile files('libs/android-viewbadger.jar')

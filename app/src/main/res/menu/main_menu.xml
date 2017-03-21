@@ -7,9 +7,14 @@
         android:icon="@drawable/ic_undo_white_48dp"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_manage_race_history"
-        android:title="@string/main_menu_manage_history"
+        android:id="@+id/action_race_history"
+        android:title="@string/main_menu_history"
         android:icon="@drawable/ic_history_white_48dp"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_race_statistics"
+        android:title="@string/main_menu_statistics"
+        android:icon="@drawable/ic_assessment_white_48dp"
         app:showAsAction="always"/>
 
     <item

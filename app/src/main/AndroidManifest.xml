@@ -41,10 +41,12 @@
         <activity
             android:name=".main.ScanQRCodeActivity"
             android:label="@string/activity_label_qr_code" />
-
         <activity
             android:name=".race.RaceHistoryActivity"
             android:label="@string/activity_label_history" />
+        <activity
+            android:name=".main.RaceStatisticsActivity"
+            android:label="@string/activity_label_statistics" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

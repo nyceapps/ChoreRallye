@@ -263,6 +263,20 @@ public class MainActivity extends AppCompatActivity {
                     undoPoints();
                 }
                 break;
+            case R.id.action_race_history:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    showRaceHistory();
+                }
+                break;
+            case R.id.action_race_statistics:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    showRaceStatistics();
+                }
+                break;
             case R.id.action_start_stop_race:
                 if (householdId == null) {
                     showGotoPreferencesDialog();
@@ -299,13 +313,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_scan_household_qr_code:
                 scanHouseholdQRCode();
                 break;
-            case R.id.action_manage_race_history:
-                if (householdId == null) {
-                    showGotoPreferencesDialog();
-                } else {
-                    manageRaceHistory();
-                }
-                break;
             case R.id.action_switch_display_mode:
                 if (householdId == null) {
                     showGotoPreferencesDialog();
@@ -329,6 +336,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void showRaceHistory() {
+        enterInit = true;
+
+        Intent intent = new Intent(this, RaceHistoryActivity.class);
+        startActivity(intent);
+    }
+
+    private void showRaceStatistics() {
+        enterInit = true;
+
+        Intent intent = new Intent(this, RaceStatisticsActivity.class);
+        startActivity(intent);
     }
 
     private void startRace() {
@@ -412,13 +433,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ScanQRCodeActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SCAN_QR_CODE);
-    }
-
-    private void manageRaceHistory() {
-        enterInit = true;
-
-        Intent intent = new Intent(this, RaceHistoryActivity.class);
-        startActivity(intent);
     }
 
     private void switchDisplayMode(String pDisplayMode) {
