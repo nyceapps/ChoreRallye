@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,6 +44,8 @@ import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_CHORE;
 
 public class ChoresListActivity extends AppCompatActivity {
+    private static final String TAG = ChoresListActivity.class.getSimpleName();
+
     private RallyeData data;
     private ChoresListAdapter choresListAdapter;
     private DatabaseReference choresDatabase;
@@ -63,6 +67,24 @@ public class ChoresListActivity extends AppCompatActivity {
         data = ((RallyeApplication) this.getApplication()).getRallyeData();
         choresListAdapter = new ChoresListAdapter(data, this);
         choresListView.setAdapter(choresListAdapter);
+
+        ItemTouchHelper choreItemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                        ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        final int fromPos = viewHolder.getAdapterPosition();
+                        final int toPos = target.getAdapterPosition();
+                        Log.i(TAG, String.format("fromPos = [%d], toPos = [%d]", fromPos, toPos));
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        // No swiping please!
+                    }
+                });
+        choreItemTouchHelper.attachToRecyclerView(choresListView);
 
         String householdId = Utils.getHouseholdId(this);
         choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
