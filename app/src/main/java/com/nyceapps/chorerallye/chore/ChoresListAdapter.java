@@ -64,7 +64,7 @@ public class ChoresListAdapter extends RecyclerView.Adapter<ChoresListAdapter.Vi
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView nameTextView;
         public ImageView imageImageView;
@@ -74,37 +74,12 @@ public class ChoresListAdapter extends RecyclerView.Adapter<ChoresListAdapter.Vi
             nameTextView = (TextView) v.findViewById(R.id.chore_list_name);
             imageImageView = (ImageView) v.findViewById(R.id.chore_list_image);
             v.setOnClickListener(this);
-            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             ChoreItem chore = (ChoreItem) imageImageView.getTag();
             callingActivity.editChore(chore);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.setHeaderTitle(nameTextView.getText());
-            MenuItem menuItemEdit = menu.add(Menu.NONE, CONTEXT_MENU_ACTION_EDIT, Menu.NONE, R.string.list_context_menu_edit);
-            menuItemEdit.setOnMenuItemClickListener(this);
-            MenuItem menuItemRemove = menu.add(Menu.NONE, CONTEXT_MENU_ACTION_REMOVE, Menu.NONE, R.string.list_context_menu_remove);
-            menuItemRemove.setOnMenuItemClickListener(this);
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            ChoreItem chore = (ChoreItem) imageImageView.getTag();
-            switch (item.getItemId()) {
-                case CONTEXT_MENU_ACTION_EDIT:
-                    callingActivity.editChore(chore);
-                    break;
-                case CONTEXT_MENU_ACTION_REMOVE:
-                    callingActivity.removeChore(chore);
-                    break;
-                default:
-            }
-            return true;
         }
     }
 

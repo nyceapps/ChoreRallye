@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,7 @@ import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -69,19 +71,20 @@ public class ChoresListActivity extends AppCompatActivity {
         choresListView.setAdapter(choresListAdapter);
 
         ItemTouchHelper choreItemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                        ItemTouchHelper.LEFT) {
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                        final int fromPos = viewHolder.getAdapterPosition();
-                        final int toPos = target.getAdapterPosition();
-                        Log.i(TAG, String.format("fromPos = [%d], toPos = [%d]", fromPos, toPos));
-                        return false;
+                        int fromPos = viewHolder.getAdapterPosition();
+                        int toPos = target.getAdapterPosition();
+                        swapChores(fromPos, toPos);
+                        return true;
                     }
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        // No swiping please!
+                        int adapterPosition = viewHolder.getAdapterPosition();
+                        ChoreItem chore = data.getChores().get(adapterPosition);
+                        removeChore(chore);
                     }
                 });
         choreItemTouchHelper.attachToRecyclerView(choresListView);
@@ -106,6 +109,13 @@ public class ChoresListActivity extends AppCompatActivity {
         });
 
         raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // TODO: Index in den Daten für die Sortierung
     }
 
     @Override
@@ -145,6 +155,20 @@ public class ChoresListActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_EDIT_CHORE);
     }
 
+    private void swapChores(int fromPos, int toPos) {
+        List<ChoreItem> chores = data.getChores();
+        if (fromPos < toPos) {
+            for (int i = fromPos; i < toPos; i++) {
+                Collections.swap(chores, i, i + 1);
+            }
+        } else {
+            for (int i = fromPos; i > toPos; i--) {
+                Collections.swap(chores, i, i - 1);
+            }
+        }
+        choresListAdapter.notifyItemMoved(fromPos, toPos);
+    }
+
     public void removeChore(final ChoreItem pChore) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_chore), pChore.getName()))
@@ -157,11 +181,12 @@ public class ChoresListActivity extends AppCompatActivity {
                             }
                         }
                         choresDatabase.child(pChore.getUid()).removeValue();
+                        choresListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        choresListAdapter.notifyDataSetChanged();
                     }
                 });
         builder.create().show();
