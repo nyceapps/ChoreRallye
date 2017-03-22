@@ -13,11 +13,13 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.chore.ChoreItem;
@@ -172,6 +174,8 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         membersChoresBarChart.setPinchZoom(false);
         membersChoresBarChart.setDrawBarShadow(false);
         membersChoresBarChart.setDrawGridBackground(false);
+        membersChoresBarChart.setDrawValueAboveBar(false);
+        membersChoresBarChart.setFitBars(true);
 
         initMembersChoresBarChartData();
 
@@ -203,11 +207,13 @@ public class RaceStatisticsActivity extends AppCompatActivity {
             if (count == null) {
                 count = new Integer(0);
             }
-            count += choreValue;
+            count++;
             choresCountMap.put(choreName, count);
 
             membersChoresCountMap.put(memberName, choresCountMap);
         }
+
+        List<IBarDataSet> dataSets = new ArrayList<>();
 
         int barIdx = 0;
         List<MemberItem> members = data.getMembers();
@@ -226,51 +232,25 @@ public class RaceStatisticsActivity extends AppCompatActivity {
                 yVals.add(new BarEntry(barIdx, barValue));
                 barIdx++;
             }
+
+            BarDataSet dataSet = new BarDataSet(yVals, chore.getName());
+            dataSets.add(dataSet);
         }
+
+        BarData data = new BarData(dataSets);
+        membersChoresBarChart.setData(data);
 
         /*
-
-            ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-            ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-            ArrayList<BarEntry> yVals3 = new ArrayList<BarEntry>();
-            ArrayList<BarEntry> yVals4 = new ArrayList<BarEntry>();
-
-            for (int i = startYear; i < endYear; i++) {
-                yVals1.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-                yVals2.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-                yVals3.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-                yVals4.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-            }
-
-            BarDataSet set1, set2, set3, set4;
-
-            // create 4 DataSets
-            set1 = new BarDataSet(yVals1, "Company A");
-            set1.setColor(Color.rgb(104, 241, 175));
-            set2 = new BarDataSet(yVals2, "Company B");
-            set2.setColor(Color.rgb(164, 228, 251));
-            set3 = new BarDataSet(yVals3, "Company C");
-            set3.setColor(Color.rgb(242, 247, 158));
-            set4 = new BarDataSet(yVals4, "Company D");
-            set4.setColor(Color.rgb(255, 102, 0));
-
-            BarData data = new BarData(set1, set2, set3, set4);
-            data.setValueFormatter(new LargeValueFormatter());
-
-            mChart.setData(data);
-        }
-
         // specify the width each bar should have
-        mChart.getBarData().setBarWidth(barWidth);
+        membersChoresBarChart.getBarData().setBarWidth(barWidth);
 
         // restrict the x-axis range
-        mChart.getXAxis().setAxisMinimum(startYear);
+        membersChoresBarChart.getXAxis().setAxisMinimum(startYear);
 
         // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-        mChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-        mChart.groupBars(startYear, groupSpace, barSpace);
-        mChart.invalidate();
-
-         */
+        membersChoresBarChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
+        membersChoresBarChart.groupBars(startYear, groupSpace, barSpace);
+        membersChoresBarChart.invalidate();
+        */
     }
 }
