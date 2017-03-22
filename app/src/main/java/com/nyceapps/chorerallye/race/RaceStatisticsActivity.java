@@ -9,15 +9,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -25,7 +29,6 @@ import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.nyceapps.chorerallye.main.RallyeApplication;
 import com.nyceapps.chorerallye.main.RallyeData;
-import com.nyceapps.chorerallye.main.Utils;
 import com.nyceapps.chorerallye.member.MemberItem;
 
 import java.util.ArrayList;
@@ -33,14 +36,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
-import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
-
 public class RaceStatisticsActivity extends AppCompatActivity {
     private RallyeData data;
 
+    private List<Integer> colors;
+
     private PieChart choresPieChart;
-    private BarChart membersChoresBarChart;
+    private HorizontalBarChart membersChoresBarChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_race_statistics);
 
         data = ((RallyeApplication) this.getApplication()).getRallyeData();
+
+        initColors();
 
         initChoresPieChart();
 
@@ -81,17 +85,36 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         return true;
     }
 
+    private void initColors() {
+        colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(c);
+        }
+        for (int c : ColorTemplate.JOYFUL_COLORS) {
+            colors.add(c);
+        }
+        for (int c : ColorTemplate.COLORFUL_COLORS) {
+            colors.add(c);
+        }
+        for (int c : ColorTemplate.LIBERTY_COLORS) {
+            colors.add(c);
+        }
+        for (int c : ColorTemplate.PASTEL_COLORS) {
+            colors.add(c);
+        }
+        colors.add(ColorTemplate.getHoloBlue());
+    }
+
     private void initChoresPieChart() {
         choresPieChart = (PieChart) findViewById(R.id.chores_pie_chart);
 
+        choresPieChart.setTouchEnabled(false);
         choresPieChart.setUsePercentValues(true);
         choresPieChart.getDescription().setEnabled(false);
         choresPieChart.setExtraOffsets(5, 10, 5, 5);
-
         choresPieChart.setDrawEntryLabels(false);
         choresPieChart.setDrawHoleEnabled(false);
         choresPieChart.setDrawCenterText(true);
-
         choresPieChart.setRotationAngle(0);
         choresPieChart.setRotationEnabled(false);
         choresPieChart.setHighlightPerTapEnabled(false);
@@ -133,27 +156,6 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
-        // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS) {
-            colors.add(c);
-        }
-        for (int c : ColorTemplate.JOYFUL_COLORS) {
-            colors.add(c);
-        }
-        for (int c : ColorTemplate.COLORFUL_COLORS) {
-            colors.add(c);
-        }
-        for (int c : ColorTemplate.LIBERTY_COLORS) {
-            colors.add(c);
-        }
-        for (int c : ColorTemplate.PASTEL_COLORS) {
-            colors.add(c);
-        }
-        colors.add(ColorTemplate.getHoloBlue());
-
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
@@ -163,31 +165,54 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         choresPieChart.setData(data);
 
         choresPieChart.highlightValues(null);
-
-        choresPieChart.invalidate();
     }
 
     private void initMembersChoresBarChart() {
-        membersChoresBarChart = (BarChart) findViewById(R.id.members_chores_bar_chart);
+        membersChoresBarChart = (HorizontalBarChart) findViewById(R.id.members_chores_bar_chart);
 
+        membersChoresBarChart.setTouchEnabled(false);
+        membersChoresBarChart.setDrawBarShadow(false);
+        membersChoresBarChart.setDrawValueAboveBar(true);
         membersChoresBarChart.getDescription().setEnabled(false);
         membersChoresBarChart.setPinchZoom(false);
-        membersChoresBarChart.setDrawBarShadow(false);
         membersChoresBarChart.setDrawGridBackground(false);
-        membersChoresBarChart.setDrawValueAboveBar(false);
-        membersChoresBarChart.setFitBars(true);
+
+        List<String> axisLabelsList = new ArrayList<>();
+        List<ChoreItem> chores = data.getChores();
+        for (ChoreItem chore : chores) {
+            axisLabelsList.add(chore.getName());
+        }
+        String[] axisLabels = axisLabelsList.toArray(new String[axisLabelsList.size()]);
+
+        XAxis xAxis = membersChoresBarChart.getXAxis();
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setLabelCount(100, true);
+        xAxis.setValueFormatter(new ChoresXAxisValueFormatter());
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(false);
+
+        YAxis axisLeft = membersChoresBarChart.getAxisLeft();
+        axisLeft.setDrawAxisLine(true);
+        axisLeft.setDrawGridLines(true);
+        axisLeft.setAxisMinimum(0f);
+
+        YAxis axisRight = membersChoresBarChart.getAxisRight();
+        axisRight.setDrawAxisLine(true);
+        axisRight.setDrawGridLines(false);
+        axisRight.setAxisMinimum(0f);
 
         initMembersChoresBarChartData();
 
+        membersChoresBarChart.setFitBars(true);
+
         Legend membersChoresBarChartLegend = membersChoresBarChart.getLegend();
-        membersChoresBarChartLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        membersChoresBarChartLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        membersChoresBarChartLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        membersChoresBarChartLegend.setDrawInside(true);
-        membersChoresBarChartLegend.setYOffset(0f);
-        membersChoresBarChartLegend.setXOffset(10f);
-        membersChoresBarChartLegend.setYEntrySpace(0f);
-        membersChoresBarChartLegend.setTextSize(8f);
+        membersChoresBarChartLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        membersChoresBarChartLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        membersChoresBarChartLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        membersChoresBarChartLegend.setDrawInside(false);
+        membersChoresBarChartLegend.setFormSize(8f);
+        membersChoresBarChartLegend.setXEntrySpace(4f);
     }
 
     private void initMembersChoresBarChartData() {
@@ -213,14 +238,22 @@ public class RaceStatisticsActivity extends AppCompatActivity {
             membersChoresCountMap.put(memberName, choresCountMap);
         }
 
-        List<IBarDataSet> dataSets = new ArrayList<>();
-
-        int barIdx = 0;
         List<MemberItem> members = data.getMembers();
         List<ChoreItem> chores = data.getChores();
+
+        float barWidth = 9f;
+        float spaceForBar = 10f;
+        List<List<BarEntry>> yVals = new ArrayList<>();
+
+        for (int m = 0; m < members.size(); m++) {
+            yVals.add(new ArrayList<BarEntry>());
+        }
+
+        float startX = 0;
         for (ChoreItem chore : chores) {
-            List<BarEntry> yVals = new ArrayList<>();
-            for (MemberItem member : members) {
+            for (int m = 0; m < members.size(); m++) {
+                MemberItem member = members.get(m);
+
                 int barValue = 0;
                 Map<String, Integer> choresCountMap = membersChoresCountMap.get(member.getName());
                 if (choresCountMap != null) {
@@ -229,28 +262,54 @@ public class RaceStatisticsActivity extends AppCompatActivity {
                         barValue = count;
                     }
                 }
-                yVals.add(new BarEntry(barIdx, barValue));
-                barIdx++;
+
+                BarEntry barEntry = new BarEntry(startX, barValue);
+                List<BarEntry> barEntries = yVals.get(m);
+                barEntries.add(barEntry);
+                startX += barWidth;
+            }
+            startX += (spaceForBar - barWidth) * members.size();
+        }
+
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        int colorIdx = 0;
+        for (int i = 0; i < yVals.size(); i++) {
+            List<BarEntry> entries = yVals.get(i);
+            BarDataSet dataSet = new BarDataSet(entries, members.get(i).getName());
+            dataSet.setDrawValues(false);
+            dataSet.setColor(colors.get(colorIdx));
+            colorIdx++;
+            if (colorIdx == colors.size()) {
+                colorIdx = 0;
             }
 
-            BarDataSet dataSet = new BarDataSet(yVals, chore.getName());
             dataSets.add(dataSet);
         }
 
         BarData data = new BarData(dataSets);
+        data.setValueTextSize(10f);
+        data.setBarWidth(barWidth);
         membersChoresBarChart.setData(data);
 
-        /*
-        // specify the width each bar should have
-        membersChoresBarChart.getBarData().setBarWidth(barWidth);
+        membersChoresBarChart.highlightValue(null);
+    }
 
-        // restrict the x-axis range
-        membersChoresBarChart.getXAxis().setAxisMinimum(startYear);
+    public class ChoresXAxisValueFormatter extends IndexAxisValueFormatter {
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return String.valueOf(value);
+            /*
+            int intValue = (int) (value / 10);
+            List<MemberItem> members = data.getMembers();
+            List<ChoreItem> chores = data.getChores();
+            if (intValue < chores.size() && intValue % members.size() == 0) {
+                ChoreItem chore = chores.get(intValue);
+                return chore.getName();
+            }
 
-        // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-        membersChoresBarChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-        membersChoresBarChart.groupBars(startYear, groupSpace, barSpace);
-        membersChoresBarChart.invalidate();
-        */
+            return "";
+            */
+        }
     }
 }
