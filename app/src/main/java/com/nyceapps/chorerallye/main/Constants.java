@@ -52,7 +52,10 @@ public interface Constants {
     String PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS = "pref_key_length_of_rallye_in_days";
 
     String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
-    String PREF_KEY_PREFEIX_LOCAL_HISTORY_ENTRY = "pref_key_prefeix_local_history_entry_";
+    String PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY = "pref_key_prefix_local_history_entry_";
+
+    String PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT = "pref_key_displayed_race_items_count";
+    String PREF_KEY_PREFIX_DISPLAYED_RACE_ITEMS_ENTRY = "pref_key_prefix_displayed_race_items_entry_";
 
     String DISPLAY_MODE_RALLYE = "RALLYE";
     String DISPLAY_MODE_LOG = "LOG";

@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RallyeData data;
     private LocalHistory localHistory;
+    private DisplayedRaceItems displayedRaceItems;
 
     private MembersAdapter membersAdapter;
     private ChoresAdapter choresAdapter;
@@ -135,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (localHistory != null) {
             localHistory.save();
+        }
+
+        if (displayedRaceItems != null) {
+            displayedRaceItems.save();
         }
     }
 
@@ -358,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         settingsDatabase.setValue(data.getSettings());
 
         localHistory.init();
+        displayedRaceItems.init();
 
         Date dateStarted = new Date();
         Date dateEnding = Utils.getDateEndingForRace(dateStarted, data.getSettings().getLengthOfRallyeInDays());
@@ -496,6 +502,7 @@ public class MainActivity extends AppCompatActivity {
         ((RallyeApplication) this.getApplication()).setRallyeData(data);
 
         localHistory = new LocalHistory(this);
+        displayedRaceItems = new DisplayedRaceItems(this);
     }
 
     private void initMembersView() {
@@ -695,18 +702,15 @@ public class MainActivity extends AppCompatActivity {
                 raceAdapter.notifyDataSetChanged();
 
                 if (raceItems.size() > 0) {
-                    String lastDisplayedRaceItemUid = Utils.getLastDisplayedRaceItemUid(MainActivity.this);
-                    if (!TextUtils.isEmpty(lastDisplayedRaceItemUid)) {
-                        for (int i = raceItems.size() - 1; i >= 0; i--) {
-                            RaceItem raceItem = raceItems.get(i);
-                            if (!lastDisplayedRaceItemUid.equals(raceItem.getUid())) {
-                                showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
-                            } else {
-                                break;
-                            }
+                    for (int i = raceItems.size() - 1; i >= 0; i--) {
+                        RaceItem raceItem = raceItems.get(i);
+                        if (!displayedRaceItems.contains(raceItem.getUid())) {
+                            showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
+                        } else {
+                            break;
                         }
                     }
-                    Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() - 1).getUid(), MainActivity.this);
+                    displayedRaceItems.add(raceItems.get(raceItems.size() - 1).getUid());
                 }
 
                 setInfoText();
@@ -738,16 +742,13 @@ public class MainActivity extends AppCompatActivity {
         localHistory.add(raceItem.getUid());
 
         showPointsToast(pMember, pChore);
-        Utils.setLastDisplayedRaceItemUid(raceItem.getUid(), this);
+        displayedRaceItems.add(raceItem.getUid());
     }
 
     private void undoPoints() {
         String raceItemUid = localHistory.undo();
         if (raceItemUid != null) {
             List<RaceItem> raceItems = data.getRace().getRaceItems();
-            if (raceItems.size() > 1) {
-                Utils.setLastDisplayedRaceItemUid(raceItems.get(raceItems.size() -2).getUid(), MainActivity.this);
-            }
             raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(raceItemUid).removeValue();
         }
     }

@@ -9,21 +9,21 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LOCAL_HISTORY_COUNT;
-import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_PREFIX_DISPLAYED_RACE_ITEMS_ENTRY;
 
 /**
  * Created by lugosi on 26.02.17.
  */
 
-public class LocalHistory {
-    private final static String TAG = LocalHistory.class.getSimpleName();
+public class DisplayedRaceItems {
+    private final static String TAG = DisplayedRaceItems.class.getSimpleName();
 
     private final Context context;
 
     private List<String> entries;
 
-    public LocalHistory(Context pContext) {
+    public DisplayedRaceItems(Context pContext) {
         context = pContext;
         load();
     }
@@ -32,23 +32,15 @@ public class LocalHistory {
         entries.add(pEntry);
     }
 
-    public String undo() {
-        if (entries.size() > 0) {
-            return entries.remove(entries.size() - 1);
-        }
-
-        return null;
-    }
-
     public void init() {
         entries = new ArrayList<>();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int localHistoryCount = sharedPreferences.getInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
-        if (localHistoryCount > 0) {
+        int displayedRaceItemsCount = sharedPreferences.getInt(PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT, 0);
+        if (displayedRaceItemsCount > 0) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
+            editor.putInt(PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT, 0);
             for (int i = 0; i < entries.size(); i++) {
-                String key = PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY + i;
+                String key = PREF_KEY_PREFIX_DISPLAYED_RACE_ITEMS_ENTRY + i;
                 editor.remove(key);
             }
             editor.commit();
@@ -58,10 +50,10 @@ public class LocalHistory {
     private void load() {
         entries = new ArrayList<>();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int localHistoryCount = sharedPreferences.getInt(PREF_KEY_LOCAL_HISTORY_COUNT, 0);
-        Log.d(TAG, String.format("localHistoryCount = [%d]", localHistoryCount));
-        for (int i = 0; i < localHistoryCount; i++) {
-            String key = PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY + i;
+        int displayedRaceItemsCount = sharedPreferences.getInt(PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT, 0);
+        Log.d(TAG, String.format("displayedRaceItemsCount = [%d]", displayedRaceItemsCount));
+        for (int i = 0; i < displayedRaceItemsCount; i++) {
+            String key = PREF_KEY_PREFIX_DISPLAYED_RACE_ITEMS_ENTRY + i;
             String value = sharedPreferences.getString(key, null);
             if (!TextUtils.isEmpty(value)) {
                 entries.add(value);
@@ -73,12 +65,19 @@ public class LocalHistory {
         if (entries != null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(PREF_KEY_LOCAL_HISTORY_COUNT, entries.size());
+            editor.putInt(PREF_KEY_DISPLAYED_RACE_ITEMS_COUNT, entries.size());
             for (int i = 0; i < entries.size(); i++) {
-                String key = PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY + i;
+                String key = PREF_KEY_PREFIX_DISPLAYED_RACE_ITEMS_ENTRY + i;
                 editor.putString(key, entries.get(i));
             }
             editor.commit();
         }
+    }
+
+    public boolean contains(String pEntry) {
+        if (entries != null) {
+            return entries.contains(pEntry);
+        }
+        return false;
     }
 }

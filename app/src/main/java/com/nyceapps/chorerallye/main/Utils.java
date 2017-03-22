@@ -207,6 +207,7 @@ public final class Utils {
         editor.commit();
     }
 
+    /*
     public static String getLastDisplayedRaceItemUid(Context pContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
         String lastDisplayedRaceItemUid = sharedPreferences.getString(PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID, null);
@@ -220,6 +221,7 @@ public final class Utils {
         editor.putString(PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID, pLastDisplayedRaceItemUid);
         editor.commit();
     }
+    */
 
     public static Date getDateEndingForRace(Date pDateStarted, int pLengthOfRallyeInDays) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
