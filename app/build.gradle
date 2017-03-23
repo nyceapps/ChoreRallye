@@ -31,9 +31,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
     compile 'com.google.firebase:firebase-database:10.2.0'
@@ -47,6 +47,8 @@ dependencies {
     compile 'com.truizlop.sectionedrecyclerview:library:1.2.0'
     // MPAndroidChart
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    // WilliamChart
+    compile 'com.diogobernardino:williamchart:2.4.0'
     // Android ViewBadger
     // https://github.com/jgilfelt/android-viewbadger
     //compile files('libs/android-viewbadger.jar')

@@ -9,21 +9,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.db.chart.Tools;
+import com.db.chart.animation.Animation;
+import com.db.chart.model.Bar;
+import com.db.chart.model.BarSet;
+import com.db.chart.renderer.AxisRenderer;
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.view.HorizontalBarChartView;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.chore.ChoreItem;
@@ -42,7 +40,8 @@ public class RaceStatisticsActivity extends AppCompatActivity {
     private List<Integer> colors;
 
     private PieChart choresPieChart;
-    private HorizontalBarChart membersChoresBarChart;
+    //private HorizontalBarChart membersChoresBarChart;
+    private HorizontalBarChartView membersChoresBarChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class RaceStatisticsActivity extends AppCompatActivity {
 
         initColors();
 
-        initChoresPieChart();
+        //initChoresPieChart();
 
         initMembersChoresBarChart();
     }
@@ -105,6 +104,7 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         colors.add(ColorTemplate.getHoloBlue());
     }
 
+    /*
     private void initChoresPieChart() {
         choresPieChart = (PieChart) findViewById(R.id.chores_pie_chart);
 
@@ -119,7 +119,9 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         choresPieChart.setRotationEnabled(false);
         choresPieChart.setHighlightPerTapEnabled(false);
 
-        initChoresPieChartData();
+        PieData choresPieData = prepareChoresPieChartData();
+        choresPieChart.setData(choresPieData);
+        choresPieChart.highlightValues(null);
 
         Legend choresPieChartlegend = choresPieChart.getLegend();
         choresPieChartlegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -130,7 +132,7 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         choresPieChartlegend.setEnabled(true);
     }
 
-    private void initChoresPieChartData() {
+    private PieData prepareChoresPieChartData() {
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         Map<String, Integer> choresCountMap = new HashMap<>();
@@ -162,11 +164,81 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.DKGRAY);
-        choresPieChart.setData(data);
 
-        choresPieChart.highlightValues(null);
+        return data;
+    }
+    */
+
+    private void initMembersChoresBarChart() {
+        membersChoresBarChart = (HorizontalBarChartView) findViewById(R.id.members_chores_bar_chart);
+
+        BarSet membersChoresBarSet = prepareMembersChoresBarChartData();
+        membersChoresBarChart.addData(membersChoresBarSet);
+        membersChoresBarChart.setBarSpacing(Tools.fromDpToPx(4));
+
+        membersChoresBarChart.setBorderSpacing(0)
+                .setXAxis(true)
+                .setYAxis(false)
+                .setLabelsColor(Color.DKGRAY)
+                .setXLabels(XRenderer.LabelPosition.OUTSIDE);
+
+        membersChoresBarChart.show();
     }
 
+    private BarSet prepareMembersChoresBarChartData() {
+        Map<String, Map<String, Integer>> membersChoresCountMap = new HashMap<>();
+
+        List<RaceItem> raceItems = data.getRace().getRaceItems();
+        for (RaceItem raceItem : raceItems) {
+            String memberName = raceItem.getMemberName();
+            Map<String, Integer> choresCountMap = membersChoresCountMap.get(memberName);
+            if (choresCountMap == null) {
+                choresCountMap = new HashMap<>();
+            }
+
+            String choreName = raceItem.getChoreName();
+            int choreValue = raceItem.getChoreValue();
+            Integer count = choresCountMap.get(choreName);
+            if (count == null) {
+                count = new Integer(0);
+            }
+            count++;
+            choresCountMap.put(choreName, count);
+
+            membersChoresCountMap.put(memberName, choresCountMap);
+        }
+
+        List<MemberItem> members = data.getMembers();
+        List<ChoreItem> chores = data.getChores();
+
+        BarSet barSet = new BarSet();
+        for (ChoreItem chore : chores) {
+            for (int m = 0; m < members.size(); m++) {
+                MemberItem member = members.get(m);
+
+                int barValue = 0;
+                Map<String, Integer> choresCountMap = membersChoresCountMap.get(member.getName());
+                if (choresCountMap != null) {
+                    Integer count = choresCountMap.get(chore.getName());
+                    if (count != null) {
+                        barValue = count;
+                    }
+                }
+
+                String barLabel = (m == members.size() - 1 ? chore.getName() : "");
+                Bar bar = new Bar(barLabel, barValue);
+                int colorIdx = m;
+                if (colorIdx > colors.size()) {
+                    colorIdx -= colors.size();
+                }
+                bar.setColor(colors.get(colorIdx));
+                barSet.addBar(bar);
+            }
+        }
+
+        return barSet;
+    }
+    /*
     private void initMembersChoresBarChart() {
         membersChoresBarChart = (HorizontalBarChart) findViewById(R.id.members_chores_bar_chart);
 
@@ -177,17 +249,19 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         membersChoresBarChart.setPinchZoom(false);
         membersChoresBarChart.setDrawGridBackground(false);
 
-        List<String> axisLabelsList = new ArrayList<>();
-        List<ChoreItem> chores = data.getChores();
-        for (ChoreItem chore : chores) {
-            axisLabelsList.add(chore.getName());
-        }
-        String[] axisLabels = axisLabelsList.toArray(new String[axisLabelsList.size()]);
+        initMembersChoresBarChartData();
 
         XAxis xAxis = membersChoresBarChart.getXAxis();
-        xAxis.setCenterAxisLabels(true);
+        //xAxis.setCenterAxisLabels(true);
+        //xAxis.setAxisMinimum(0f);
         xAxis.setLabelCount(100, true);
-        xAxis.setValueFormatter(new ChoresXAxisValueFormatter());
+        BarData barData = membersChoresBarChart.getData();
+        if (barData != null) {
+            IBarDataSet firstBarDataSet = barData.getDataSetByIndex(0);
+            if (firstBarDataSet != null) {
+                xAxis.setValueFormatter(new LabelValueFormatter(firstBarDataSet));
+            }
+        }
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(false);
@@ -201,8 +275,6 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         axisRight.setDrawAxisLine(true);
         axisRight.setDrawGridLines(false);
         axisRight.setAxisMinimum(0f);
-
-        initMembersChoresBarChartData();
 
         membersChoresBarChart.setFitBars(true);
 
@@ -263,12 +335,12 @@ public class RaceStatisticsActivity extends AppCompatActivity {
                     }
                 }
 
-                BarEntry barEntry = new BarEntry(startX, barValue);
+                BarEntry barEntry = new BarEntry(startX, barValue, chore.getName());
                 List<BarEntry> barEntries = yVals.get(m);
                 barEntries.add(barEntry);
-                startX += barWidth;
+                startX += spaceForBar;
             }
-            startX += (spaceForBar - barWidth) * members.size();
+            //startX += spaceForBar * members.size();
         }
 
 
@@ -288,28 +360,32 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         }
 
         BarData data = new BarData(dataSets);
-        data.setValueTextSize(10f);
+        //data.setValueTextSize(10f);
         data.setBarWidth(barWidth);
         membersChoresBarChart.setData(data);
 
         membersChoresBarChart.highlightValue(null);
     }
 
-    public class ChoresXAxisValueFormatter extends IndexAxisValueFormatter {
+    public class LabelValueFormatter implements IAxisValueFormatter {
+        private final IBarDataSet data;
+        private String lastLabel;
+
+        public LabelValueFormatter(IBarDataSet pData) {
+            data = pData;
+        }
+
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return String.valueOf(value);
-            /*
-            int intValue = (int) (value / 10);
-            List<MemberItem> members = data.getMembers();
-            List<ChoreItem> chores = data.getChores();
-            if (intValue < chores.size() && intValue % members.size() == 0) {
-                ChoreItem chore = chores.get(intValue);
-                return chore.getName();
+            // return the entry's data which represents the label
+            BarEntry entryForXValue = data.getEntryForXValue(value, Float.NaN, DataSet.Rounding.CLOSEST);
+            String formattedValue = (String) entryForXValue.getData();
+            if (TextUtils.equals(lastLabel, formattedValue)) {
+                formattedValue = "";
             }
-
-            return "";
-            */
+            lastLabel = formattedValue;
+            return formattedValue;
         }
     }
+    */
 }
