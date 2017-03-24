@@ -10,10 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.db.chart.Tools;
-import com.db.chart.animation.Animation;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
-import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.renderer.XRenderer;
 import com.db.chart.view.HorizontalBarChartView;
 import com.github.mikephil.charting.charts.PieChart;
@@ -52,9 +50,9 @@ public class RaceStatisticsActivity extends AppCompatActivity {
 
         initColors();
 
-        //initChoresPieChart();
-
         initMembersChoresBarChart();
+
+        initChoresPieChart();
     }
 
     @Override
@@ -69,12 +67,12 @@ public class RaceStatisticsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.switch_statistics_chart:
-                if (choresPieChart.getVisibility() == View.VISIBLE) {
-                    choresPieChart.setVisibility(View.GONE);
-                    membersChoresBarChart.setVisibility(View.VISIBLE);
-                } else {
-                    choresPieChart.setVisibility(View.VISIBLE);
+                if (membersChoresBarChart.getVisibility() == View.VISIBLE) {
                     membersChoresBarChart.setVisibility(View.GONE);
+                    choresPieChart.setVisibility(View.VISIBLE);
+                } else {
+                    membersChoresBarChart.setVisibility(View.VISIBLE);
+                    choresPieChart.setVisibility(View.GONE);
                 }
                 break;
             default:
@@ -86,6 +84,17 @@ public class RaceStatisticsActivity extends AppCompatActivity {
 
     private void initColors() {
         colors = new ArrayList<Integer>();
+
+        colors.add(Color.parseColor("#5da5da")); // blue
+        colors.add(Color.parseColor("#faa43a")); // orange
+        colors.add(Color.parseColor("#60bd68")); // green
+        colors.add(Color.parseColor("#f17cb0")); // pink
+        colors.add(Color.parseColor("#b2912f")); // brown
+        colors.add(Color.parseColor("#b276b2")); // purple
+        colors.add(Color.parseColor("#decf3f")); // yellow
+        colors.add(Color.parseColor("#f15854")); // red
+        //colors.add(Color.parseColor("#4d4d4d")); // gray
+
         for (int c : ColorTemplate.VORDIPLOM_COLORS) {
             colors.add(c);
         }
@@ -104,7 +113,80 @@ public class RaceStatisticsActivity extends AppCompatActivity {
         colors.add(ColorTemplate.getHoloBlue());
     }
 
-    /*
+    private void initMembersChoresBarChart() {
+        membersChoresBarChart = (HorizontalBarChartView) findViewById(R.id.members_chores_bar_chart);
+
+        BarSet membersChoresBarSet = prepareMembersChoresBarChartData();
+        membersChoresBarChart.addData(membersChoresBarSet);
+        membersChoresBarChart.setBarSpacing(Tools.fromDpToPx(4));
+
+        membersChoresBarChart.setBorderSpacing(0)
+                .setXAxis(true)
+                .setYAxis(true)
+                .setLabelsColor(Color.DKGRAY)
+                .setXLabels(XRenderer.LabelPosition.OUTSIDE);
+
+        membersChoresBarChart.show();
+    }
+
+    private BarSet prepareMembersChoresBarChartData() {
+        Map<String, Map<String, Integer>> membersChoresCountMap = new HashMap<>();
+
+        List<RaceItem> raceItems = data.getRace().getRaceItems();
+        for (RaceItem raceItem : raceItems) {
+            String memberName = raceItem.getMemberName();
+            Map<String, Integer> choresCountMap = membersChoresCountMap.get(memberName);
+            if (choresCountMap == null) {
+                choresCountMap = new HashMap<>();
+            }
+
+            String choreName = raceItem.getChoreName();
+            int choreValue = raceItem.getChoreValue();
+            Integer count = choresCountMap.get(choreName);
+            if (count == null) {
+                count = new Integer(0);
+            }
+            count++;
+            choresCountMap.put(choreName, count);
+
+            membersChoresCountMap.put(memberName, choresCountMap);
+        }
+
+        List<MemberItem> members = data.getMembers();
+        List<ChoreItem> chores = data.getChores();
+
+        BarSet barSet = new BarSet();
+        for (ChoreItem chore : chores) {
+            for (int mIdx = 0; mIdx < members.size(); mIdx++) {
+                MemberItem member = members.get(mIdx);
+
+                int barValue = 0;
+                Map<String, Integer> choresCountMap = membersChoresCountMap.get(member.getName());
+                if (choresCountMap != null) {
+                    Integer count = choresCountMap.get(chore.getName());
+                    if (count != null) {
+                        barValue = count;
+                    }
+                }
+
+                String barLabel = "";
+                if (mIdx == members.size() - 1) {
+                    barLabel += chore.getName() + " ";
+                }
+                barLabel += member.getName();
+                Bar bar = new Bar(barLabel, barValue);
+                int colorIdx = mIdx;
+                if (colorIdx > colors.size()) {
+                    colorIdx -= colors.size();
+                }
+                bar.setColor(colors.get(colorIdx));
+                barSet.addBar(bar);
+            }
+        }
+
+        return barSet;
+    }
+
     private void initChoresPieChart() {
         choresPieChart = (PieChart) findViewById(R.id.chores_pie_chart);
 
@@ -167,77 +249,7 @@ public class RaceStatisticsActivity extends AppCompatActivity {
 
         return data;
     }
-    */
 
-    private void initMembersChoresBarChart() {
-        membersChoresBarChart = (HorizontalBarChartView) findViewById(R.id.members_chores_bar_chart);
-
-        BarSet membersChoresBarSet = prepareMembersChoresBarChartData();
-        membersChoresBarChart.addData(membersChoresBarSet);
-        membersChoresBarChart.setBarSpacing(Tools.fromDpToPx(4));
-
-        membersChoresBarChart.setBorderSpacing(0)
-                .setXAxis(true)
-                .setYAxis(false)
-                .setLabelsColor(Color.DKGRAY)
-                .setXLabels(XRenderer.LabelPosition.OUTSIDE);
-
-        membersChoresBarChart.show();
-    }
-
-    private BarSet prepareMembersChoresBarChartData() {
-        Map<String, Map<String, Integer>> membersChoresCountMap = new HashMap<>();
-
-        List<RaceItem> raceItems = data.getRace().getRaceItems();
-        for (RaceItem raceItem : raceItems) {
-            String memberName = raceItem.getMemberName();
-            Map<String, Integer> choresCountMap = membersChoresCountMap.get(memberName);
-            if (choresCountMap == null) {
-                choresCountMap = new HashMap<>();
-            }
-
-            String choreName = raceItem.getChoreName();
-            int choreValue = raceItem.getChoreValue();
-            Integer count = choresCountMap.get(choreName);
-            if (count == null) {
-                count = new Integer(0);
-            }
-            count++;
-            choresCountMap.put(choreName, count);
-
-            membersChoresCountMap.put(memberName, choresCountMap);
-        }
-
-        List<MemberItem> members = data.getMembers();
-        List<ChoreItem> chores = data.getChores();
-
-        BarSet barSet = new BarSet();
-        for (ChoreItem chore : chores) {
-            for (int m = 0; m < members.size(); m++) {
-                MemberItem member = members.get(m);
-
-                int barValue = 0;
-                Map<String, Integer> choresCountMap = membersChoresCountMap.get(member.getName());
-                if (choresCountMap != null) {
-                    Integer count = choresCountMap.get(chore.getName());
-                    if (count != null) {
-                        barValue = count;
-                    }
-                }
-
-                String barLabel = (m == members.size() - 1 ? chore.getName() : "");
-                Bar bar = new Bar(barLabel, barValue);
-                int colorIdx = m;
-                if (colorIdx > colors.size()) {
-                    colorIdx -= colors.size();
-                }
-                bar.setColor(colors.get(colorIdx));
-                barSet.addBar(bar);
-            }
-        }
-
-        return barSet;
-    }
     /*
     private void initMembersChoresBarChart() {
         membersChoresBarChart = (HorizontalBarChart) findViewById(R.id.members_chores_bar_chart);

@@ -5,7 +5,7 @@
   * geheime Rallye
   * dateEnding anpassen
 * Statistiken
-  * Diagramme
+  * Listen Anzahl Aufgaben / Person
   * Druck
 * App-Store-Beta
   * https://support.google.com/googleplay/android-developer/answer/3131213?hl=de
