@@ -1,9 +1,6 @@
 * About (App-Version), Lizenzen, Icons
 * Zeitlich begrenzte Rallye
   * Dialog bei Ende
-* Log-Modus
-  * geheime Rallye
-  * dateEnding anpassen
 * Statistiken
   * Listen Anzahl Aufgaben / Person
   * Druck
