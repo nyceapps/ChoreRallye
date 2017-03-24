@@ -445,6 +445,20 @@ public class MainActivity extends AppCompatActivity {
     private void switchDisplayMode(String pDisplayMode) {
         data.getSettings().setDisplayMode(pDisplayMode);
         settingsDatabase.setValue(data.getSettings());
+        Date dateStarted = data.getRace().getDateStarted();
+        Date dateEnding = null;
+        switch (pDisplayMode) {
+            case DISPLAY_MODE_RALLYE:
+                dateEnding = Utils.getDateEndingForRace(dateStarted, data.getSettings().getLengthOfRallyeInDays());
+                break;
+            case DISPLAY_MODE_LOG:
+                // Add ten years
+                dateEnding = Utils.getDateEndingForRace(dateStarted, 3650);
+                break;
+        }
+        if (dateEnding != null) {
+            raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(dateEnding);
+        }
     }
 
     private void managePreferences() {
