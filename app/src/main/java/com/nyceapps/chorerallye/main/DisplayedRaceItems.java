@@ -80,4 +80,12 @@ public class DisplayedRaceItems {
         }
         return false;
     }
+
+    public int size() {
+        if (entries != null) {
+            return entries.size();
+        }
+
+        return 0;
+    }
 }

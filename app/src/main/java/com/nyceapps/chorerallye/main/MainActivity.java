@@ -716,15 +716,20 @@ public class MainActivity extends AppCompatActivity {
                 raceAdapter.notifyDataSetChanged();
 
                 if (raceItems.size() > 0) {
-                    for (int i = raceItems.size() - 1; i >= 0; i--) {
-                        RaceItem raceItem = raceItems.get(i);
-                        if (!displayedRaceItems.contains(raceItem.getUid())) {
-                            showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
-                        } else {
-                            break;
+                    RaceItem lastRaceItem = raceItems.get(raceItems.size() - 1);
+                    if (displayedRaceItems.size() > 0) {
+                        for (int i = raceItems.size() - 1; i >= 0; i--) {
+                            RaceItem raceItem = raceItems.get(i);
+                            if (!displayedRaceItems.contains(raceItem.getUid())) {
+                                showPointsToast(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue());
+                            } else {
+                                break;
+                            }
                         }
+                    } else {
+                        showPointsToast(lastRaceItem.getMemberName(), lastRaceItem.getChoreName(), lastRaceItem.getChoreValue());
                     }
-                    displayedRaceItems.add(raceItems.get(raceItems.size() - 1).getUid());
+                    displayedRaceItems.add(lastRaceItem.getUid());
                 }
 
                 setInfoText();
