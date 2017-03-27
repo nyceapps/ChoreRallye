@@ -14,6 +14,7 @@ public class RaceItem {
     private String choreUid;
     private String choreName;
     private int choreValue;
+    private String note;
 
     public String getUid() {
         return uid;
@@ -69,5 +70,13 @@ public class RaceItem {
 
     public void setChoreValue(int pChoreValue) {
         choreValue = pChoreValue;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String pNote) {
+        note = pNote;
     }
 }

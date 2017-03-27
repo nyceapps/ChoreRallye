@@ -1,11 +1,9 @@
 package com.nyceapps.chorerallye.race;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nyceapps.chorerallye.main.Constants.CONTEXT_MENU_ACTION_REMOVE;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 
 /**
@@ -89,6 +86,9 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
 
             List<String> raceHistoryItemList = raceHistoryItems.get(raceItemDateStr);
             String raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
+            if (!TextUtils.isEmpty(raceItem.getNote())) {
+                raceHistoryItemText += "*";
+            }
             raceHistoryItemList.add(raceHistoryItemText);
             raceHistoryItems.put(raceItemDateStr, raceHistoryItemList);
         }
@@ -97,33 +97,22 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView raceHistoryItemTextView;
 
         public ViewHolder(View v) {
             super(v);
             raceHistoryItemTextView = (TextView) v.findViewById(R.id.race_history_list_item);
-            v.setOnCreateContextMenuListener(this);
+            v.setOnClickListener(this);
         }
 
         @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.setHeaderTitle(raceHistoryItemTextView.getText());
-            MenuItem menuItemRemove = menu.add(Menu.NONE, CONTEXT_MENU_ACTION_REMOVE, Menu.NONE, R.string.list_context_menu_remove);
-            menuItemRemove.setOnMenuItemClickListener(this);
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            RaceItem raceItem = (RaceItem) raceHistoryItemTextView.getTag();
-            switch (item.getItemId()) {
-                case CONTEXT_MENU_ACTION_REMOVE:
-                    callingActivity.removeRaceHistoryItem(raceItem);
-                    break;
-                default:
-            }
-            return true;
+        public void onClick(View v) {
+            /*
+            ChoreItem chore = (ChoreItem) imageImageView.getTag();
+            callingActivity.editChore(chore);
+            */
         }
     }
 

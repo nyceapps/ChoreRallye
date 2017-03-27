@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +22,9 @@ import com.nyceapps.chorerallye.main.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_IDLE;
+import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
+import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
 
@@ -45,6 +49,28 @@ public class RaceHistoryActivity extends AppCompatActivity {
         data = ((RallyeApplication) this.getApplication()).getRallyeData();
         raceHistoryListAdapter = new RaceHistoryListAdapter(data, this);
         raceHistoryListView.setAdapter(raceHistoryListAdapter);
+
+        ItemTouchHelper raceHistoryTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, RIGHT) {
+                    @Override
+                    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                        return makeFlag(ACTION_STATE_IDLE, RIGHT) | makeFlag(ACTION_STATE_SWIPE, RIGHT);
+                    }
+
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        int adapterPosition = viewHolder.getAdapterPosition();
+                        RaceItem raceItem = data.getRace().getRaceItems().get(adapterPosition);
+                        removeRaceHistoryItem(raceItem);
+                    }
+                });
+        raceHistoryTouchHelper.attachToRecyclerView(raceHistoryListView);
+
 
         String householdId = Utils.getHouseholdId(this);
         raceHistoryDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE + "/" + DATABASE_SUBPATH_ITEMS);
@@ -80,7 +106,7 @@ public class RaceHistoryActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        raceHistoryListAdapter.notifyDataSetChanged();
                     }
                 });
         builder.create().show();
