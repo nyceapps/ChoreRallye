@@ -1,6 +1,8 @@
 package com.nyceapps.chorerallye.chore;
 
 import android.content.ClipData;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,7 +52,7 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
                 @Override
                 public boolean onLongClick(View v) {
                     ClipData data = ClipData.newPlainText("", "");
-                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    View.DragShadowBuilder shadowBuilder = new ChoresDragShadowBuilder(v);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         v.startDragAndDrop(data, shadowBuilder, v.getTag(), 0);
                     } else {
@@ -94,6 +96,33 @@ public class ChoresAdapter extends RecyclerView.Adapter<ChoresAdapter.ViewHolder
             valueBadgeView.show();
         }
 
+    }
+
+    private static class ChoresDragShadowBuilder extends View.DragShadowBuilder {
+        private Point dragShadowScaleFactor;
+
+        public ChoresDragShadowBuilder(View v) {
+            super(v);
+        }
+
+        @Override
+        public void onProvideShadowMetrics (Point size, Point touch) {
+            int width = getView().getWidth() * 2;
+            int height = getView().getHeight() * 2;
+
+            size.set(width, height);
+            dragShadowScaleFactor = size;
+
+            touch.set(width / 2, height / 2);
+        }
+
+        @Override
+        public void onDrawShadow(Canvas canvas) {
+            float viewWidth = getView().getWidth();
+            float viewHeight = getView().getHeight();
+            canvas.scale(dragShadowScaleFactor.x / viewWidth, dragShadowScaleFactor.y / viewHeight);
+            getView().draw(canvas);
+        }
     }
 
     @Override
