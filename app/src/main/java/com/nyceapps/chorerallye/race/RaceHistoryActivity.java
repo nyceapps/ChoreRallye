@@ -30,6 +30,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIP
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 
 public class RaceHistoryActivity extends AppCompatActivity {
     private RallyeData data;
@@ -121,8 +122,10 @@ public class RaceHistoryActivity extends AppCompatActivity {
         View dialogView = inflater.inflate(R.layout.dialog_race_history_list_item_note, null);
         final EditText raceHistoryItemNoteEditText = (EditText) dialogView.findViewById(R.id.race_history_item_note);
         raceHistoryItemNoteEditText.setText(pRaceItem.getNote());
+        boolean includePoints = (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode()));
+        String raceHistoryItemText = Utils.makeRaceItemText(pRaceItem.getMemberName(), pRaceItem.getChoreName(), pRaceItem.getChoreValue(), this, includePoints);
         builder.setView(dialogView);
-        builder.setMessage(getString(R.string.confirmation_text_remove_race_history_item))
+        builder.setMessage(String.format(getString(R.string.dialog_text_note_for_race_history_item), raceHistoryItemText))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         showSavingDataDialog();
