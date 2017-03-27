@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         if (data != null) {
+            String displayMode = data.getSettings().getDisplayMode();
+
             MenuItem itemStartStop = menu.findItem(R.id.action_start_stop_race);
             if (itemStartStop != null) {
                 boolean isRunning = data.getSettings().isRunning();
@@ -240,11 +242,18 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     itemStartStop.setTitle(R.string.main_menu_start_race);
                 }
+                switch (displayMode) {
+                    case DISPLAY_MODE_RALLYE:
+                        itemStartStop.setVisible(true);
+                        break;
+                    case DISPLAY_MODE_LOG:
+                        itemStartStop.setVisible(false);
+                        break;
+                }
             }
 
             MenuItem itemSwitchDisplayMode = menu.findItem(R.id.action_switch_display_mode);
             if (itemSwitchDisplayMode != null) {
-                String displayMode = data.getSettings().getDisplayMode();
                 switch (displayMode) {
                     case DISPLAY_MODE_RALLYE:
                         itemSwitchDisplayMode.setTitle(R.string.main_menu_display_mode_log);
