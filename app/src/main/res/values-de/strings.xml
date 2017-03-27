@@ -62,6 +62,7 @@
 
     <string name="edittext_hint_name">Name</string>
     <string name="edittext_hint_value">Wert</string>
+    <string name="edittext_hint_note">Notiz</string>
 
     <string name="pref_title_household_name">Haushaltsname</string>
     <string name="pref_summary_household_name">Der symbolische Name des Haushalts</string>

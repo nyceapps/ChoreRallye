@@ -29,7 +29,7 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
     private RaceHistoryActivity callingActivity;
     private boolean includePoints;
     private List<String> raceHistorySections;
-    private Map<String, List<String>> raceHistoryItems;
+    private Map<String, List<RaceItem>> raceHistoryItems;
     private java.text.DateFormat dateFormat;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -50,13 +50,19 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
 
     @Override
     public void onBindItemViewHolder(ViewHolder holder, int section, int position) {
-        RaceItem raceItem = data.getRace().getRaceItems().get(position);
+        RaceItem raceItem = null;
 
         String sectionKey = raceHistorySections.get(section);
         String raceHistoryItemText = "";
-        List<String> raceHistoryItemList = raceHistoryItems.get(sectionKey);
+        List<RaceItem> raceHistoryItemList = raceHistoryItems.get(sectionKey);
         if (raceHistoryItemList != null) {
-            raceHistoryItemText = raceHistoryItemList.get(position);
+            raceItem = raceHistoryItemList.get(position);
+            if (raceItem != null) {
+                raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
+                if (!TextUtils.isEmpty(raceItem.getNote())) {
+                    raceHistoryItemText += "*";
+                }
+            }
         }
 
         holder.raceHistoryItemTextView.setText(raceHistoryItemText);
@@ -81,15 +87,11 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
             String raceItemDateStr = dateFormat.format(raceItemDate);
             if (!raceHistorySections.contains(raceItemDateStr)) {
                 raceHistorySections.add(raceItemDateStr);
-                raceHistoryItems.put(raceItemDateStr, new ArrayList<String>());
+                raceHistoryItems.put(raceItemDateStr, new ArrayList<RaceItem>());
             }
 
-            List<String> raceHistoryItemList = raceHistoryItems.get(raceItemDateStr);
-            String raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
-            if (!TextUtils.isEmpty(raceItem.getNote())) {
-                raceHistoryItemText += "*";
-            }
-            raceHistoryItemList.add(raceHistoryItemText);
+            List<RaceItem> raceHistoryItemList = raceHistoryItems.get(raceItemDateStr);
+            raceHistoryItemList.add(raceItem);
             raceHistoryItems.put(raceItemDateStr, raceHistoryItemList);
         }
     }
@@ -109,10 +111,10 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
 
         @Override
         public void onClick(View v) {
-            /*
-            ChoreItem chore = (ChoreItem) imageImageView.getTag();
-            callingActivity.editChore(chore);
-            */
+            RaceItem raceItem = (RaceItem) raceHistoryItemTextView.getTag();
+            if (raceItem != null) {
+                callingActivity.editRaceHistoryItemNote(raceItem);
+            }
         }
     }
 
@@ -138,7 +140,7 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
             return 0;
         }
         String sectionKey = raceHistorySections.get(section);
-        List<String> raceHistoryItemList = raceHistoryItems.get(sectionKey);
+        List<RaceItem> raceHistoryItemList = raceHistoryItems.get(sectionKey);
         if (raceHistoryItemList == null) {
             return 0;
         }

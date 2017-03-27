@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -107,6 +110,33 @@ public class RaceHistoryActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         raceHistoryListAdapter.notifyDataSetChanged();
+                    }
+                });
+        builder.create().show();
+    }
+
+    public void editRaceHistoryItemNote(final RaceItem pRaceItem) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_race_history_list_item_note, null);
+        final EditText raceHistoryItemNoteEditText = (EditText) dialogView.findViewById(R.id.race_history_item_note);
+        raceHistoryItemNoteEditText.setText(pRaceItem.getNote());
+        builder.setView(dialogView);
+        builder.setMessage(getString(R.string.confirmation_text_remove_race_history_item))
+                .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showSavingDataDialog();
+
+                        String raceHistoryItemNote = raceHistoryItemNoteEditText.getText().toString();
+                        pRaceItem.setNote(raceHistoryItemNote);
+                        raceHistoryDatabase.child(pRaceItem.getUid()).setValue(pRaceItem);
+
+                        hideSavingDataDialog();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog.
                     }
                 });
         builder.create().show();
