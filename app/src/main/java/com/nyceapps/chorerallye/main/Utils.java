@@ -171,6 +171,9 @@ public final class Utils {
         if (TextUtils.isEmpty(householdUuidId)) {
             householdUuidId = UUID.randomUUID().toString();
         }
+        if (!TextUtils.isEmpty(householdName)) {
+            householdName = householdName.trim().toUpperCase();
+        }
         String householdId = householdName + HOUSEHOLD_ID_INFIX + householdUuidId;
 
         return new String[]{householdId, householdName};
@@ -237,17 +240,19 @@ public final class Utils {
                 Date dateStarted = pData.getRace().getDateStarted();
                 Date dateEnding = pData.getRace().getDateEnding();
 
-                java.text.DateFormat dateFormat = DateFormat.getDateFormat(pContext);
-                String dateStartedStr = dateFormat.format(dateStarted);
-                String dateEndingStr = dateFormat.format(dateEnding);
-                String datePeriodStr = dateStartedStr + " - " + dateEndingStr;
+                if (dateStarted != null && dateEnding != null) {
+                    java.text.DateFormat dateFormat = DateFormat.getDateFormat(pContext);
+                    String dateStartedStr = dateFormat.format(dateStarted);
+                    String dateEndingStr = dateFormat.format(dateEnding);
+                    String datePeriodStr = dateStartedStr + " - " + dateEndingStr;
 
-                long startTime = new Date().getTime();
-                long endTime = dateEnding.getTime();
-                long diffTime = endTime - startTime;
-                long daysLeft = (diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    long startTime = new Date().getTime();
+                    long endTime = dateEnding.getTime();
+                    long diffTime = endTime - startTime;
+                    long daysLeft = (diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-                raceInfoText = String.format(pContext.getString(R.string.race_info_text_running), datePeriodStr, daysLeft);
+                    raceInfoText = String.format(pContext.getString(R.string.race_info_text_running), datePeriodStr, daysLeft);
+                }
             }
         }
         return raceInfoText;
