@@ -172,7 +172,7 @@ public final class Utils {
             householdUuidId = UUID.randomUUID().toString();
         }
         if (!TextUtils.isEmpty(householdName)) {
-            householdName = householdName.trim().toUpperCase();
+            householdName = formatHouseholdName(householdName);
         }
         String householdId = householdName + HOUSEHOLD_ID_INFIX + householdUuidId;
 
@@ -190,10 +190,37 @@ public final class Utils {
         Matcher matcher = HOUSEHOLD_NAME_ID_PATTERN.matcher(pHouseholdId);
         if (matcher.matches() && matcher.groupCount() == 2) {
             String householdName = matcher.group(1);
+            if (!TextUtils.isEmpty(householdName)) {
+                householdName = formatHouseholdName(householdName);
+            }
             return householdName;
         }
 
         return null;
+    }
+
+    private static String formatHouseholdName(String pHouseholdName) {
+        String householdName = pHouseholdName;
+
+        if (!TextUtils.isEmpty(householdName)) {
+            householdName = householdName.trim().toUpperCase();
+
+            StringBuilder householdNameSB = new StringBuilder();
+            if(!Character.isJavaIdentifierStart(householdName.charAt(0))) {
+                householdNameSB.append("_");
+            }
+            for (char c : householdName.toCharArray()) {
+                if(!Character.isJavaIdentifierPart(c)) {
+                    householdNameSB.append("_");
+                } else {
+                    householdNameSB.append(c);
+                }
+            }
+
+            householdName = householdNameSB.toString();
+        }
+
+        return householdName;
     }
 
     public static void setHouseholdId(String pHouseholdId, Context pContext) {

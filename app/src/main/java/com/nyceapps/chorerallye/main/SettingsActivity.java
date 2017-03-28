@@ -107,9 +107,8 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     private void setHouseholdName(String pHouseholdName) {
         if (!TextUtils.isEmpty(pHouseholdName)) {
-            String householdName = pHouseholdName.trim().toUpperCase();
-            previousHouseholdName = householdName;
-            prefHouseholdName.setText(householdName);
+            previousHouseholdName = pHouseholdName;
+            prefHouseholdName.setText(pHouseholdName);
         }
     }
 
