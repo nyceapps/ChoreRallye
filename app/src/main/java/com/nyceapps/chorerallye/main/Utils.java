@@ -167,12 +167,13 @@ public final class Utils {
         if (matcher.matches() && matcher.groupCount() == 2) {
             householdName = matcher.group(1);
             householdUuidId = matcher.group(2);
+        } else {
+            if (!TextUtils.isEmpty(householdName)) {
+                householdName = formatHouseholdName(householdName);
+            }
         }
         if (TextUtils.isEmpty(householdUuidId)) {
             householdUuidId = UUID.randomUUID().toString();
-        }
-        if (!TextUtils.isEmpty(householdName)) {
-            householdName = formatHouseholdName(householdName);
         }
         String householdId = householdName + HOUSEHOLD_ID_INFIX + householdUuidId;
 

@@ -67,4 +67,6 @@ public interface Constants {
     String HOUSEHOLD_ID_INFIX = "@@@";
     Pattern HOUSEHOLD_NAME_ID_PATTERN = Pattern.compile("(.+)@@@(.+)");
     Pattern HOUSEHOLD_AT_NAME_ID_PATTERN_AT = Pattern.compile("@@@(.+)@@@(.+)@@@");
+
+    int LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE = 3650;
 }

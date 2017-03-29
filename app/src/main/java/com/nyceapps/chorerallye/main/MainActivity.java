@@ -63,6 +63,7 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
@@ -368,6 +369,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRace() {
+        startRace(data.getSettings().getLengthOfRallyeInDays());
+    }
+
+    private void startRace(int pLengthOfRallyeInDays) {
         data.getSettings().setRunning(true);
         settingsDatabase.setValue(data.getSettings());
 
@@ -375,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
         displayedRaceItems.init();
 
         Date dateStarted = new Date();
-        Date dateEnding = Utils.getDateEndingForRace(dateStarted, data.getSettings().getLengthOfRallyeInDays());
+        Date dateEnding = Utils.getDateEndingForRace(dateStarted, pLengthOfRallyeInDays);
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(dateEnding);
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
@@ -461,8 +466,14 @@ public class MainActivity extends AppCompatActivity {
                 dateEnding = Utils.getDateEndingForRace(dateStarted, data.getSettings().getLengthOfRallyeInDays());
                 break;
             case DISPLAY_MODE_LOG:
-                // Add ten years
-                dateEnding = Utils.getDateEndingForRace(dateStarted, 3650);
+                boolean isRunning = data.getSettings().isRunning();
+                if (!isRunning) {
+                    startRace(LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE);
+                    dateEnding = null;
+                } else {
+                    // Add ten years
+                    dateEnding = Utils.getDateEndingForRace(dateStarted, LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE);
+                }
                 break;
         }
         if (dateEnding != null) {
