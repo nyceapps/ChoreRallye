@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -62,9 +63,11 @@ public class MemberDetailActivity extends AppCompatActivity {
 
         memberImageImageView = (ImageView) findViewById(R.id.member_image);
         memberFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-        BitmapDrawable memberBitmapDrawable = Utils.convertStringToBitmapDrawable(memberFileString, this);
-        if (memberBitmapDrawable != null) {
-            memberImageImageView.setImageDrawable(memberBitmapDrawable);
+        MemberItem tmpMember = new MemberItem();
+        tmpMember.setImageString(memberFileString);
+        Drawable memberDrawable = tmpMember.getDrawable(this);
+        if (memberDrawable != null) {
+            memberImageImageView.setImageDrawable(memberDrawable);
         }
         memberImageImageView.setOnClickListener(new View.OnClickListener() {
             @Override

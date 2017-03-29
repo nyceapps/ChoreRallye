@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -67,9 +68,11 @@ public class ChoreDetailActivity extends AppCompatActivity {
 
         choreImageImageView = (ImageView) findViewById(R.id.chore_image);
         choreFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-        BitmapDrawable choreBitmapDrawable = Utils.convertStringToBitmapDrawable(choreFileString, this);
-        if (choreBitmapDrawable != null) {
-            choreImageImageView.setImageDrawable(choreBitmapDrawable);
+        ChoreItem tmpChore = new ChoreItem();
+        tmpChore.setImageString(choreFileString);
+        Drawable choreDrawable = tmpChore.getDrawable(this);
+        if (choreDrawable != null) {
+            choreImageImageView.setImageDrawable(choreDrawable);
         }
         choreImageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
