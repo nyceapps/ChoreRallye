@@ -32,8 +32,12 @@
         <activity
             android:name=".chore.ChoresListActivity"
             android:label="@string/activity_label_chores" />
-        <activity android:name=".member.MemberDetailActivity" />
-        <activity android:name=".chore.ChoreDetailActivity" />
+        <activity
+            android:name=".member.MemberDetailActivity"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".chore.ChoreDetailActivity"
+            android:windowSoftInputMode="stateVisible" />
         <activity android:name=".main.SettingsActivity" />
         <activity
             android:name=".main.ShowQRCodeActivity"
