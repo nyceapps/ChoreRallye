@@ -76,6 +76,7 @@ public interface Constants {
     int LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE = 3650;
 
     String BACKUP_FILENAME_STRING_PATTERN = "%s_backup_%s.zip";
+    String BACKUP_EMBEDDED_FILENAME = "backup.json";
 
     boolean DEFAULT_VALUE_ADD_NOTE_INSTANTLY = false;
 }

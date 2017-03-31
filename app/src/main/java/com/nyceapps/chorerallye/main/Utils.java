@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,8 +39,10 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import static com.nyceapps.chorerallye.main.Constants.BACKUP_EMBEDDED_FILENAME;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_AT_NAME_ID_PATTERN_AT;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_NAME_ID_PATTERN;
@@ -308,17 +311,15 @@ public final class Utils {
     public static void createBackup(Uri pUri, RallyeData pData, Context pContext) {
         if (pUri != null) {
             Gson gson = new Gson();
-
             String dataJson = gson.toJson(pData);
-
             if (!TextUtils.isEmpty(dataJson)) {
                 OutputStream outStream = null;
                 ZipOutputStream outZip = null;
                 try {
                     outStream = pContext.getContentResolver().openOutputStream(pUri);
                     outZip = new ZipOutputStream(outStream);
-                    ZipEntry e = new ZipEntry("backup.json");
-                    outZip.putNextEntry(e);
+                    ZipEntry zipEntry = new ZipEntry(BACKUP_EMBEDDED_FILENAME);
+                    outZip.putNextEntry(zipEntry);
                     byte[] data = dataJson.getBytes();
                     outZip.write(data, 0, data.length);
                     outZip.closeEntry();
@@ -345,7 +346,49 @@ public final class Utils {
         }
     }
 
-    public static void restoreBackup(Uri pUri, RallyeData pData, Context pContext) {
+    public static RallyeData restoreBackup(Uri pUri, Context pContext) {
+        if (pUri != null) {
+            InputStream inStream = null;
+            ZipInputStream inZip = null;
+            try {
+                inStream = pContext.getContentResolver().openInputStream(pUri);
+                inZip = new ZipInputStream(inStream);
+                ZipEntry zipEntry;
+                while ((zipEntry = inZip.getNextEntry()) != null) {
+                    if (BACKUP_EMBEDDED_FILENAME.equals(zipEntry.getName())) {
+                        StringWriter data = new StringWriter();
+                        for (int c = inZip.read(); c != -1; c = inZip.read()) {
+                            data.write(c);
+                        }
+                        inZip.closeEntry();
+                        String dataJson = data.toString();
+                        if (!TextUtils.isEmpty(dataJson)) {
+                            Gson gson = new Gson();
+                            return gson.fromJson(dataJson, RallyeData.class);
+                        }
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            } finally {
+                if (inStream != null) {
+                    try {
+                        inStream.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                if (inZip != null) {
+                    try {
+                        inZip.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+            }
+        }
 
+        return null;
     }
 }

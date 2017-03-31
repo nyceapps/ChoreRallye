@@ -572,7 +572,11 @@ public class MainActivity extends AppCompatActivity {
                     Uri uri = null;
                     if (intent != null) {
                         uri = intent.getData();
-                        Utils.restoreBackup(uri, data, this);
+                        RallyeData rallyeData = Utils.restoreBackup(uri, this);
+                        if (rallyeData != null) {
+                            ((RallyeApplication) this.getApplication()).setRallyeData(data);
+                            data = rallyeData;
+                        }
                     }
                 }
                 break;
