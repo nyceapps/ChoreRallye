@@ -17,6 +17,7 @@ import com.nyceapps.chorerallye.member.MemberItem;
 
 public class ChoreItem extends MemberItem {
     private int value;
+    private boolean instantlyAddNote;
 
     public int getValue() {
         return value;
@@ -24,6 +25,14 @@ public class ChoreItem extends MemberItem {
 
     public void setValue(int pValue) {
         value = pValue;
+    }
+
+    public boolean isInstantlyAddNote() {
+        return instantlyAddNote;
+    }
+
+    public void setInstantlyAddNote(boolean instantlyAddNote) {
+        this.instantlyAddNote = instantlyAddNote;
     }
 
     @Override

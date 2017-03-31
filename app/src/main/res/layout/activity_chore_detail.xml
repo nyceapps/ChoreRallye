@@ -30,4 +30,9 @@
         android:digits="0123456789"
         android:inputType="number"
         android:hint="@string/edittext_hint_value"/>
+    <CheckBox
+        android:id="@+id/chore_add_note_instantly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkbox_text_instantly_add_note"/>
 </LinearLayout>

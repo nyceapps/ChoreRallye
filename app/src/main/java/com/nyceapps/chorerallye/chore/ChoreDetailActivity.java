@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -29,6 +30,8 @@ import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
 
+import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ADD_NOTE_INSTANTLY;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
@@ -51,6 +54,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
     private ImageView choreImageImageView;
     private EditText choreNameEditText;
     private EditText choreValueEditText;
+    private CheckBox choreInstantlyAddNoteCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,10 @@ public class ChoreDetailActivity extends AppCompatActivity {
         if (choreValue > 0) {
             choreValueEditText.setText(String.valueOf(choreValue));
         }
+
+        boolean choreInstantlyAddNote = intent.getBooleanExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, DEFAULT_VALUE_ADD_NOTE_INSTANTLY);
+        choreInstantlyAddNoteCheckBox = (CheckBox) findViewById(R.id.chore_add_note_instantly);
+        choreInstantlyAddNoteCheckBox.setChecked(choreInstantlyAddNote);
 
         cameraPhotoWasChosen = false;
     }
@@ -196,6 +204,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, originalName);
                 intent.putExtra(EXTRA_MESSAGE_VALUE, Integer.valueOf(choreValueEditText.getText().toString()));
                 intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, originalValue);
+                intent.putExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, choreInstantlyAddNoteCheckBox.isChecked());
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
                     intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);

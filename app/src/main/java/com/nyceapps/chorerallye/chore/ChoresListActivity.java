@@ -35,6 +35,8 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ADD_NOTE_INSTANTLY;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
@@ -152,6 +154,7 @@ public class ChoresListActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pChore.getName());
         intent.putExtra(EXTRA_MESSAGE_VALUE, pChore.getValue());
         intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, pChore.getValue());
+        intent.putExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, pChore.isInstantlyAddNote());
         intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pChore.getImageString());
         startActivityForResult(intent, REQUEST_CODE_EDIT_CHORE);
     }
@@ -230,6 +233,7 @@ public class ChoresListActivity extends AppCompatActivity {
                 chore.setUid(uid);
                 chore.setName(choreName);
                 chore.setValue(choreValue);
+                chore.setInstantlyAddNote(intent.getBooleanExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, DEFAULT_VALUE_ADD_NOTE_INSTANTLY));
                 String choreImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
                 if (!TextUtils.isEmpty(choreImageString)) {
                     chore.setImageString(choreImageString);

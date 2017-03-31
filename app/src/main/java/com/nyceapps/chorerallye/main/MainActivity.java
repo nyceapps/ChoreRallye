@@ -821,7 +821,7 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreName(pChore.getName());
         raceItem.setChoreValue(pChore.getValue());
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
-        if (Utils.isInstantlyAddRaceItemNote(this)) {
+        if (Utils.isInstantlyAddRaceItemNote(this) || pChore.isInstantlyAddNote()) {
             addRaceHistoryItemNote(raceItem);
         }
 

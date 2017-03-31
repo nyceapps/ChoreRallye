@@ -16,6 +16,7 @@ public interface Constants {
     String EXTRA_MESSAGE_VALUE = "com.nyceapps.chorerallye.MESSAGE_VALUE";
     String EXTRA_MESSAGE_ORIGINAL_VALUE = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_VALUE";
     String EXTRA_MESSAGE_FILE_STRING = "com.nyceapps.chorerallye.MESSAGE_FILE_STRING";
+    String EXTRA_MESSAGE_ADD_NOTE_INSTANTLY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY";
 
     int REQUEST_CODE_ADD_MEMBER = 1;
     int REQUEST_CODE_EDIT_MEMBER = 2;
@@ -75,4 +76,6 @@ public interface Constants {
     int LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE = 3650;
 
     String BACKUP_FILENAME_STRING_PATTERN = "%s_backup_%s.zip";
+
+    boolean DEFAULT_VALUE_ADD_NOTE_INSTANTLY = false;
 }
