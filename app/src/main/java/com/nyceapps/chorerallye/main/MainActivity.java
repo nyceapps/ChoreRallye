@@ -47,10 +47,12 @@ import com.nyceapps.chorerallye.race.RaceHistoryActivity;
 import com.nyceapps.chorerallye.race.RaceItem;
 import com.nyceapps.chorerallye.race.RaceStatisticsActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.nyceapps.chorerallye.main.Constants.BACKUP_FILENAME_STRING_PATTERN;
 import static com.nyceapps.chorerallye.main.Constants.CHORE_COLUMNS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_ENDING;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_STARTED;
@@ -66,7 +68,9 @@ import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_LOG;
 import static com.nyceapps.chorerallye.main.Constants.DISPLAY_MODE_RALLYE;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
 import static com.nyceapps.chorerallye.main.Constants.LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CREATE_BACKUP;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_MANAGE_PREFERENCES;
+import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_RESTORE_BACKUP;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_SCAN_QR_CODE;
 
 public class MainActivity extends AppCompatActivity {
@@ -346,6 +350,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
+            case R.id.action_create_backup:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    createBackup();
+                }
+                break;
+            case R.id.action_restore_backup:
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    restoreBackup();
+                }
+                break;
             case R.id.action_manage_preferences:
                 managePreferences();
                 break;
@@ -483,6 +501,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void createBackup() {
+        String householdName = Utils.getHouseholdName(this);
+        if (householdName != null) {
+            String datePostfix = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());;
+            String fileName = String.format(BACKUP_FILENAME_STRING_PATTERN, householdName, datePostfix);
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/zip");
+            intent.putExtra(Intent.EXTRA_TITLE, fileName);
+            startActivityForResult(intent, REQUEST_CODE_CREATE_BACKUP);
+        }
+    }
+
+    private void restoreBackup() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+        startActivityForResult(intent, REQUEST_CODE_RESTORE_BACKUP);
+    }
+
     private void managePreferences() {
         enterInit = true;
 
@@ -523,11 +561,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
+            case REQUEST_CODE_CREATE_BACKUP:
+                break;
+            case REQUEST_CODE_RESTORE_BACKUP:
+                break;
             case REQUEST_CODE_MANAGE_PREFERENCES:
-                if (data != null) {
+            if (data != null) {
                     settingsDatabase.setValue(data.getSettings());
                 }
-                break;
+            break;
         }
     }
 

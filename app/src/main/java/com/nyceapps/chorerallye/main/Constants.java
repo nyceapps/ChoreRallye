@@ -25,6 +25,8 @@ public interface Constants {
     int REQUEST_CODE_SCAN_QR_CODE = 6;
     int REQUEST_CODE_PERMISSION_REQUEST_CAMERA = 7;
     int REQUEST_CODE_MANAGE_PREFERENCES = 8;
+    int REQUEST_CODE_CREATE_BACKUP = 9;
+    int REQUEST_CODE_RESTORE_BACKUP = 10;
 
     int CONTEXT_MENU_ACTION_EDIT = 0;
     int CONTEXT_MENU_ACTION_REMOVE = 1;
@@ -71,4 +73,6 @@ public interface Constants {
     Pattern HOUSEHOLD_AT_NAME_ID_PATTERN_AT = Pattern.compile("@@@(.+)@@@(.+)@@@");
 
     int LENGTH_OF_RACE_IN_DAYS_FOR_LOG_MODE = 3650;
+
+    String BACKUP_FILENAME_STRING_PATTERN = "%s_backup_%s.zip";
 }

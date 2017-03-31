@@ -201,6 +201,11 @@ public final class Utils {
         return null;
     }
 
+    public static String getHouseholdName(Context pContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        return sharedPreferences.getString(PREF_KEY_HOUSEHOLD_NAME, null);
+    }
+
     private static String formatHouseholdName(String pHouseholdName) {
         String householdName = pHouseholdName;
 
