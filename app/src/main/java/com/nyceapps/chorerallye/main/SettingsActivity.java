@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import com.nyceapps.chorerallye.R;
 
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_NAME;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_INSTANTLY_ADD_RACE_ITEM_NOTE;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_WINNING_PERCENTAGE;
 import static com.nyceapps.chorerallye.main.Constants.SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS;
@@ -30,6 +32,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private EditTextPreference prefHouseholdName;
     private EditTextPreference prefWinningPercentage;
     private EditTextPreference prefLengthOfRallyeInDays;
+    private CheckBoxPreference prefInstantlyAddRaceItemNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         setHouseholdNamePreference();
         setWinningPercentagePreference();
         setLengthOfRallyeInDaysPreference();
+        setInstantlyAddRaceItemNotePreference();
     }
 
     @Override
@@ -174,5 +178,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             lengthOfRallyeInDays = data.getSettings().getLengthOfRallyeInDays();
         }
         prefLengthOfRallyeInDays.setSummary(String.valueOf(lengthOfRallyeInDays));
+    }
+
+    private void setInstantlyAddRaceItemNotePreference() {
+        prefInstantlyAddRaceItemNote = (CheckBoxPreference) findPreference(PREF_KEY_INSTANTLY_ADD_RACE_ITEM_NOTE);
+        prefInstantlyAddRaceItemNote.setOnPreferenceChangeListener(this);
     }
 }

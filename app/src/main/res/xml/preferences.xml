@@ -7,9 +7,14 @@
     <EditTextPreference
         android:key="pref_key_winning_percentage"
         android:title="@string/pref_title_winning_percentage"
-        android:order="1"/>
+        android:order="10"/>
     <EditTextPreference
         android:key="pref_key_length_of_rallye_in_days"
         android:title="@string/pref_title_rallye_length"
-        android:order="2"/>
+        android:order="20"/>
+    <CheckBoxPreference
+        android:key="pref_key_instantly_add_race_item_note"
+        android:title="@string/pref_title_instantly_add_race_item_note"
+        android:summary="@string/pref_summary_instantly_add_race_item_note"
+        android:order="30"/>
 </PreferenceScreen>

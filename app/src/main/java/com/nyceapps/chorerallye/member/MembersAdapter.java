@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nyceapps.chorerallye.main.MainActivity;
 import com.nyceapps.chorerallye.R;
-import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.chore.ChoreItem;
+import com.nyceapps.chorerallye.main.MainActivity;
+import com.nyceapps.chorerallye.main.RallyeData;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;

@@ -70,6 +70,8 @@
     <string name="pref_summary_household_name">Der symbolische Name des Haushalts</string>
     <string name="pref_title_winning_percentage">Prozentsatz zum Gewinn</string>
     <string name="pref_title_rallye_length">Länge der Rallye in Tagen</string>
+    <string name="pref_title_instantly_add_race_item_note">Notiz sofort erfassen</string>
+    <string name="pref_summary_instantly_add_race_item_note">Notiz erfassen, sobald eine Aufgabe einer Person zugeordnet wird</string>
 
     <string name="text_scan_qr_code_to_participate">Scannen Sie diesen Qr-Code mit einer anderen App ein, um in diesem Haushalt teilzunehmen.</string>
 

@@ -38,7 +38,8 @@ import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_NAME_ID_PATTERN;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_ID;
 import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_HOUSEHOLD_NAME;
-import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID;
+import static com.nyceapps.chorerallye.main.Constants.PREF_KEY_INSTANTLY_ADD_RACE_ITEM_NOTE;
+import static com.nyceapps.chorerallye.main.Constants.SETTINGS_DEFAULT_VALUE_INSTANTLY_ADD_RACE_ITEM_NOTE;
 
 /**
  * Created by bela on 08.02.17.
@@ -236,6 +237,12 @@ public final class Utils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PREF_KEY_HOUSEHOLD_NAME, pHouseholdName);
         editor.commit();
+    }
+
+    public static boolean isInstantlyAddRaceItemNote(Context pContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        boolean isInstantlyAddRaceItemNote = sharedPreferences.getBoolean(PREF_KEY_INSTANTLY_ADD_RACE_ITEM_NOTE, SETTINGS_DEFAULT_VALUE_INSTANTLY_ADD_RACE_ITEM_NOTE);
+        return isInstantlyAddRaceItemNote;
     }
 
     /*

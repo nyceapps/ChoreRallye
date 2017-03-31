@@ -50,6 +50,7 @@ public interface Constants {
     String PREF_KEY_LAST_DISPLAYED_RACE_ITEM_UID = "pref_key_last_displayed_race_item_uid";
     String PREF_KEY_WINNING_PERCENTAGE = "pref_key_winning_percentage";
     String PREF_KEY_LENGTH_OF_RALLYE_IN_DAYS = "pref_key_length_of_rallye_in_days";
+    String PREF_KEY_INSTANTLY_ADD_RACE_ITEM_NOTE = "pref_key_instantly_add_race_item_note";
 
     String PREF_KEY_LOCAL_HISTORY_COUNT = "pref_key_local_history_count";
     String PREF_KEY_PREFIX_LOCAL_HISTORY_ENTRY = "pref_key_prefix_local_history_entry_";
@@ -63,6 +64,7 @@ public interface Constants {
     String SETTINGS_DEFAULT_VALUE_DISPLAY_MODE = DISPLAY_MODE_RALLYE;
     int SETTINGS_DEFAULT_VALUE_RACE_WINNING_PERCENTAGE = 67;
     int SETTINGS_DEFAULT_VALUE_LENGTH_OF_RACE_IN_DAYS = 30;
+    boolean SETTINGS_DEFAULT_VALUE_INSTANTLY_ADD_RACE_ITEM_NOTE = false;
 
     String HOUSEHOLD_ID_INFIX = "@@@";
     Pattern HOUSEHOLD_NAME_ID_PATTERN = Pattern.compile("(.+)@@@(.+)");

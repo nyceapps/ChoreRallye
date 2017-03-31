@@ -20,7 +20,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nyceapps.chorerallye.R;
-import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.nyceapps.chorerallye.main.RallyeApplication;
 import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;

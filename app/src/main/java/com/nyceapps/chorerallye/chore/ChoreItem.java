@@ -7,9 +7,9 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
 
-import com.nyceapps.chorerallye.member.MemberItem;
 import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.main.Utils;
+import com.nyceapps.chorerallye.member.MemberItem;
 
 /**
  * Created by lugosi on 06.02.17.

@@ -19,10 +19,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -777,11 +779,38 @@ public class MainActivity extends AppCompatActivity {
         raceItem.setChoreName(pChore.getName());
         raceItem.setChoreValue(pChore.getValue());
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(uid).setValue(raceItem);
+        if (Utils.isInstantlyAddRaceItemNote(this)) {
+            addRaceHistoryItemNote(raceItem);
+        }
 
         localHistory.add(raceItem.getUid());
 
         showPointsToast(pMember, pChore);
         displayedRaceItems.add(raceItem.getUid());
+    }
+
+    private void addRaceHistoryItemNote(final RaceItem pRaceItem) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_race_history_list_item_note, null);
+        final EditText raceHistoryItemNoteEditText = (EditText) dialogView.findViewById(R.id.race_history_item_note);
+        boolean includePoints = (DISPLAY_MODE_RALLYE.equals(data.getSettings().getDisplayMode()));
+        final String raceHistoryItemText = Utils.makeRaceItemText(pRaceItem.getMemberName(), pRaceItem.getChoreName(), pRaceItem.getChoreValue(), this, includePoints);
+        builder.setView(dialogView);
+        builder.setMessage(String.format(getString(R.string.dialog_text_note_for_race_history_item), raceHistoryItemText))
+                .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String raceHistoryItemNote = raceHistoryItemNoteEditText.getText().toString();
+                        pRaceItem.setNote(raceHistoryItemNote);
+                        raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(pRaceItem.getUid()).setValue(pRaceItem);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog.
+                    }
+                });
+        builder.create().show();
     }
 
     private void undoPoints() {
