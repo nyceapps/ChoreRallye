@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.nyceapps.chorerallye.member.MemberItem;
@@ -22,8 +24,11 @@ import com.nyceapps.chorerallye.member.MemberItem;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +37,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_AT_NAME_ID_PATTERN_AT;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
@@ -296,5 +303,49 @@ public final class Utils {
             }
         }
         return raceInfoText;
+    }
+
+    public static void createBackup(Uri pUri, RallyeData pData, Context pContext) {
+        if (pUri != null) {
+            Gson gson = new Gson();
+
+            String dataJson = gson.toJson(pData);
+
+            if (!TextUtils.isEmpty(dataJson)) {
+                OutputStream outStream = null;
+                ZipOutputStream outZip = null;
+                try {
+                    outStream = pContext.getContentResolver().openOutputStream(pUri);
+                    outZip = new ZipOutputStream(outStream);
+                    ZipEntry e = new ZipEntry("backup.json");
+                    outZip.putNextEntry(e);
+                    byte[] data = dataJson.getBytes();
+                    outZip.write(data, 0, data.length);
+                    outZip.closeEntry();
+                    outZip.finish();
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage());
+                } finally {
+                    if (outStream != null) {
+                        try {
+                            outStream.close();
+                        } catch (IOException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                    if (outZip != null) {
+                        try {
+                            outZip.close();
+                        } catch (IOException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void restoreBackup(Uri pUri, RallyeData pData, Context pContext) {
+
     }
 }

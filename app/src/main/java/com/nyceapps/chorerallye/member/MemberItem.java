@@ -22,7 +22,7 @@ public class MemberItem {
     private String uid;
     private String name;
     private String imageString;
-    protected Drawable imageDrawable;
+    protected transient Drawable imageDrawable;
 
     public String getUid() {
         return uid;

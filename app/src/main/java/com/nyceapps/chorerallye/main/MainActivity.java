@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -358,11 +359,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_restore_backup:
-                if (householdId == null) {
-                    showGotoPreferencesDialog();
-                } else {
-                    restoreBackup();
-                }
+                restoreBackup();
                 break;
             case R.id.action_manage_preferences:
                 managePreferences();
@@ -562,8 +559,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case REQUEST_CODE_CREATE_BACKUP:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = null;
+                    if (intent != null) {
+                        uri = intent.getData();
+                        Utils.createBackup(uri, data, this);
+                    }
+                }
                 break;
             case REQUEST_CODE_RESTORE_BACKUP:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = null;
+                    if (intent != null) {
+                        uri = intent.getData();
+                        Utils.restoreBackup(uri, data, this);
+                    }
+                }
                 break;
             case REQUEST_CODE_MANAGE_PREFERENCES:
             if (data != null) {
