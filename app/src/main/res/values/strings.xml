@@ -46,6 +46,8 @@
 
     <string name="detail_menu_action_save">Save</string>
 
+    <string name="history_menu_delete_full_history">Delete history</string>
+
     <string name="race_item_text_member_points_for_chore" formatted="false">%s gets %d points for doing %s.</string>
     <string name="race_item_text_member_chore" formatted="false">%s did %s.</string>
 
@@ -58,6 +60,7 @@
     <string name="confirmation_text_remove_member" formatted="false">Do you really want to remove person \"%s\"?</string>
     <string name="confirmation_text_remove_chore" formatted="false">Do you really want to remove chore \"%s\"?</string>
     <string name="confirmation_text_remove_race_history_item">Do you really want to remove this entry?</string>
+    <string name="confirmation_text_delete_full_race_history">Do you really want to delete the full history?</string>
     <string name="confirmation_text_update_chore_value" formatted="false">Do you really want to change the value for chore \"%s\"?</string>
     <string name="confirmation_text_change_household_name">Do you really want to change the household name?\nYou cannot use the existing data anymore!</string>
     <string name="confirmation_text_participate_in_household" formatted="false">Do you really want to participate in Household \"%s\"?\nAny previous existing data cannot be used anymore!</string>

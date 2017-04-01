@@ -9,6 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,7 +26,9 @@ import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_IDLE;
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
@@ -94,6 +99,51 @@ public class RaceHistoryActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.history_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_full_history:
+                deleteFullRaceHistory();
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    public void deleteFullRaceHistory() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirmation_text_delete_full_race_history))
+                .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showSavingDataDialog();
+
+                        Map<String, Object> raceItemsMap = new HashMap<>();
+                        for (RaceItem raceItem : data.getRace().getRaceItems()) {
+                            raceItemsMap.put(raceItem.getUid(), null);
+                        }
+                        raceHistoryDatabase.updateChildren(raceItemsMap);
+
+                        hideSavingDataDialog();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Cancel the dialog
+                    }
+                });
+        builder.create().show();
     }
 
     public void removeRaceHistoryItem(final RaceItem pRaceItem) {
