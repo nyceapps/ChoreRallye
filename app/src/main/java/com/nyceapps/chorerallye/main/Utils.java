@@ -8,33 +8,39 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.nyceapps.chorerallye.R;
 import com.nyceapps.chorerallye.chore.ChoreItem;
 import com.nyceapps.chorerallye.member.MemberItem;
+import com.nyceapps.chorerallye.race.RaceItem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -43,6 +49,14 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import static com.nyceapps.chorerallye.main.Constants.BACKUP_EMBEDDED_FILENAME;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_ENDING;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_DATE_STARTED;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_META;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_SETTINGS;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_AT_NAME_ID_PATTERN_AT;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_ID_INFIX;
 import static com.nyceapps.chorerallye.main.Constants.HOUSEHOLD_NAME_ID_PATTERN;
@@ -346,7 +360,7 @@ public final class Utils {
         }
     }
 
-    public static RallyeData restoreBackup(Uri pUri, Context pContext) {
+    public static void restoreBackup(Uri pUri, Context pContext) {
         if (pUri != null) {
             InputStream inStream = null;
             ZipInputStream inZip = null;
@@ -364,7 +378,26 @@ public final class Utils {
                         String dataJson = data.toString();
                         if (!TextUtils.isEmpty(dataJson)) {
                             Gson gson = new Gson();
-                            return gson.fromJson(dataJson, RallyeData.class);
+                            RallyeData rallyeData = gson.fromJson(dataJson, RallyeData.class);
+                            if (rallyeData != null) {
+                                RallyeApplication app = (RallyeApplication) ((AppCompatActivity) pContext).getApplication();
+                                app.setRallyeData(rallyeData);
+                                String householdId = Utils.getHouseholdId(pContext);
+                                DatabaseReference settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_SETTINGS);
+                                settingsDatabase.setValue(rallyeData.getSettings());
+                                DatabaseReference membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
+                                membersDatabase.setValue(rallyeData.getMembers());
+                                DatabaseReference choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
+                                choresDatabase.setValue(rallyeData.getChores());
+                                DatabaseReference raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
+                                raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(rallyeData.getRace().getDateStarted());
+                                raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(rallyeData.getRace().getDateEnding());
+                                Map<String, Object> raceItemsMap = new HashMap<>();
+                                for (RaceItem raceItem : rallyeData.getRace().getRaceItems()) {
+                                    raceItemsMap.put(raceItem.getUid(), raceItem);
+                                }
+                                raceDatabase.child(DATABASE_SUBPATH_ITEMS).updateChildren(raceItemsMap);
+                            }
                         }
                         break;
                     }
@@ -388,7 +421,5 @@ public final class Utils {
                 }
             }
         }
-
-        return null;
     }
 }
