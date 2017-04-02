@@ -60,7 +60,7 @@ public class RaceHistoryListAdapter extends SimpleSectionedAdapter<RaceHistoryLi
             if (raceItem != null) {
                 raceHistoryItemText = Utils.makeRaceItemText(raceItem.getMemberName(), raceItem.getChoreName(), raceItem.getChoreValue(), callingActivity, includePoints);
                 if (!TextUtils.isEmpty(raceItem.getNote())) {
-                    raceHistoryItemText += "*";
+                    raceHistoryItemText += " (" + raceItem.getNote() + ")";
                 }
             }
         }
