@@ -8,31 +8,46 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
-    <ImageView
-        android:id="@+id/chore_image"
-        android:layout_width="@dimen/rallye_item_width"
-        android:layout_height="@dimen/rallye_item_height"
-        android:layout_gravity="center"
-        android:src="@drawable/chore_placeholder"/>
-    <EditText
-        android:id="@+id/chore_name"
-        android:textSize="@dimen/font_size_normal"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/edittext_hint_name"/>
-    <EditText
-        android:id="@+id/chore_value"
-        android:textSize="@dimen/font_size_normal"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/chore_image"
+            android:layout_width="@dimen/rallye_item_width"
+            android:layout_height="@dimen/rallye_item_height"
+            android:src="@drawable/chore_placeholder"/>
+        <EditText
+            android:id="@+id/chore_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:hint="@string/edittext_hint_name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:digits="0123456789"
-        android:inputType="number"
-        android:hint="@string/edittext_hint_value"/>
-    <CheckBox
-        android:id="@+id/chore_add_note_instantly"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/checkbox_text_instantly_add_note"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edittext_hint_value"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <EditText
+            android:id="@+id/chore_value"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:hint="@string/edittext_hint_value"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <CheckBox
+            android:id="@+id/chore_add_note_instantly"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/checkbox_text_instantly_add_note"/>
+    </LinearLayout>
 </LinearLayout>

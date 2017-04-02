@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/member_detail_main_layout"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -12,13 +12,12 @@
         android:id="@+id/member_image"
         android:layout_width="@dimen/rallye_item_width"
         android:layout_height="@dimen/rallye_item_height"
-        android:layout_gravity="center"
         android:src="@drawable/member_placeholder"/>
     <EditText
         android:id="@+id/member_name"
-        android:textSize="@dimen/font_size_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/edittext_hint_name"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:hint="@string/edittext_hint_name"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 </LinearLayout>
