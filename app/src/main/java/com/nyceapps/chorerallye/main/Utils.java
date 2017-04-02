@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -377,6 +376,7 @@ public final class Utils {
                         inZip.closeEntry();
                         String dataJson = data.toString();
                         if (!TextUtils.isEmpty(dataJson)) {
+                            dataJson = new String(dataJson.getBytes(StandardCharsets.ISO_8859_1));
                             Gson gson = new Gson();
                             RallyeData rallyeData = gson.fromJson(dataJson, RallyeData.class);
                             if (rallyeData != null) {
