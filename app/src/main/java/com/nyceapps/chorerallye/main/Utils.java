@@ -382,16 +382,32 @@ public final class Utils {
                             if (rallyeData != null) {
                                 RallyeApplication app = (RallyeApplication) ((AppCompatActivity) pContext).getApplication();
                                 app.setRallyeData(rallyeData);
+
                                 String householdId = Utils.getHouseholdId(pContext);
+
                                 DatabaseReference settingsDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_SETTINGS);
                                 settingsDatabase.setValue(rallyeData.getSettings());
+
                                 DatabaseReference membersDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_MEMBERS);
-                                membersDatabase.setValue(rallyeData.getMembers());
+                                membersDatabase.removeValue();
+                                Map<String, Object> membersMap = new HashMap<>();
+                                for (MemberItem member : rallyeData.getMembers()) {
+                                    membersMap.put(member.getUid(), member);
+                                }
+                                membersDatabase.updateChildren(membersMap);
+
                                 DatabaseReference choresDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_CHORES);
-                                choresDatabase.setValue(rallyeData.getChores());
+                                choresDatabase.removeValue();
+                                Map<String, Object> choresMap = new HashMap<>();
+                                for (ChoreItem chore : rallyeData.getChores()) {
+                                    choresMap.put(chore.getUid(), chore);
+                                }
+                                choresDatabase.updateChildren(choresMap);
+
                                 DatabaseReference raceDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_RACE);
                                 raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(rallyeData.getRace().getDateStarted());
                                 raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(rallyeData.getRace().getDateEnding());
+                                raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
                                 Map<String, Object> raceItemsMap = new HashMap<>();
                                 for (RaceItem raceItem : rallyeData.getRace().getRaceItems()) {
                                     raceItemsMap.put(raceItem.getUid(), raceItem);

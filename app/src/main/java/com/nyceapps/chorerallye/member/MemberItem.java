@@ -22,6 +22,7 @@ public class MemberItem {
     private String uid;
     private String name;
     private String imageString;
+    private int orderKey;
     protected transient Drawable imageDrawable;
 
     public String getUid() {
@@ -46,6 +47,14 @@ public class MemberItem {
 
     public void setImageString(String pImageString) {
         imageString = pImageString;
+    }
+
+    public int getOrderKey() {
+        return orderKey;
+    }
+
+    public void setOrderKey(int pOrderKey) {
+        orderKey = pOrderKey;
     }
 
     @Exclude
