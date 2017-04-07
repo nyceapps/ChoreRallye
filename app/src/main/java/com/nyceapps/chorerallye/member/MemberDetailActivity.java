@@ -29,8 +29,10 @@ import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
 
+import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
@@ -39,6 +41,7 @@ import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_PERMISSION_RE
 public class MemberDetailActivity extends AppCompatActivity {
     private String uid;
     private String originalName;
+    private int orderKey;
     private String memberFileString;
 
     private boolean cameraPhotoWasChosen;
@@ -58,6 +61,7 @@ public class MemberDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
         originalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
+        orderKey = intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY);
 
         memberImageImageView = (ImageView) findViewById(R.id.member_image);
         memberFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
@@ -183,6 +187,7 @@ public class MemberDetailActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_MESSAGE_UID, uid);
                 intent.putExtra(EXTRA_MESSAGE_NAME, memberNameEditText.getText().toString());
                 intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, originalName);
+                intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
                     intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);

@@ -34,8 +34,10 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
+import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_MEMBER;
@@ -147,6 +149,15 @@ public class MembersListActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE_UID, pMember.getUid());
         intent.putExtra(EXTRA_MESSAGE_NAME, pMember.getName());
         intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pMember.getName());
+        int orderKey = pMember.getOrderKey();
+        List<MemberItem> members = data.getMembers();
+        for (int i = 0; i < members.size(); i++) {
+            if (pMember.getUid().equals(members.get(i).getUid())) {
+                orderKey = i;
+                break;
+            }
+        }
+        intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
         intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pMember.getImageString());
         startActivityForResult(intent, REQUEST_CODE_EDIT_MEMBER);
     }
@@ -218,6 +229,7 @@ public class MembersListActivity extends AppCompatActivity {
                 }
                 member.setUid(uid);
                 member.setName(memberName);
+                member.setOrderKey(intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY));
                 String memberImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
                 if (!TextUtils.isEmpty(memberImageString)) {
                     member.setImageString(memberImageString);

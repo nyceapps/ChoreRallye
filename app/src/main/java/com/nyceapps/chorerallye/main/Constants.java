@@ -17,6 +17,7 @@ public interface Constants {
     String EXTRA_MESSAGE_ORIGINAL_VALUE = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_VALUE";
     String EXTRA_MESSAGE_FILE_STRING = "com.nyceapps.chorerallye.MESSAGE_FILE_STRING";
     String EXTRA_MESSAGE_ADD_NOTE_INSTANTLY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY";
+    String EXTRA_MESSAGE_ORDER_KEY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ORDER_KEY";
 
     int REQUEST_CODE_ADD_MEMBER = 1;
     int REQUEST_CODE_EDIT_MEMBER = 2;
@@ -79,4 +80,5 @@ public interface Constants {
     String BACKUP_EMBEDDED_FILENAME = "backup.json";
 
     boolean DEFAULT_VALUE_ADD_NOTE_INSTANTLY = false;
+    int DEFAULT_VALUE_ORDER_KEY = Integer.MAX_VALUE;
 }
