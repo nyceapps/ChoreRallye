@@ -359,7 +359,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_restore_backup:
-                restoreBackup();
+                if (householdId == null) {
+                    showGotoPreferencesDialog();
+                } else {
+                    restoreBackup();
+                }
                 break;
             case R.id.action_manage_preferences:
                 managePreferences();
@@ -572,11 +576,7 @@ public class MainActivity extends AppCompatActivity {
                     Uri uri = null;
                     if (intent != null) {
                         uri = intent.getData();
-                        RallyeData rallyeData = Utils.restoreBackup(uri, this);
-                        if (rallyeData != null) {
-                            ((RallyeApplication) this.getApplication()).setRallyeData(data);
-                            data = rallyeData;
-                        }
+                        Utils.restoreBackup(uri, this);
                     }
                 }
                 break;

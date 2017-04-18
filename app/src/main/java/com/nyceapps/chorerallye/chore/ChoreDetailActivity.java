@@ -31,9 +31,11 @@ import com.nyceapps.chorerallye.main.Utils;
 import java.io.File;
 
 import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ADD_NOTE_INSTANTLY;
+import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
 import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
@@ -45,6 +47,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
     private String uid;
     private String originalName;
     private int originalValue;
+    private int orderKey;
     private String choreFileString;
 
     private boolean cameraPhotoWasChosen;
@@ -67,6 +70,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
         uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
         originalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
         originalValue = intent.getIntExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, -1);
+        orderKey = intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY);
 
         choreImageImageView = (ImageView) findViewById(R.id.chore_image);
         choreFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
@@ -205,6 +209,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_MESSAGE_VALUE, Integer.valueOf(choreValueEditText.getText().toString()));
                 intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, originalValue);
                 intent.putExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, choreInstantlyAddNoteCheckBox.isChecked());
+                intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
                     intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);
