@@ -81,4 +81,6 @@ public interface Constants {
 
     boolean DEFAULT_VALUE_ADD_NOTE_INSTANTLY = false;
     int DEFAULT_VALUE_ORDER_KEY = Integer.MAX_VALUE;
+
+    String DIALOG_TYPE_SAVE = "DIALOG_TYPE_SAVE";
 }

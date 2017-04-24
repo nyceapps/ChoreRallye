@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nyceapps.chorerallye.R;
+import com.nyceapps.chorerallye.main.DialogManager;
 import com.nyceapps.chorerallye.main.RallyeApplication;
 import com.nyceapps.chorerallye.main.RallyeData;
 import com.nyceapps.chorerallye.main.Utils;
@@ -49,16 +50,18 @@ import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_CHORE;
 
 public class ChoresListActivity extends AppCompatActivity {
+    private DialogManager dialogManager;
     private RallyeData data;
     private ChoresListAdapter choresListAdapter;
     private DatabaseReference choresDatabase;
     private DatabaseReference raceDatabase;
-    private ProgressDialog savingDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chores_list);
+
+        dialogManager = new DialogManager(this);
 
         RecyclerView choresListView = (RecyclerView) findViewById(R.id.chores_list_view);
 
@@ -189,7 +192,7 @@ public class ChoresListActivity extends AppCompatActivity {
         builder.setMessage(String.format(getString(R.string.confirmation_text_remove_chore), pChore.getName()))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        showSavingDataDialog();
+                        dialogManager.showSavingDataDialog();
 
                         if (data.getRace().hasChore(pChore.getUid())) {
                             Set<String> removedRaceItems = data.getRace().removeChores(pChore.getUid());
@@ -200,7 +203,7 @@ public class ChoresListActivity extends AppCompatActivity {
                         choresDatabase.child(pChore.getUid()).removeValue();
                         //choresListAdapter.notifyDataSetChanged();
 
-                        hideSavingDataDialog();
+                        dialogManager.hideSavingDataDialog();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -220,7 +223,7 @@ public class ChoresListActivity extends AppCompatActivity {
             String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
             int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
             if (!TextUtils.isEmpty(choreName) && choreValue > 0) {
-                showSavingDataDialog();
+                dialogManager.showSavingDataDialog();
 
                 final ChoreItem chore = new ChoreItem();
                 String uid = null;
@@ -257,7 +260,7 @@ public class ChoresListActivity extends AppCompatActivity {
                     builder.setMessage(String.format(getString(R.string.confirmation_text_update_chore_value), chore.getName()))
                             .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    showSavingDataDialog();
+                                    dialogManager.showSavingDataDialog();
 
                                     Set<String> updatedRaceItemsForValue = data.getRace().updateChoreValues(chore.getUid(), chore.getValue());
                                     for (String updatedUid : updatedRaceItemsForValue) {
@@ -271,7 +274,7 @@ public class ChoresListActivity extends AppCompatActivity {
                                     }
                                     choresDatabase.child(chore.getUid()).setValue(chore);
 
-                                    hideSavingDataDialog();
+                                    dialogManager.hideSavingDataDialog();
                                 }
                             })
                             .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -291,21 +294,8 @@ public class ChoresListActivity extends AppCompatActivity {
                     choresDatabase.child(uid).setValue(chore);
                 }
 
-                hideSavingDataDialog();
+                dialogManager.hideSavingDataDialog();
             }
-        }
-    }
-
-    private void showSavingDataDialog() {
-        if (savingDataDialog != null && savingDataDialog.isShowing()) {
-            return;
-        }
-        savingDataDialog = ProgressDialog.show(this, getString(R.string.dialog_text_saving_data), getString(R.string.dialog_text_please_wait), true);
-    }
-
-    private void hideSavingDataDialog() {
-        if (savingDataDialog != null && savingDataDialog.isShowing()) {
-            savingDataDialog.dismiss();
         }
     }
 }
