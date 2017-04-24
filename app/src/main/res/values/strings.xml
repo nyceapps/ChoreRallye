@@ -13,6 +13,8 @@
     <string name="dialog_text_no_chores">You have not added any chores yet.\nYou need them to use the app.</string>
     <string name="dialog_text_no_household_name">You have not set a household name yet.\nPlease provide one in the settings or scan a QR code.</string>
     <string name="dialog_text_note_for_race_history_item" formatted="false">Note for \"%s\":</string>
+    <string name="dialog_text_race_has_ended">The rallye has ended!</string>
+    <string name="dialog_text_race_has_ended_with_winner" formatted="false">The rallye has ended!\nThe winner is \"%s\"!</string>
     <string name="dialog_text_loading_data">Loading data</string>
     <string name="dialog_text_saving_data">Saving data</string>
     <string name="dialog_text_please_wait">Please wait...</string>

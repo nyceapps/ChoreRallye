@@ -417,15 +417,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(getString(R.string.confirmation_text_end_rallye))
                 .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        data.getSettings().setRunning(false);
-                        settingsDatabase.setValue(data.getSettings());
-
-                        moveCurrentRaceToHistory();
-
-                        membersAdapter.notifyDataSetChanged();
-                        choresAdapter.notifyDataSetChanged();
-
-                        setInfoText();
+                        finishRace();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_text_cancel, new DialogInterface.OnClickListener() {
@@ -435,7 +427,18 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog stopRallyeConfirmationDialog = builder.create();
         stopRallyeConfirmationDialog.show();
+    }
 
+    private void finishRace() {
+        data.getSettings().setRunning(false);
+        settingsDatabase.setValue(data.getSettings());
+
+        moveCurrentRaceToHistory();
+
+        membersAdapter.notifyDataSetChanged();
+        choresAdapter.notifyDataSetChanged();
+
+        setInfoText();
     }
 
     private void moveCurrentRaceToHistory() {
@@ -498,6 +501,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (dateEnding != null) {
+            data.getRace().setDateEnding(dateEnding);
             raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(dateEnding);
         }
     }
@@ -713,6 +717,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 hideLoadingDataDialog();
+
+                checkRaceStatus();
             }
 
             @Override
@@ -814,6 +820,8 @@ public class MainActivity extends AppCompatActivity {
                 setInfoText();
 
                 hideLoadingDataDialog();
+
+                checkRaceStatus();
             }
 
             @Override
@@ -823,6 +831,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
         historyDatabase = FirebaseDatabase.getInstance().getReference(householdId + "/" + DATABASE_SUBPATH_HISTORY);
+    }
+
+    private void checkRaceStatus() {
+        String displayMode = data.getSettings().getDisplayMode();
+        boolean running = data.getSettings().isRunning();
+        if (DISPLAY_MODE_RALLYE.equals(displayMode) && running) {
+            Date now = new Date();
+            Date dateEnding = data.getRace().getDateEnding();
+            if (dateEnding != null && now.after(dateEnding)) {
+                hideLoadingDataDialog();
+
+                finishRace();
+
+                String raceHasEndedText = getString(R.string.dialog_text_race_has_ended);
+                int totalPoints = data.getRace().getTotalPoints();
+                for (MemberItem member : data.getMembers()) {
+                    int memberPoints = data.getRace().getPoints(member);
+                    int memberPercentage = Utils.calculatePercentage(memberPoints, totalPoints);
+                    if (memberPercentage >= data.getSettings().getWinningPercentage()) {
+                        raceHasEndedText = String.format(getString(R.string.dialog_text_race_has_ended_with_winner), member.getName());
+                        break;
+                    }
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(raceHasEndedText)
+                        .setPositiveButton(R.string.dialog_button_text_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Do nothing
+                            }
+                        });
+                membersDialog = builder.create();
+                membersDialog.show();
+            }
+        }
     }
 
     public void updatePoints(MemberItem pMember, ChoreItem pChore) {
