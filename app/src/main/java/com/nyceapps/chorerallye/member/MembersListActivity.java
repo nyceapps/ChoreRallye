@@ -34,12 +34,7 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_MEMBERS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_MEMBER;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_MEMBER;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_MEMBER;
 
@@ -141,14 +136,11 @@ public class MembersListActivity extends AppCompatActivity {
 
     public void addMember() {
         Intent intent = new Intent(this, MemberDetailActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_MEMBER, new MemberItem());
         startActivityForResult(intent, REQUEST_CODE_ADD_MEMBER);
     }
 
     public void editMember(final MemberItem pMember) {
-        Intent intent = new Intent(this, MemberDetailActivity.class);
-        intent.putExtra(EXTRA_MESSAGE_UID, pMember.getUid());
-        intent.putExtra(EXTRA_MESSAGE_NAME, pMember.getName());
-        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pMember.getName());
         int orderKey = pMember.getOrderKey();
         List<MemberItem> members = data.getMembers();
         for (int i = 0; i < members.size(); i++) {
@@ -157,8 +149,11 @@ public class MembersListActivity extends AppCompatActivity {
                 break;
             }
         }
-        intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
-        intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pMember.getImageString());
+        pMember.setOrderKey(orderKey);
+        pMember.setNameUpdate(false);
+
+        Intent intent = new Intent(this, MemberDetailActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_MEMBER, pMember);
         startActivityForResult(intent, REQUEST_CODE_EDIT_MEMBER);
     }
 
@@ -206,33 +201,26 @@ public class MembersListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
-            String memberName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
+            MemberItem member = intent.getParcelableExtra(EXTRA_MESSAGE_MEMBER);
+            String memberName = member.getName();
             if (!TextUtils.isEmpty(memberName)) {
                 showSavingDataDialog();
 
-                MemberItem member = new MemberItem();
                 String uid = null;
                 switch (requestCode) {
                     case REQUEST_CODE_ADD_MEMBER:
                         uid = membersDatabase.push().getKey();
+                        member.setUid(uid);
                         break;
                     case REQUEST_CODE_EDIT_MEMBER:
-                        uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
-                        String memberOriginalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
-                        if (!memberName.equals(memberOriginalName) && data.getRace().hasMember(uid)) {
+                        uid = member.getUid();
+                        if (member.hasNameUpdate() && data.getRace().hasMember(uid)) {
                             Set<String> updatedRaceItems = data.getRace().updateMemberNames(uid, memberName);
                             for (String updatedUid : updatedRaceItems) {
                                 raceDatabase.child(DATABASE_SUBPATH_ITEMS).child(updatedUid).child(DATABASE_CHILD_KEY_MEMBER_NAME).setValue(memberName);
                             }
                         }
                         break;
-                }
-                member.setUid(uid);
-                member.setName(memberName);
-                member.setOrderKey(intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY));
-                String memberImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-                if (!TextUtils.isEmpty(memberImageString)) {
-                    member.setImageString(memberImageString);
                 }
 
                 membersDatabase.child(uid).setValue(member);

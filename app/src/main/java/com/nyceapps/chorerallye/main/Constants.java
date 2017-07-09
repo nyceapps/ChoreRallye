@@ -10,14 +10,17 @@ public interface Constants {
     int CHORE_COLUMNS = 3;
     float MEMBER_IMAGE_CORNER_RADIUS = 45;
 
-    String EXTRA_MESSAGE_UID = "com.nyceapps.chorerallye.MESSAGE_UID";
-    String EXTRA_MESSAGE_NAME = "com.nyceapps.chorerallye.MESSAGE_NAME";
-    String EXTRA_MESSAGE_ORIGINAL_NAME = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_NAME";
+    //String EXTRA_MESSAGE_UID = "com.nyceapps.chorerallye.MESSAGE_UID";
+    //String EXTRA_MESSAGE_NAME = "com.nyceapps.chorerallye.MESSAGE_NAME";
+    //String EXTRA_MESSAGE_ORIGINAL_NAME = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_NAME";
+    //String EXTRA_MESSAGE_ORIGINAL_VALUE = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_VALUE";
+    //String EXTRA_MESSAGE_FILE_STRING = "com.nyceapps.chorerallye.MESSAGE_FILE_STRING";
+    //String EXTRA_MESSAGE_ADD_NOTE_INSTANTLY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY";
+    //String EXTRA_MESSAGE_ORDER_KEY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ORDER_KEY";
     String EXTRA_MESSAGE_VALUE = "com.nyceapps.chorerallye.MESSAGE_VALUE";
-    String EXTRA_MESSAGE_ORIGINAL_VALUE = "com.nyceapps.chorerallye.MESSAGE_ORIGINAL_VALUE";
-    String EXTRA_MESSAGE_FILE_STRING = "com.nyceapps.chorerallye.MESSAGE_FILE_STRING";
-    String EXTRA_MESSAGE_ADD_NOTE_INSTANTLY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY";
-    String EXTRA_MESSAGE_ORDER_KEY = "com.nyceapps.chorerallye.EXTRA_MESSAGE_ORDER_KEY";
+    String EXTRA_MESSAGE_MEMBER = "com.nyceapps.chorerallye.EXTRA_MESSAGE_MEMBER";
+    String EXTRA_MESSAGE_CHORE = "com.nyceapps.chorerallye.EXTRA_MESSAGE_CHORE";
+    String EXTRA_MESSAGE_RACE_ITEM = "com.nyceapps.chorerallye.EXTRA_MESSAGE_RACE_ITEM";
 
     int REQUEST_CODE_ADD_MEMBER = 1;
     int REQUEST_CODE_EDIT_MEMBER = 2;
@@ -81,6 +84,7 @@ public interface Constants {
 
     boolean DEFAULT_VALUE_ADD_NOTE_INSTANTLY = false;
     int DEFAULT_VALUE_ORDER_KEY = Integer.MAX_VALUE;
+    int DEFAULT_VALUE_CHORE_VALUE = -1;
 
     String DIALOG_TYPE_SAVE = "DIALOG_TYPE_SAVE";
 }

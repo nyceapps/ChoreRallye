@@ -7,8 +7,8 @@ android {
         applicationId "com.nyceapps.chorerallye"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 9
-        versionName "0.8b"
+        versionCode 10
+        versionName "0.9b"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

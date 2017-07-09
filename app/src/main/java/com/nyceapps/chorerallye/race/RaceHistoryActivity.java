@@ -73,8 +73,8 @@ public class RaceHistoryActivity extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        int adapterPosition = viewHolder.getAdapterPosition();
-                        RaceItem raceItem = data.getRace().getRaceItems().get(adapterPosition);
+                        RaceHistoryListAdapter.ViewHolder raceHistoryViewHolder = (RaceHistoryListAdapter.ViewHolder) viewHolder;
+                        RaceItem raceItem = (RaceItem) raceHistoryViewHolder.raceHistoryItemTextView.getTag();
                         removeRaceHistoryItem(raceItem);
                     }
                 });

@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,24 +30,16 @@ import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
 
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_MEMBER;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA;
 
 public class MemberDetailActivity extends AppCompatActivity {
-    private String uid;
-    private String originalName;
-    private int orderKey;
-    private String memberFileString;
+    private MemberItem member;
 
     private boolean cameraPhotoWasChosen;
-    private File tempCameraFile;
 
+    private File tempCameraFile;
     private ViewGroup mainLayout;
     private ImageView memberImageImageView;
     private EditText memberNameEditText;
@@ -59,15 +52,10 @@ public class MemberDetailActivity extends AppCompatActivity {
         mainLayout = (ViewGroup) findViewById(R.id.member_detail_main_layout);
 
         Intent intent = getIntent();
-        uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
-        originalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
-        orderKey = intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY);
+        member = intent.getParcelableExtra(EXTRA_MESSAGE_MEMBER);
 
         memberImageImageView = (ImageView) findViewById(R.id.member_image);
-        memberFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-        MemberItem tmpMember = new MemberItem();
-        tmpMember.setImageString(memberFileString);
-        Drawable memberDrawable = tmpMember.getDrawable(this);
+        Drawable memberDrawable = member.getDrawable(this);
         if (memberDrawable != null) {
             memberImageImageView.setImageDrawable(memberDrawable);
         }
@@ -82,7 +70,7 @@ public class MemberDetailActivity extends AppCompatActivity {
             }
         });
 
-        String memberName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
+        String memberName = member.getName();
         setTitle(memberName);
         memberNameEditText = (EditText) findViewById(R.id.member_name);
         memberNameEditText.setText(memberName);
@@ -184,19 +172,19 @@ public class MemberDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save_detail:
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_MESSAGE_UID, uid);
-                intent.putExtra(EXTRA_MESSAGE_NAME, memberNameEditText.getText().toString());
-                intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, originalName);
-                intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
+                String newMemberName = memberNameEditText.getText().toString();
+                if (!TextUtils.isEmpty(newMemberName) && !newMemberName.equals(member.getName())) {
+                    member.setNameUpdate(true);
+                    member.setName(newMemberName);
+                }
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
-                    intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);
-                } else {
-                    intent.putExtra(EXTRA_MESSAGE_FILE_STRING, memberFileString);
+                    member.setImageString(cameraFileString);
                 }
                 if (tempCameraFile != null) {
                     tempCameraFile.delete();
                 }
+                intent.putExtra(EXTRA_MESSAGE_MEMBER, member);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

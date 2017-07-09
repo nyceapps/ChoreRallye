@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,25 +33,12 @@ import com.nyceapps.chorerallye.main.Utils;
 
 import java.io.File;
 
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ADD_NOTE_INSTANTLY;
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_CAPTURE_IMAGE_FROM_CAMERA;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_PERMISSION_REQUEST_CAMERA;
 
 public class ChoreDetailActivity extends AppCompatActivity {
-    private String uid;
-    private String originalName;
-    private int originalValue;
-    private int orderKey;
-    private String choreFileString;
+    private ChoreItem chore;
 
     private boolean cameraPhotoWasChosen;
     private File tempCameraFile;
@@ -69,16 +57,10 @@ public class ChoreDetailActivity extends AppCompatActivity {
         mainLayout = (ViewGroup) findViewById(R.id.chore_detail_main_layout);
 
         Intent intent = getIntent();
-        uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
-        originalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
-        originalValue = intent.getIntExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, -1);
-        orderKey = intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY);
+        chore = intent.getParcelableExtra(EXTRA_MESSAGE_CHORE);
 
         choreImageImageView = (ImageView) findViewById(R.id.chore_image);
-        choreFileString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-        ChoreItem tmpChore = new ChoreItem();
-        tmpChore.setImageString(choreFileString);
-        Drawable choreDrawable = tmpChore.getDrawable(this);
+        Drawable choreDrawable = chore.getDrawable(this);
         if (choreDrawable != null) {
             choreImageImageView.setImageDrawable(choreDrawable);
         }
@@ -93,7 +75,7 @@ public class ChoreDetailActivity extends AppCompatActivity {
             }
         });
 
-        String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
+        String choreName = chore.getName();
         setTitle(choreName);
         choreNameEditText = (EditText) findViewById(R.id.chore_name);
         choreNameEditText.setText(choreName);
@@ -114,13 +96,13 @@ public class ChoreDetailActivity extends AppCompatActivity {
             }
         });
 
-        int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
+        int choreValue = chore.getValue();
         choreValueEditText = (EditText) findViewById(R.id.chore_value);
         if (choreValue > 0) {
             choreValueEditText.setText(String.valueOf(choreValue));
         }
 
-        boolean choreInstantlyAddNote = intent.getBooleanExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, DEFAULT_VALUE_ADD_NOTE_INSTANTLY);
+        boolean choreInstantlyAddNote = chore.isInstantlyAddNote();
         choreInstantlyAddNoteCheckBox = (CheckBox) findViewById(R.id.chore_add_note_instantly);
         choreInstantlyAddNoteCheckBox.setChecked(choreInstantlyAddNote);
 
@@ -211,22 +193,28 @@ public class ChoreDetailActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_MESSAGE_UID, uid);
-                intent.putExtra(EXTRA_MESSAGE_NAME, choreNameEditText.getText().toString());
-                intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, originalName);
-                intent.putExtra(EXTRA_MESSAGE_VALUE, Integer.valueOf(choreValueEditText.getText().toString()));
-                intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, originalValue);
-                intent.putExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, choreInstantlyAddNoteCheckBox.isChecked());
-                intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
+                String newChoreName = choreNameEditText.getText().toString();
+                if (!TextUtils.isEmpty(newChoreName) && !newChoreName.equals(chore.getName())) {
+                    chore.setNameUpdate(true);
+                    chore.setName(newChoreName);
+                }
+                String valueStr = choreValueEditText.getText().toString();
+                if (!TextUtils.isEmpty(valueStr)) {
+                    Integer newChoreValue = Integer.valueOf(valueStr);
+                    if (newChoreValue != chore.getValue()) {
+                        chore.setValueUpdate(true);
+                        chore.setValue(newChoreValue);
+                    }
+                }
+                chore.setInstantlyAddNote(choreInstantlyAddNoteCheckBox.isChecked());
                 if (cameraPhotoWasChosen && tempCameraFile != null) {
                     String cameraFileString = Utils.convertFileToString(tempCameraFile);
-                    intent.putExtra(EXTRA_MESSAGE_FILE_STRING, cameraFileString);
-                } else {
-                    intent.putExtra(EXTRA_MESSAGE_FILE_STRING, choreFileString);
+                    chore.setImageString(cameraFileString);
                 }
                 if (tempCameraFile != null) {
                     tempCameraFile.delete();
                 }
+                intent.putExtra(EXTRA_MESSAGE_CHORE, chore);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

@@ -395,13 +395,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void startRace(int pLengthOfRallyeInDays) {
         data.getSettings().setRunning(true);
+
+        Date dateStarted = new Date();
+        data.getRace().setDateStarted(dateStarted);
+        Date dateEnding = Utils.getDateEndingForRace(dateStarted, pLengthOfRallyeInDays);
+        data.getRace().setDateEnding(dateEnding);
+
         settingsDatabase.setValue(data.getSettings());
 
         localHistory.init();
         displayedRaceItems.init();
 
-        Date dateStarted = new Date();
-        Date dateEnding = Utils.getDateEndingForRace(dateStarted, pLengthOfRallyeInDays);
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).setValue(dateStarted);
         raceDatabase.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).setValue(dateEnding);
         raceDatabase.child(DATABASE_SUBPATH_ITEMS).removeValue();
@@ -785,10 +789,15 @@ public class MainActivity extends AppCompatActivity {
         raceDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Date localDateStarted = data.getRace().getDateStarted();
+                Date localDateEnding = data.getRace().getDateEnding();
+
                 Date dateStarted = dataSnapshot.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_STARTED).getValue(Date.class);
-                data.getRace().setDateStarted(dateStarted);
                 Date dateEnding = dataSnapshot.child(DATABASE_SUBPATH_META).child(DATABASE_KEY_DATE_ENDING).getValue(Date.class);
-                data.getRace().setDateEnding(dateEnding);
+                if (localDateStarted == null || localDateEnding == null || dateStarted.after(localDateStarted)) {
+                    data.getRace().setDateStarted(dateStarted);
+                    data.getRace().setDateEnding(dateEnding);
+                }
 
                 List<RaceItem> raceItems = new ArrayList<>();
                 for (DataSnapshot raceDataSnapshot : dataSnapshot.child(DATABASE_SUBPATH_ITEMS).getChildren()) {
@@ -836,6 +845,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkRaceStatus() {
         String displayMode = data.getSettings().getDisplayMode();
         boolean running = data.getSettings().isRunning();
+        Log.d(TAG, String.format("dm = %s, r = %b", displayMode, running));
         if (DISPLAY_MODE_RALLYE.equals(displayMode) && running) {
             Date now = new Date();
             Date dateEnding = data.getRace().getDateEnding();

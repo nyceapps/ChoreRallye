@@ -1,7 +1,6 @@
 package com.nyceapps.chorerallye.chore;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,16 +35,7 @@ import static com.nyceapps.chorerallye.main.Constants.DATABASE_KEY_ORDER_KEY;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_CHORES;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_ITEMS;
 import static com.nyceapps.chorerallye.main.Constants.DATABASE_SUBPATH_RACE;
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ADD_NOTE_INSTANTLY;
-import static com.nyceapps.chorerallye.main.Constants.DEFAULT_VALUE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ADD_NOTE_INSTANTLY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_FILE_STRING;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORDER_KEY;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_NAME;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_ORIGINAL_VALUE;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_UID;
-import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_VALUE;
+import static com.nyceapps.chorerallye.main.Constants.EXTRA_MESSAGE_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_ADD_CHORE;
 import static com.nyceapps.chorerallye.main.Constants.REQUEST_CODE_EDIT_CHORE;
 
@@ -149,17 +139,11 @@ public class ChoresListActivity extends AppCompatActivity {
 
     public void addChore() {
         Intent intent = new Intent(this, ChoreDetailActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_CHORE, new ChoreItem());
         startActivityForResult(intent, REQUEST_CODE_ADD_CHORE);
     }
 
     public void editChore(ChoreItem pChore) {
-        Intent intent = new Intent(this, ChoreDetailActivity.class);
-        intent.putExtra(EXTRA_MESSAGE_UID, pChore.getUid());
-        intent.putExtra(EXTRA_MESSAGE_NAME, pChore.getName());
-        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_NAME, pChore.getName());
-        intent.putExtra(EXTRA_MESSAGE_VALUE, pChore.getValue());
-        intent.putExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, pChore.getValue());
-        intent.putExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, pChore.isInstantlyAddNote());
         int orderKey = pChore.getOrderKey();
         List<ChoreItem> chores = data.getChores();
         for (int i = 0; i < chores.size(); i++) {
@@ -168,8 +152,12 @@ public class ChoresListActivity extends AppCompatActivity {
                 break;
             }
         }
-        intent.putExtra(EXTRA_MESSAGE_ORDER_KEY, orderKey);
-        intent.putExtra(EXTRA_MESSAGE_FILE_STRING, pChore.getImageString());
+        pChore.setOrderKey(orderKey);
+        pChore.setNameUpdate(false);
+        pChore.setValueUpdate(false);
+
+        Intent intent = new Intent(this, ChoreDetailActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_CHORE, pChore);
         startActivityForResult(intent, REQUEST_CODE_EDIT_CHORE);
     }
 
@@ -220,38 +208,28 @@ public class ChoresListActivity extends AppCompatActivity {
             boolean databaseUpdateNeedsConfirmation = false;
             boolean updateChoreNamesInDatabase = false;
 
-            String choreName = intent.getStringExtra(EXTRA_MESSAGE_NAME);
-            int choreValue = intent.getIntExtra(EXTRA_MESSAGE_VALUE, -1);
+            final ChoreItem chore = intent.getParcelableExtra(EXTRA_MESSAGE_CHORE);
+            String choreName = chore.getName();
+            int choreValue = chore.getValue();
             if (!TextUtils.isEmpty(choreName) && choreValue > 0) {
                 dialogManager.showSavingDataDialog();
 
-                final ChoreItem chore = new ChoreItem();
                 String uid = null;
                 switch (requestCode) {
                     case REQUEST_CODE_ADD_CHORE:
                         uid = choresDatabase.push().getKey();
+                        chore.setUid(uid);
                         break;
                     case REQUEST_CODE_EDIT_CHORE:
-                        uid = intent.getStringExtra(EXTRA_MESSAGE_UID);
-                        int choreOriginalValue = intent.getIntExtra(EXTRA_MESSAGE_ORIGINAL_VALUE, -1);
-                        if (choreValue != choreOriginalValue && data.getRace().hasChore(uid)) {
+                        uid = chore.getUid();
+                        if (chore.hasValueUpdate() && data.getRace().hasChore(uid)) {
                             databaseUpdateNeedsConfirmation = (data.getRace().hasChore(uid));
                         }
-                        String choreOriginalName = intent.getStringExtra(EXTRA_MESSAGE_ORIGINAL_NAME);
-                        if (!choreName.equals(choreOriginalName) && data.getRace().hasChore(uid)) {
+                        if (chore.hasNameUpdate() && data.getRace().hasChore(uid)) {
                             updateChoreNamesInDatabase = true;
                         }
 
                         break;
-                }
-                chore.setUid(uid);
-                chore.setName(choreName);
-                chore.setValue(choreValue);
-                chore.setInstantlyAddNote(intent.getBooleanExtra(EXTRA_MESSAGE_ADD_NOTE_INSTANTLY, DEFAULT_VALUE_ADD_NOTE_INSTANTLY));
-                chore.setOrderKey(intent.getIntExtra(EXTRA_MESSAGE_ORDER_KEY, DEFAULT_VALUE_ORDER_KEY));
-                String choreImageString = intent.getStringExtra(EXTRA_MESSAGE_FILE_STRING);
-                if (!TextUtils.isEmpty(choreImageString)) {
-                    chore.setImageString(choreImageString);
                 }
 
                 if (databaseUpdateNeedsConfirmation) {
